@@ -1,0 +1,14 @@
+{
+  "name": "peddl",
+  "packageManager": "yarn@3.2.3",
+  "scripts": {
+    "start": "yarn workspaces foreach -pi run start",
+    "build": "yarn workspaces foreach -pti run build"
+  },
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  }
+}

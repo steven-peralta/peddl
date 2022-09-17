@@ -1,0 +1,17 @@
+/* eslint-env node */
+module.exports = {
+  env: {
+    node: false,
+  },
+  extends: ['eslint-config-airbnb', '../common/.eslintrc.js'],
+  parserOptions: {
+    sourceType: 'module',
+    project: './tsconfig.eslint.json',
+    ecmaVersion: 'latest',
+  },
+  settings: {
+    typescript: {
+      project: './',
+    },
+  },
+};
