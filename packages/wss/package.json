@@ -1,13 +1,9 @@
 {
-  "name": "@peddl/common",
+  "name": "@peddl/wss",
   "version": "1.0.0",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "tsc"
-  },
+  "main": "dist/server",
   "devDependencies": {
-    "@tsconfig/recommended": "^1.0.1",
+    "@types/node": "^18.7.18",
     "@typescript-eslint/eslint-plugin": "^5.37.0",
     "@typescript-eslint/parser": "^5.37.0",
     "eslint": "^8.23.1",
@@ -17,6 +13,18 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.7.1",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^4.8.3"
+  },
+  "dependencies": {
+    "@peddl/common": "1.0.0",
+    "express": "^4.18.1",
+    "socket.io": "^4.5.2"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "tsc -b --clean",
+    "start": "node dist/server.js",
+    "dev": "ts-node-dev src/server.ts"
   }
 }
