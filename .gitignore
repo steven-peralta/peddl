@@ -53,3 +53,5 @@ package-lock.json
 .vs
 
 *.tsbuildinfo
+
+.rollup.cache
