@@ -1,45 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
-import APP_NAME from '@peddl/common';
+import React from 'react';
 
-const socket = io('http://localhost:8000');
+import './index.css';
+//  import { Route, Routes } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
+import MainNavbar from './components/MainNavbar/MainNavbar';
+import NewProfile from './pages/NewProfile';
 
 function App() {
-  const [isConnected, setIsConnected] = useState(socket.connected);
-  const [lastPong, setLastPong] = useState<string | null>(null);
-
-  useEffect(() => {
-    socket.on('connect', () => {
-      setIsConnected(true);
-    });
-
-    socket.on('disconnect', () => {
-      setIsConnected(false);
-    });
-
-    socket.on('pong', () => {
-      setLastPong(new Date().toISOString());
-    });
-
-    return () => {
-      socket.off('connect');
-      socket.off('disconnect');
-      socket.off('pong');
-    };
-  }, []);
-
-  const sendPing = () => {
-    socket.emit('ping');
-  };
-
   return (
-    <div>
-      <h1>Welcome to {`${APP_NAME}`}</h1>
-      <p>Connected: {`${isConnected}`}</p>
-      <p>Last pong: {lastPong || '-'}</p>
-      <button type="button" onClick={sendPing}>
-        Send ping
-      </button>
+    <div className="App">
+      <MainNavbar />
+      <Container>
+        <NewProfile />
+      </Container>
+
+      {/* <Routes> */}
+      {/*  <Route path="/" element={<Home />} /> */}
+      {/*  <Route path="about" element={<About />} /> */}
+      {/* </Routes> */}
     </div>
   );
 }
