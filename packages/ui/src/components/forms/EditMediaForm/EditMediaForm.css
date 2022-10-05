@@ -1,12 +1,12 @@
 .upload-btn{
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
     display: inline-block;
     background-color: white !important;
     border: dashed 1px #ccc !important;
     background: center center no-repeat;
     background-size: 14px 14px;
-    background-image: url("plus.svg");
+
 
 }
 .upload-btn> input{

@@ -4,17 +4,17 @@ import './index.css';
 //  import { Route, Routes } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import MainNavbar from './components/MainNavbar/MainNavbar';
-// import UploadMedia from './components/UploadMedia/UploadMedia';
-// import NewProfileMedia from './components/NewProfile/NewProfile-Media';
-import NewProfile from './components/NewProfile/NewProfile';
+
+import AddMediaPage from './pages/AddMediaPage';
+// import NewProfile from './pages/NewProfile';
 
 function App() {
   return (
     <div className="App">
       <MainNavbar />
       <Container>
-        {/* <NewProfileMedia /> */}
-        <NewProfile />
+        {/* <NewProfile /> */}
+        <AddMediaPage />
       </Container>
 
       {/* <Routes> */}
