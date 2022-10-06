@@ -1,26 +1,46 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
+import handleFormChange from './utils';
 
-export default function EditLinksForm() {
+export type EditLinksFormProps = {
+  onSpotifyLinkInputChange: (link: string) => void;
+  onSoundcloudLinkInputChange: (link: string) => void;
+  onBandcampLinkInputChange: (link: string) => void;
+};
+
+export default function EditLinksForm({
+  onSpotifyLinkInputChange,
+  onSoundcloudLinkInputChange,
+  onBandcampLinkInputChange,
+}: EditLinksFormProps) {
   return (
-    <Form>
-      <div className="mb-3">
-        <h2>Links</h2>
-      </div>
-      <Form.Group className="mb-3" controlId="formSpotify">
+    <div>
+      <Form.Group className="mb-3">
         <Form.Label>Spotify</Form.Label>
-        <Form.Control type="link" placeholder="https://Spotify.com" />
+        <Form.Control
+          type="text"
+          placeholder="https://spotify.com"
+          onChange={handleFormChange(onSpotifyLinkInputChange)}
+        />
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formSoundCloud">
+      <Form.Group className="mb-3">
         <Form.Label>SoundCloud</Form.Label>
-        <Form.Control type="link" placeholder="https://SoundCloud.com" />
+        <Form.Control
+          type="text"
+          placeholder="https://soundcloud.com"
+          onChange={handleFormChange(onSoundcloudLinkInputChange)}
+        />
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBandcamp">
+      <Form.Group className="mb-3">
         <Form.Label>Bandcamp</Form.Label>
-        <Form.Control type="link" placeholder="https://Bandcamp.com" />
+        <Form.Control
+          type="text"
+          placeholder="https://bandcamp.com"
+          onChange={handleFormChange(onBandcampLinkInputChange)}
+        />
       </Form.Group>
-    </Form>
+    </div>
   );
 }

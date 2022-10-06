@@ -1,95 +1,127 @@
 import { Form } from 'react-bootstrap';
-import React, { useState } from 'react';
+import React from 'react';
 import DatePicker from 'react-datepicker';
 import { TagsInput } from 'react-tag-input-component';
 import 'react-datepicker/dist/react-datepicker.css';
+import { Gender } from '@peddl/common/dist/api/enums';
+import handleFormChange from './utils';
 
-export default function EditPersonalInfoForm() {
-  const [date, setDate] = useState<Date | null>(new Date());
-  const [dateInvalid, setDateInvalid] = useState<boolean>(false);
-  const minDate = new Date(
-    new Date().setFullYear(new Date().getFullYear() - 18)
-  );
+export type EditPersonalInfoFormProps = {
+  onNameInputChange: (name: string) => void;
+  onBirthdayInputChange: (date: Date | null) => void;
+  onLocationInputChange: (location: string) => void;
+  onGenderInputChange: (gender: string) => void;
+  onGenreInputChange: (genres: string[]) => void;
+  onTalentInputChange: (talents: string[]) => void;
+  onBioInputChange: (bio: string) => void;
+};
 
-  const [genre, setGenre] = useState(['Rock']);
-  const [talent, setTalent] = useState(['Guitar']);
+export default function EditPersonalInfoForm({
+  onNameInputChange,
+  onBirthdayInputChange,
+  onLocationInputChange,
+  onGenderInputChange,
+  onGenreInputChange,
+  onTalentInputChange,
+  onBioInputChange,
+}: EditPersonalInfoFormProps) {
+  // const [date, setDate] = useState<Date | null>(new Date());
+  // const [dateInvalid, setDateInvalid] = useState<boolean>(false);
+  // const minDate = new Date(
+  //   new Date().setFullYear(new Date().getFullYear() - 18)
+  // );
+  //
+  // const [genre, setGenre] = useState(['Rock']);
+  // const [talent, setTalent] = useState(['Guitar']);
+  // <DatePicker
+  //   className="form-control"
+  //   selected={date}
+  //   openToDate={date ?? undefined}
+  //   onChange={(newDate) => {
+  //     setDateInvalid(false);
+  //     setDate(newDate);
+  //     if (newDate) {
+  //       if (newDate > minDate) {
+  //         setDateInvalid(true);
+  //         setDate(minDate);
+  //       }
+  //     }
+  //   }}
+  // />
+  // {dateInvalid && <p className="text-danger">You are too young bro</p>}
   return (
-    <Form>
-      <div className="mb-3">
-        <h2>Personal Info</h2>
-      </div>
-      <Form.Group className="mb-3" controlId="formName">
+    <div>
+      <Form.Group className="mb-3">
         <Form.Label>Name</Form.Label>
-        <Form.Control type="text" placeholder="Enter name" />
-      </Form.Group>
-
-      <Form.Group className="mb-3" controlId="formBirthday">
-        <Form.Label>Birthday</Form.Label>
-        <DatePicker
-          className="form-control"
-          selected={date}
-          openToDate={date ?? undefined}
-          onChange={(newDate) => {
-            setDateInvalid(false);
-            setDate(newDate);
-            if (newDate) {
-              if (newDate > minDate) {
-                setDateInvalid(true);
-                setDate(minDate);
-              }
-            }
-          }}
+        <Form.Control
+          type="text"
+          placeholder="Enter name"
+          onChange={handleFormChange(onNameInputChange)}
         />
-        {dateInvalid && <p className="text-danger">You are too young bro</p>}
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formLocation">
+      <Form.Group className="mb-3">
+        <Form.Label>Birthday</Form.Label>
+        <DatePicker onChange={onBirthdayInputChange} />
+      </Form.Group>
+
+      <Form.Group className="mb-3">
         <Form.Label>Location</Form.Label>
-        <Form.Control type="text" placeholder="Enter location" />
+        <Form.Control
+          type="text"
+          placeholder="Enter location"
+          onChange={handleFormChange(onLocationInputChange)}
+        />
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formGender">
+      <Form.Group className="mb-3">
         <Form.Label>Gender</Form.Label>
-        <Form.Select aria-label="Default select example">
+        <Form.Select
+          aria-label="Default select example"
+          onChange={handleFormChange(onGenderInputChange)}
+        >
           <option>Please select gender</option>
-          <option value="1">Male</option>
-          <option value="2">Female</option>
-          <option value="3">Trans-Male</option>
-          <option value="4">Trans-Female</option>
-          <option value="5">Non-Binary</option>
+          <option value={Gender.Man}>{Gender.Man}</option>
+          <option value={Gender.Woman}>{Gender.Woman}</option>
+          <option value={Gender.TransMan}>{Gender.TransMan}</option>
+          <option value={Gender.TransWoman}>{Gender.TransWoman}</option>
+          <option value={Gender.NonBinary}>{Gender.NonBinary}</option>
         </Form.Select>
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formGenres">
+      <Form.Group className="mb-3">
         <Form.Label>Genres</Form.Label>
         <div>
           <TagsInput
-            value={genre}
-            onChange={setGenre}
+            onChange={onGenreInputChange}
             name="genres"
-            placeHolder="Enter music genre"
+            placeHolder="Genres"
           />
-          <em>press enter to add new tag</em>
+          <em>Press enter to add new tag</em>
         </div>
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formTalents">
+      <Form.Group className="mb-3">
         <Form.Label>Talents</Form.Label>
         <div>
           <TagsInput
-            value={talent}
-            onChange={setTalent}
+            onChange={onTalentInputChange}
             name="talents"
-            placeHolder="Enter musical talents"
+            placeHolder="Talents"
           />
           <em>press enter to add new tag</em>
         </div>
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBio">
+      <Form.Group className="mb-3">
         <Form.Label>Bio</Form.Label>
-        <Form.Control as="textarea" rows={3} placeholder="Enter bio" />
+        <Form.Control
+          as="textarea"
+          rows={3}
+          placeholder="Enter bio"
+          onChange={handleFormChange(onBioInputChange)}
+        />
       </Form.Group>
-    </Form>
+    </div>
   );
 }
