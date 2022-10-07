@@ -14,4 +14,7 @@ module.exports = {
       project: './',
     },
   },
+  rules: {
+    'react/require-default-props': 'off',
+  },
 };

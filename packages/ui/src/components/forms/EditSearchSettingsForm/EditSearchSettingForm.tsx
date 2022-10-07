@@ -1,9 +1,10 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
 import { TagsInput } from 'react-tag-input-component';
+import handleFormChange from '../utils';
 
 export type EditSearchSettingFormProps = {
-  onRangeSettingChange: () => void;
+  onRangeSettingChange: (rangeSetting: string) => void;
   onGenderSettingChange: (gendersSetting: string[]) => void;
   onLocationSettingChange: (locationsSetting: string[]) => void;
   onGenreSettingInputChange: (genresSetting: string[]) => void;
@@ -20,14 +21,7 @@ export default function EditSearchSettingForm({
   return (
     <div>
       <Form.Group>
-        <Form.Range
-          getAriaLabel={() => 'Minimum distance'}
-          value={value1}
-          onChange={onRangeSettingChange}
-          valueLabelDisplay="auto"
-          getAriaValueText={valuetext}
-          disableSwap
-        />
+        <Form.Range onChange={handleFormChange(onRangeSettingChange)} />
       </Form.Group>
 
       <Form.Group className="mb-3">
