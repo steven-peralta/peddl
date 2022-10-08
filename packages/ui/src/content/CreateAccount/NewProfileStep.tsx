@@ -1,69 +1,99 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Form } from 'react-bootstrap';
-import EditLoginForm from '../../components/forms/EditLoginForm';
-import EditPersonalInfoForm from '../../components/forms/EditPersonalInfoForm';
-import EditLinksForm from '../../components/forms/EditLinksForm';
+import EditLoginForm, {
+  EditLoginFormProps,
+} from '../../components/forms/EditLoginForm';
+import EditPersonalInfoForm, {
+  EditPersonalInfoFormProps,
+} from '../../components/forms/EditPersonalInfoForm';
+import EditLinksForm, {
+  EditLinksFormProps,
+} from '../../components/forms/EditLinksForm';
 
-export default function NewProfileStep() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+export type NewProfileStepProps = EditLoginFormProps &
+  EditPersonalInfoFormProps &
+  EditLinksFormProps;
 
-  const [name, setName] = useState('');
-  const [birthday, setBirthday] = useState<Date | null>(new Date());
-  const [location, setLocation] = useState('');
-  const [gender, setGender] = useState('');
-  const [genres, setGenres] = useState<string[]>([]);
-  const [talents, setTalents] = useState<string[]>([]);
-  const [bio, setBio] = useState('');
-
-  const [spotifyLink, setSpotifyLink] = useState('');
-  const [soundcloudLink, setSoundcloudLink] = useState('');
-  const [bandcampLink, setBandcampLink] = useState('');
-
-  useEffect(() => {
-    console.log({
-      email,
-      password,
-      confirmPassword,
-      name,
-      birthday,
-      location,
-      gender,
-      genres,
-      talents,
-      bio,
-      spotifyLink,
-      soundcloudLink,
-      bandcampLink,
-    });
-  });
-
+export default function NewProfileStep({
+  onEmailInputChange,
+  onPasswordInputChange,
+  onConfirmPasswordInputChange,
+  onNameInputChange,
+  onBirthdayInputChange,
+  onLocationInputChange,
+  onGenderInputChange,
+  onGenreInputChange,
+  onTalentInputChange,
+  onBioInputChange,
+  onSpotifyLinkInputChange,
+  onSoundcloudLinkInputChange,
+  onBandcampLinkInputChange,
+  emailRequired,
+  passwordRequired,
+  confirmPasswordRequired,
+  emailValidationText,
+  passwordValidationText,
+  confirmPasswordValidationText,
+  nameRequired,
+  nameValidationText,
+  birthdayRequired,
+  birthdayValidationText,
+  locationRequired,
+  locationValidationText,
+  genderRequired,
+  genderValidationText,
+  genreRequired,
+  genreValidationText,
+  talentRequired,
+  talentValidationText,
+  bioRequired,
+  bioValidationText,
+}: NewProfileStepProps) {
   return (
-    <Form>
+    <Form noValidate>
       <h2 className="mb-3">Login</h2>
       <EditLoginForm
-        onEmailInputChange={setEmail}
-        onPasswordInputChange={setPassword}
-        onConfirmPasswordInputChange={setConfirmPassword}
+        onEmailInputChange={onEmailInputChange}
+        onPasswordInputChange={onPasswordInputChange}
+        onConfirmPasswordInputChange={onConfirmPasswordInputChange}
+        emailRequired={emailRequired}
+        passwordRequired={passwordRequired}
+        confirmPasswordRequired={confirmPasswordRequired}
+        emailValidationText={emailValidationText}
+        passwordValidationText={passwordValidationText}
+        confirmPasswordValidationText={confirmPasswordValidationText}
       />
 
       <h2 className="mb-3">Personal Info</h2>
       <EditPersonalInfoForm
-        onNameInputChange={setName}
-        onBirthdayInputChange={setBirthday}
-        onLocationInputChange={setLocation}
-        onGenderInputChange={setGender}
-        onGenreInputChange={setGenres}
-        onTalentInputChange={setTalents}
-        onBioInputChange={setBio}
+        onNameInputChange={onNameInputChange}
+        onBirthdayInputChange={onBirthdayInputChange}
+        onLocationInputChange={onLocationInputChange}
+        onGenderInputChange={onGenderInputChange}
+        onGenreInputChange={onGenreInputChange}
+        onTalentInputChange={onTalentInputChange}
+        onBioInputChange={onBioInputChange}
+        nameRequired={nameRequired}
+        nameValidationText={nameValidationText}
+        birthdayRequired={birthdayRequired}
+        birthdayValidationText={birthdayValidationText}
+        locationRequired={locationRequired}
+        locationValidationText={locationValidationText}
+        genderRequired={genderRequired}
+        genderValidationText={genderValidationText}
+        genreRequired={genreRequired}
+        genreValidationText={genreValidationText}
+        talentRequired={talentRequired}
+        talentValidationText={talentValidationText}
+        bioRequired={bioRequired}
+        bioValidationText={bioValidationText}
       />
 
       <h2 className="mb-3">Links</h2>
       <EditLinksForm
-        onSpotifyLinkInputChange={setSpotifyLink}
-        onSoundcloudLinkInputChange={setSoundcloudLink}
-        onBandcampLinkInputChange={setBandcampLink}
+        onSpotifyLinkInputChange={onSpotifyLinkInputChange}
+        onSoundcloudLinkInputChange={onSoundcloudLinkInputChange}
+        onBandcampLinkInputChange={onBandcampLinkInputChange}
       />
     </Form>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './index.css';
+import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import PeddlNavbar from './components/MainNavbar/PeddlNavbar';
 
