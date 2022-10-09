@@ -1,4 +1,2 @@
-import * as util from './util/index';
-import * as api from './api/index';
-
-export { util, api };
+export * from './util/index';
+export * from './api/index';

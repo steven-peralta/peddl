@@ -1,4 +1,2 @@
-import * as enums from './enums';
-import * as models from './models';
-
-export { enums, models };
+export * from './enums';
+export * from './models';

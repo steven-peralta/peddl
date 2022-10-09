@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
-import handleFormChange from './utils';
+import { handleFormChange } from './utils';
 import FormInput from './FormInput';
 
 export type EditLinksFormProps = {

@@ -1,7 +1,7 @@
-import { Location } from '../api/enums';
+import { Location } from '../api';
 
 export type ValidationResult = {
-  status: boolean;
+  success?: true;
   reason?: string;
 };
 
@@ -14,16 +14,18 @@ export const validateEmail = (email: string): ValidationResult => {
       )
   ) {
     return {
-      status: false,
       reason: 'Your email is invalid',
     };
   }
   return {
-    status: true,
+    success: true,
   };
 };
 
 export const validatePassword = (password: string): ValidationResult => {
+  if (password === '') {
+    return { reason: 'Your password is empty.' };
+  }
   if (
     !String(password)
       .toLowerCase()
@@ -33,12 +35,12 @@ export const validatePassword = (password: string): ValidationResult => {
       )
   ) {
     return {
-      status: false,
-      reason: 'Your password is invalid',
+      reason:
+        'Your password needs to be at least 6 characters long and have at least 1 special character.',
     };
   }
   return {
-    status: true,
+    success: true,
   };
 };
 
@@ -48,12 +50,11 @@ export const validateConfirmPassword = (
 ): ValidationResult => {
   if (password !== confirmPassword) {
     return {
-      status: false,
-      reason: 'Your password does not match',
+      reason: 'Your passwords do not match',
     };
   }
   return {
-    status: true,
+    success: true,
   };
 };
 
@@ -64,23 +65,21 @@ export const validateName = (name: string): ValidationResult => {
       .match(/[a-zA-Z]*$/)
   ) {
     return {
-      status: false,
       reason: 'Please enter a valid name',
     };
   }
   return {
-    status: true,
+    success: true,
   };
 };
 
 export const validateLocation = (location: string): ValidationResult => {
   if (!Object.values(Location).includes(location as Location)) {
     return {
-      status: false,
       reason: 'Invalid Location',
     };
   }
   return {
-    status: true,
+    success: true,
   };
 };

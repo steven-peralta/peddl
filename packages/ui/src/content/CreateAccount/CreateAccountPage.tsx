@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
-import * as common from '@peddl/common';
+import {
+  validateEmail,
+  validatePassword,
+  validateConfirmPassword,
+  validateName,
+  validateLocation,
+} from '@peddl/common';
 import Content from '../../components/Content';
 import NewProfileStep from './NewProfileStep';
 import UploadMediaStep from './UploadMediaStep';
 import SearchSettingsStep from './SearchSettingsStep';
-
-const {
-  validateEmail,
-  validatePassword,
-  validateConfirmPassword,
-  validateLocation,
-  validateName,
-} = common.util.validation;
+import { handleValidation } from '../../components/forms/utils';
 
 const enum CreateAccountSteps {
   NewProfile,
@@ -76,63 +75,40 @@ export default function CreateAccountPage() {
     string | undefined
   >();
 
-  const handleEmailChange = (newEmail: string) => {
-    setEmail(newEmail);
-    const result = validateEmail(newEmail);
-    if (result.status === false) {
-      setEmailValidationText(result.reason);
-    } else {
-      setEmailValidationText(undefined);
-    }
-  };
-
-  const handlePasswordChange = (newPassword: string) => {
-    setPassword(newPassword);
-    const result = validatePassword(newPassword);
-    if (result.status === false) {
-      setPasswordValidationText(result.reason);
-    } else {
-      setPasswordValidationText(undefined);
-    }
-  };
-
   const handleConfirmPasswordChange = (confirmNewPassword: string) => {
     setConfirmPassword(confirmNewPassword);
     const result = validateConfirmPassword(password, confirmNewPassword);
-    if (result.status === false) {
+    if (!result.success) {
       setConfirmPasswordValidationText(result.reason);
     } else {
       setConfirmPasswordValidationText(undefined);
     }
   };
 
-  const handleNameChange = (newName: string) => {
-    setName(newName);
-    const result = validateName(newName);
-    if (result.status === false) {
-      setNameValidationText(result.reason);
-    } else {
-      setNameValidationText(undefined);
-    }
-  };
-
-  const handleLocationChange = (newLocation: string) => {
-    setLocation(newLocation);
-    const result = validateLocation(newLocation);
-    if (result.status === false) {
-      setLocationValidationText(result.reason);
-    } else {
-      setLocationValidationText(undefined);
-    }
-  };
   const newProfileStep = (
     <NewProfileStep
-      onEmailInputChange={handleEmailChange}
-      onPasswordInputChange={handlePasswordChange}
+      onEmailInputChange={handleValidation(
+        setEmail,
+        validateEmail,
+        setEmailValidationText
+      )}
+      onPasswordInputChange={handleValidation(
+        setPassword,
+        validatePassword,
+        setPasswordValidationText
+      )}
       onConfirmPasswordInputChange={handleConfirmPasswordChange}
-      onNameInputChange={handleNameChange}
+      onNameInputChange={handleValidation(
+        setName,
+        validateName,
+        setNameValidationText
+      )}
       onBirthdayInputChange={setBirthday}
-      onLocationInputChange={handleLocationChange}
+      onLocationInputChange={handleValidation(
+        setLocation,
+        validateLocation,
+        setLocationValidationText
+      )}
       onGenderInputChange={setGender}
       onGenreInputChange={setGenres}
       onTalentInputChange={setTalents}

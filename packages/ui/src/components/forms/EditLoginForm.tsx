@@ -1,6 +1,6 @@
 import { Form } from 'react-bootstrap';
 import React from 'react';
-import handleFormChange from './utils';
+import { handleFormChange } from './utils';
 import FormInput from './FormInput';
 
 export type EditLoginFormProps = {
