@@ -1,14 +1,4 @@
-import { validateEmail, ValidationResult } from './util';
-import { Location, Gender, Genre, Talent, UserLogin, Links, User } from './api';
+import * as util from './util/index';
+import * as api from './api/index';
 
-export {
-  validateEmail,
-  ValidationResult,
-  Location,
-  Gender,
-  Genre,
-  Talent,
-  UserLogin,
-  User,
-  Links,
-};
+export { util, api };

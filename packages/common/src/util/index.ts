@@ -1,3 +1,4 @@
-import { validateEmail, ValidationResult } from './validation';
+import * as validation from './validation';
 
-export { validateEmail, ValidationResult };
+// eslint-disable-next-line import/prefer-default-export
+export { validation };

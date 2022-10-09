@@ -3,9 +3,11 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import { TagsInput } from 'react-tag-input-component';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Gender } from '@peddl/common';
+import * as common from '@peddl/common';
 import handleFormChange from './utils';
 import FormInput from './FormInput';
+
+const { Gender } = common.api.enums;
 
 export type EditPersonalInfoFormProps = {
   onNameInputChange: (name: string) => void;

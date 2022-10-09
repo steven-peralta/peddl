@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
+import * as common from '@peddl/common';
 import Content from '../../components/Content';
 import NewProfileStep from './NewProfileStep';
 import UploadMediaStep from './UploadMediaStep';
 import SearchSettingsStep from './SearchSettingsStep';
+
+const {
+  validateEmail,
+  validatePassword,
+  validateConfirmPassword,
+  validateLocation,
+  validateName,
+} = common.util.validation;
 
 const enum CreateAccountSteps {
   NewProfile,
@@ -52,14 +61,78 @@ export default function CreateAccountPage() {
   const [genresSetting, setGenreSetting] = useState<string[]>([]);
   const [talentsSetting, setTalentSetting] = useState<string[]>([]);
 
+  const [emailValidationText, setEmailValidationText] = useState<
+    string | undefined
+  >();
+  const [passwordValidationText, setPasswordValidationText] = useState<
+    string | undefined
+  >();
+  const [confirmPasswordValidationText, setConfirmPasswordValidationText] =
+    useState<string | undefined>();
+  const [nameValidationText, setNameValidationText] = useState<
+    string | undefined
+  >();
+  const [locationValidationText, setLocationValidationText] = useState<
+    string | undefined
+  >();
+
+  const handleEmailChange = (newEmail: string) => {
+    setEmail(newEmail);
+    const result = validateEmail(newEmail);
+    if (result.status === false) {
+      setEmailValidationText(result.reason);
+    } else {
+      setEmailValidationText(undefined);
+    }
+  };
+
+  const handlePasswordChange = (newPassword: string) => {
+    setPassword(newPassword);
+    const result = validatePassword(newPassword);
+    if (result.status === false) {
+      setPasswordValidationText(result.reason);
+    } else {
+      setPasswordValidationText(undefined);
+    }
+  };
+
+  const handleConfirmPasswordChange = (confirmNewPassword: string) => {
+    setConfirmPassword(confirmNewPassword);
+    const result = validateConfirmPassword(password, confirmNewPassword);
+    if (result.status === false) {
+      setConfirmPasswordValidationText(result.reason);
+    } else {
+      setConfirmPasswordValidationText(undefined);
+    }
+  };
+
+  const handleNameChange = (newName: string) => {
+    setName(newName);
+    const result = validateName(newName);
+    if (result.status === false) {
+      setNameValidationText(result.reason);
+    } else {
+      setNameValidationText(undefined);
+    }
+  };
+
+  const handleLocationChange = (newLocation: string) => {
+    setLocation(newLocation);
+    const result = validateLocation(newLocation);
+    if (result.status === false) {
+      setLocationValidationText(result.reason);
+    } else {
+      setLocationValidationText(undefined);
+    }
+  };
   const newProfileStep = (
     <NewProfileStep
-      onEmailInputChange={setEmail}
-      onPasswordInputChange={setPassword}
-      onConfirmPasswordInputChange={setConfirmPassword}
-      onNameInputChange={setName}
+      onEmailInputChange={handleEmailChange}
+      onPasswordInputChange={handlePasswordChange}
+      onConfirmPasswordInputChange={handleConfirmPasswordChange}
+      onNameInputChange={handleNameChange}
       onBirthdayInputChange={setBirthday}
-      onLocationInputChange={setLocation}
+      onLocationInputChange={handleLocationChange}
       onGenderInputChange={setGender}
       onGenreInputChange={setGenres}
       onTalentInputChange={setTalents}
@@ -70,6 +143,11 @@ export default function CreateAccountPage() {
       emailRequired
       passwordRequired
       confirmPasswordRequired
+      emailValidationText={emailValidationText}
+      passwordValidationText={passwordValidationText}
+      confirmPasswordValidationText={confirmPasswordValidationText}
+      nameValidationText={nameValidationText}
+      locationValidationText={locationValidationText}
     />
   );
 

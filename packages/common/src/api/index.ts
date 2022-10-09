@@ -1,4 +1,4 @@
-import { Location, Gender, Genre, Talent } from './enums';
-import { UserLogin, Links, User } from './models';
+import * as enums from './enums';
+import * as models from './models';
 
-export { Location, Gender, Genre, Talent, UserLogin, Links, User };
+export { enums, models };
