@@ -3,7 +3,7 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import { TagsInput } from 'react-tag-input-component';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Gender } from '@peddl/common/dist/api/enums';
+import { Gender } from '@peddl/common';
 import handleFormChange from './utils';
 import FormInput from './FormInput';
 

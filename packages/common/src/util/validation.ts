@@ -3,7 +3,7 @@ export type ValidationResult = {
   reason?: string;
 };
 
-const validateEmail = (email: string): ValidationResult => {
+export const validateEmail = (email: string): ValidationResult => {
   if (
     !String(email)
       .toLowerCase()

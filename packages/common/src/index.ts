@@ -1,3 +1,14 @@
-const APP_NAME = 'Peddl';
+import { validateEmail, ValidationResult } from './util';
+import { Location, Gender, Genre, Talent, UserLogin, Links, User } from './api';
 
-export default APP_NAME;
+export {
+  validateEmail,
+  ValidationResult,
+  Location,
+  Gender,
+  Genre,
+  Talent,
+  UserLogin,
+  User,
+  Links,
+};
