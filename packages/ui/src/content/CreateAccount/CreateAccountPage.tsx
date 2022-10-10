@@ -11,7 +11,7 @@ import Content from '../../components/Content';
 import NewProfileStep from './NewProfileStep';
 import UploadMediaStep from './UploadMediaStep';
 import SearchSettingsStep from './SearchSettingsStep';
-import { handleValidation } from '../../components/forms/utils';
+import { useValidation } from '../../components/forms/utils';
 
 const enum CreateAccountSteps {
   NewProfile,
@@ -36,14 +36,48 @@ export default function CreateAccountPage() {
   const [step, setStep] = useState<CreateAccountSteps>(
     CreateAccountSteps.NewProfile
   );
-  // new profile state
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+
+  const {
+    value: [email],
+    setter: [setEmail],
+    validationText: [emailValidationText],
+  } = useValidation(validateEmail);
+
+  const {
+    value: [password],
+    setter: [setPassword],
+    validationText: [passwordValidationText],
+  } = useValidation(validatePassword);
+
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const [name, setName] = useState('');
+  const [confirmPasswordValidationText, setConfirmPasswordValidationText] =
+    useState<string | undefined>();
+
+  const handleConfirmPasswordChange = (confirmNewPassword: string) => {
+    setConfirmPassword(confirmNewPassword);
+    const result = validateConfirmPassword(password, confirmNewPassword);
+    if (!result.success) {
+      setConfirmPasswordValidationText(result.reason);
+    } else {
+      setConfirmPasswordValidationText(undefined);
+    }
+  };
+
+  const {
+    value: [name],
+    setter: [setName],
+    validationText: [nameValidationText],
+  } = useValidation(validateName);
+
   const [birthday, setBirthday] = useState<Date | null>(new Date());
-  const [location, setLocation] = useState('');
+
+  const {
+    value: [location],
+    setter: [setLocation],
+    validationText: [locationValidationText],
+  } = useValidation(validateLocation);
+
   const [gender, setGender] = useState('');
   const [genres, setGenres] = useState<string[]>([]);
   const [talents, setTalents] = useState<string[]>([]);
@@ -60,55 +94,14 @@ export default function CreateAccountPage() {
   const [genresSetting, setGenreSetting] = useState<string[]>([]);
   const [talentsSetting, setTalentSetting] = useState<string[]>([]);
 
-  const [emailValidationText, setEmailValidationText] = useState<
-    string | undefined
-  >();
-  const [passwordValidationText, setPasswordValidationText] = useState<
-    string | undefined
-  >();
-  const [confirmPasswordValidationText, setConfirmPasswordValidationText] =
-    useState<string | undefined>();
-  const [nameValidationText, setNameValidationText] = useState<
-    string | undefined
-  >();
-  const [locationValidationText, setLocationValidationText] = useState<
-    string | undefined
-  >();
-
-  const handleConfirmPasswordChange = (confirmNewPassword: string) => {
-    setConfirmPassword(confirmNewPassword);
-    const result = validateConfirmPassword(password, confirmNewPassword);
-    if (!result.success) {
-      setConfirmPasswordValidationText(result.reason);
-    } else {
-      setConfirmPasswordValidationText(undefined);
-    }
-  };
-
   const newProfileStep = (
     <NewProfileStep
-      onEmailInputChange={handleValidation(
-        setEmail,
-        validateEmail,
-        setEmailValidationText
-      )}
-      onPasswordInputChange={handleValidation(
-        setPassword,
-        validatePassword,
-        setPasswordValidationText
-      )}
+      onEmailInputChange={setEmail}
+      onPasswordInputChange={setPassword}
       onConfirmPasswordInputChange={handleConfirmPasswordChange}
-      onNameInputChange={handleValidation(
-        setName,
-        validateName,
-        setNameValidationText
-      )}
+      onNameInputChange={setName}
       onBirthdayInputChange={setBirthday}
-      onLocationInputChange={handleValidation(
-        setLocation,
-        validateLocation,
-        setLocationValidationText
-      )}
+      onLocationInputChange={setLocation}
       onGenderInputChange={setGender}
       onGenreInputChange={setGenres}
       onTalentInputChange={setTalents}

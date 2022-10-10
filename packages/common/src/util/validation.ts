@@ -5,7 +5,11 @@ export type ValidationResult = {
   reason?: string;
 };
 
-export const validateEmail = (email: string): ValidationResult => {
+export type ValidatorFunc<T = string> = (
+  value: T | undefined
+) => ValidationResult;
+
+export const validateEmail: ValidatorFunc = (email): ValidationResult => {
   if (
     !String(email)
       .toLowerCase()
@@ -22,8 +26,8 @@ export const validateEmail = (email: string): ValidationResult => {
   };
 };
 
-export const validatePassword = (password: string): ValidationResult => {
-  if (password === '') {
+export const validatePassword: ValidatorFunc = (password): ValidationResult => {
+  if (!password || password === '') {
     return { reason: 'Your password is empty.' };
   }
   if (
@@ -36,7 +40,7 @@ export const validatePassword = (password: string): ValidationResult => {
   ) {
     return {
       reason:
-        'Your password needs to be at least 6 characters long and have at least 1 special character.',
+        'Your password needs to be at least 6 characters long and have at least 1 number and 1 special character.',
     };
   }
   return {
@@ -45,8 +49,8 @@ export const validatePassword = (password: string): ValidationResult => {
 };
 
 export const validateConfirmPassword = (
-  password: string,
-  confirmPassword: string
+  password: string | undefined,
+  confirmPassword: string | undefined
 ): ValidationResult => {
   if (password !== confirmPassword) {
     return {
@@ -58,7 +62,7 @@ export const validateConfirmPassword = (
   };
 };
 
-export const validateName = (name: string): ValidationResult => {
+export const validateName: ValidatorFunc = (name): ValidationResult => {
   if (
     !String(name)
       .toLowerCase()
@@ -73,7 +77,7 @@ export const validateName = (name: string): ValidationResult => {
   };
 };
 
-export const validateLocation = (location: string): ValidationResult => {
+export const validateLocation: ValidatorFunc = (location): ValidationResult => {
   if (!Object.values(Location).includes(location as Location)) {
     return {
       reason: 'Invalid Location',
