@@ -15,6 +15,7 @@ export type NewProfileStepProps = EditLoginFormProps &
   EditLinksFormProps;
 
 export default function NewProfileStep({
+  birthdayValue,
   onEmailInputChange,
   onPasswordInputChange,
   onConfirmPasswordInputChange,
@@ -66,6 +67,7 @@ export default function NewProfileStep({
 
       <h2 className="mb-3">Personal Info</h2>
       <EditPersonalInfoForm
+        birthdayValue={birthdayValue}
         onNameInputChange={onNameInputChange}
         onBirthdayInputChange={onBirthdayInputChange}
         onLocationInputChange={onLocationInputChange}

@@ -2,12 +2,12 @@ import { Form } from 'react-bootstrap';
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import { TagsInput } from 'react-tag-input-component';
-import 'react-datepicker/dist/react-datepicker.css';
 import { Gender } from '@peddl/common';
 import { handleFormChange } from './utils';
 import FormInput from './FormInput';
 
 export type EditPersonalInfoFormProps = {
+  birthdayValue: Date;
   onNameInputChange: (name: string) => void;
   onBirthdayInputChange: (date: Date | null) => void;
   onLocationInputChange: (location: string) => void;
@@ -32,6 +32,7 @@ export type EditPersonalInfoFormProps = {
 };
 
 export default function EditPersonalInfoForm({
+  birthdayValue,
   onNameInputChange,
   onBirthdayInputChange,
   onLocationInputChange,
@@ -54,30 +55,10 @@ export default function EditPersonalInfoForm({
   talentValidationText,
   bioValidationText,
 }: EditPersonalInfoFormProps) {
-  // const [date, setDate] = useState<Date | null>(new Date());
-  // const [dateInvalid, setDateInvalid] = useState<boolean>(false);
-  // const minDate = new Date(
-  //   new Date().setFullYear(new Date().getFullYear() - 18)
-  // );
-  //
-  // const [genre, setGenre] = useState(['Rock']);
-  // const [talent, setTalent] = useState(['Guitar']);
-  // <DatePicker
-  //   className="form-control"
-  //   selected={date}
-  //   openToDate={date ?? undefined}
-  //   onChange={(newDate) => {
-  //     setDateInvalid(false);
-  //     setDate(newDate);
-  //     if (newDate) {
-  //       if (newDate > minDate) {
-  //         setDateInvalid(true);
-  //         setDate(minDate);
-  //       }
-  //     }
-  //   }}
-  // />
-  // {dateInvalid && <p className="text-danger">You are too young bro</p>}
+  const minDate = new Date();
+  minDate.setFullYear(new Date().getFullYear() - 18);
+  const maxDate = new Date();
+  maxDate.setFullYear(new Date().getFullYear() + 120);
   return (
     <div>
       <FormInput
@@ -106,6 +87,13 @@ export default function EditPersonalInfoForm({
           className="form-control"
           name="birthday"
           onChange={onBirthdayInputChange}
+          peekNextMonth
+          showMonthDropdown
+          showYearDropdown
+          dropdownMode="select"
+          value={birthdayValue.toDateString()}
+          selected={birthdayValue}
+          maxDate={maxDate}
         />
       </FormInput>
 

@@ -6,6 +6,7 @@ import {
   validateConfirmPassword,
   validateName,
   validateLocation,
+  validateBirthday,
 } from '@peddl/common';
 import Content from '../../components/Content';
 import NewProfileStep from './NewProfileStep';
@@ -70,7 +71,11 @@ export default function CreateAccountPage() {
     validationText: [nameValidationText],
   } = useValidation(validateName);
 
-  const [birthday, setBirthday] = useState<Date | null>(new Date());
+  const {
+    value: [birthday],
+    setter: [setBirthday],
+    validationText: [birthdayValidationText],
+  } = useValidation<Date>(validateBirthday, new Date());
 
   const {
     value: [location],
@@ -96,11 +101,12 @@ export default function CreateAccountPage() {
 
   const newProfileStep = (
     <NewProfileStep
+      birthdayValue={birthday ?? new Date()}
       onEmailInputChange={setEmail}
       onPasswordInputChange={setPassword}
       onConfirmPasswordInputChange={handleConfirmPasswordChange}
       onNameInputChange={setName}
-      onBirthdayInputChange={setBirthday}
+      onBirthdayInputChange={(date) => setBirthday(date ?? new Date())}
       onLocationInputChange={setLocation}
       onGenderInputChange={setGender}
       onGenreInputChange={setGenres}
@@ -117,6 +123,7 @@ export default function CreateAccountPage() {
       confirmPasswordValidationText={confirmPasswordValidationText}
       nameValidationText={nameValidationText}
       locationValidationText={locationValidationText}
+      birthdayValidationText={birthdayValidationText}
     />
   );
 

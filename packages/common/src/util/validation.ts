@@ -62,6 +62,27 @@ export const validateConfirmPassword = (
   };
 };
 
+export const validateBirthday: ValidatorFunc<Date> = (
+  date
+): ValidationResult => {
+  if (date) {
+    const minDate = new Date();
+    minDate.setFullYear(new Date().getFullYear() - 18);
+    const maxDate = new Date();
+    maxDate.setFullYear(new Date().getFullYear() + 120);
+    if (date > minDate) {
+      return { reason: 'You need to be at least 18 to use Peddl.' };
+    }
+    if (date >= maxDate) {
+      return { reason: "You're too old." };
+    }
+  } else {
+    return { reason: 'Please specify a date.' };
+  }
+
+  return { success: true };
+};
+
 export const validateName: ValidatorFunc = (name): ValidationResult => {
   if (
     !String(name)

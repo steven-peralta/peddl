@@ -24,9 +24,10 @@ export const handleValidation = <T = string>(
 };
 
 export function useValidation<T = string>(
-  validator: (value: T | undefined) => ValidationResult
+  validator: (value: T | undefined) => ValidationResult,
+  defaultValue?: T
 ) {
-  const [value, setValue] = useState<T | undefined>();
+  const [value, setValue] = useState<T | undefined>(defaultValue);
   const [validationText, setValidationText] = useState<string | undefined>();
 
   useEffect(() => {
