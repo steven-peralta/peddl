@@ -7,6 +7,13 @@ import {
   validateName,
   validateLocation,
   validateBirthday,
+  validateGender,
+  validateGenres,
+  validateTalents,
+  validateBio,
+  validateSpotifyLink,
+  validateSoundcloudLink,
+  validateBandcampLink,
 } from '@peddl/common';
 import Content from '../../components/Content';
 import NewProfileStep from './NewProfileStep';
@@ -83,14 +90,47 @@ export default function CreateAccountPage() {
     validationText: [locationValidationText],
   } = useValidation(validateLocation);
 
-  const [gender, setGender] = useState('');
-  const [genres, setGenres] = useState<string[]>([]);
-  const [talents, setTalents] = useState<string[]>([]);
-  const [bio, setBio] = useState('');
+  const {
+    value: [gender],
+    setter: [setGender],
+    validationText: [genderValidationText],
+  } = useValidation(validateGender);
 
-  const [spotifyLink, setSpotifyLink] = useState('');
-  const [soundcloudLink, setSoundcloudLink] = useState('');
-  const [bandcampLink, setBandcampLink] = useState('');
+  const {
+    value: [genres],
+    setter: [setGenres],
+    validationText: [genresValidationText],
+  } = useValidation(validateGenres);
+
+  const {
+    value: [talents],
+    setter: [setTalents],
+    validationText: [talentsValidationText],
+  } = useValidation(validateTalents);
+
+  const {
+    value: [bio],
+    setter: [setBio],
+    validationText: [bioValidationText],
+  } = useValidation(validateBio);
+
+  const {
+    value: [spotifyLink],
+    setter: [setSpotifyLink],
+    validationText: [spotifyLinkValidationText],
+  } = useValidation(validateSpotifyLink);
+
+  const {
+    value: [soundcloudLink],
+    setter: [setSoundcloudLink],
+    validationText: [soundcloudLinkValidationText],
+  } = useValidation(validateSoundcloudLink);
+
+  const {
+    value: [bandcampLink],
+    setter: [setBandcampLink],
+    validationText: [bandcampLinkValidationText],
+  } = useValidation(validateBandcampLink);
 
   // search settings state
   const [rangeSetting, setRangeSetting] = useState('');
@@ -124,6 +164,13 @@ export default function CreateAccountPage() {
       nameValidationText={nameValidationText}
       locationValidationText={locationValidationText}
       birthdayValidationText={birthdayValidationText}
+      genderValidationText={genderValidationText}
+      genreValidationText={genresValidationText}
+      talentValidationText={talentsValidationText}
+      spotifyLinkValidationText={spotifyLinkValidationText}
+      soundcloudLinkValidationText={soundcloudLinkValidationText}
+      bandcampLinkValidationText={bandcampLinkValidationText}
+      bioValidationText={bioValidationText}
     />
   );
 
