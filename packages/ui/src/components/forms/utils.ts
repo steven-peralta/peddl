@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ValidationResult, ValidatorFunc } from '@peddl/common';
 
-export const handleFormChange = <Element extends { value: string }>(
-  onChangeHandler: (value: string) => void
+export const handleFormChange = <T, Element extends { value: T }>(
+  onChangeHandler: (value: T) => void
 ) => {
   return (event: React.ChangeEvent<Element>) => {
     onChangeHandler(event.target.value);

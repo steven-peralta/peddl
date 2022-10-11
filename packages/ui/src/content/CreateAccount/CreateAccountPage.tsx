@@ -7,6 +7,8 @@ import {
   validateName,
   validateLocation,
   validateBirthday,
+  Genre,
+  Talent,
   validateGender,
   validateGenres,
   validateTalents,
