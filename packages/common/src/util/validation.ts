@@ -1,4 +1,15 @@
-import { Location } from '../api';
+import {
+  Gender,
+  Genders,
+  Genre,
+  Genres,
+  Location,
+  Locations,
+  Talent,
+  Talents,
+} from '../api';
+
+const bioMaxLength = 240;
 
 export type ValidationResult = {
   success?: true;
@@ -90,7 +101,7 @@ export const validateName: ValidatorFunc = (name): ValidationResult => {
       .match(/[a-zA-Z]*$/)
   ) {
     return {
-      reason: 'Please enter a valid name',
+      reason: 'Please enter a valid name.',
     };
   }
   return {
@@ -98,13 +109,60 @@ export const validateName: ValidatorFunc = (name): ValidationResult => {
   };
 };
 
-export const validateLocation: ValidatorFunc = (location): ValidationResult => {
-  if (!Object.values(Location).includes(location as Location)) {
+export const validateLocation: ValidatorFunc<Location> = (
+  location
+): ValidationResult => {
+  if (!location) {
+    return { reason: 'You need to specify a location.' };
+  }
+  if (!Locations.includes(location)) {
     return {
-      reason: 'Invalid Location',
+      reason: `${location} is not a valid location`,
     };
   }
   return {
     success: true,
   };
+};
+
+export const validateGender: ValidatorFunc<Gender> = (
+  gender
+): ValidationResult => {
+  if (gender) {
+    if (!Genders.includes(gender)) {
+      return { reason: 'Invalid gender' };
+    }
+  }
+  return { success: true };
+};
+
+export const validateGenres: ValidatorFunc<Genre[]> = (
+  genres
+): ValidationResult => {
+  if (genres) {
+    if (genres.some((genre) => !Genres.includes(genre))) {
+      return { reason: 'Invalid genre' };
+    }
+  }
+  return { success: true };
+};
+
+export const validateTalents: ValidatorFunc<Talent[]> = (
+  talents
+): ValidationResult => {
+  if (talents) {
+    if (talents.some((talent) => !Talents.includes(talent))) {
+      return { reason: 'Invalid talent' };
+    }
+  }
+  return { success: true };
+};
+
+export const validateBio: ValidatorFunc = (bio) => {
+  if (bio) {
+    if (bio.length > bioMaxLength) {
+      return { reason: 'Your bio is too long' };
+    }
+  }
+  return { success: true };
 };

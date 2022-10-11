@@ -7,6 +7,12 @@ import {
   validateName,
   validateLocation,
   validateBirthday,
+  validateGender,
+  Genre,
+  validateGenres,
+  Talent,
+  validateTalents,
+  validateBio,
 } from '@peddl/common';
 import Content from '../../components/Content';
 import NewProfileStep from './NewProfileStep';
@@ -83,10 +89,29 @@ export default function CreateAccountPage() {
     validationText: [locationValidationText],
   } = useValidation(validateLocation);
 
-  const [gender, setGender] = useState('');
-  const [genres, setGenres] = useState<string[]>([]);
-  const [talents, setTalents] = useState<string[]>([]);
-  const [bio, setBio] = useState('');
+  const {
+    value: [gender],
+    setter: [setGender],
+    validationText: [genderValidationText],
+  } = useValidation(validateGender);
+
+  const {
+    value: [genres],
+    setter: [setGenres],
+    validationText: [genreValidationText],
+  } = useValidation<Genre[]>(validateGenres);
+
+  const {
+    value: [talents],
+    setter: [setTalents],
+    validationText: [talentValidationText],
+  } = useValidation<Talent>(validateTalents);
+
+  const {
+    value: [bio],
+    setter: [setBio],
+    validationText: [bioValidationText],
+  } = useValidation(validateBio);
 
   const [spotifyLink, setSpotifyLink] = useState('');
   const [soundcloudLink, setSoundcloudLink] = useState('');

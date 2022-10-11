@@ -3,6 +3,7 @@ export enum Location {
   DenverCO = 'Denver, CO',
   ChicagoIL = 'Chicago, IL',
 }
+export const Locations = Object.values(Location);
 
 export enum Gender {
   Man = 'Man',
@@ -11,6 +12,7 @@ export enum Gender {
   TransWoman = 'Trans woman',
   NonBinary = 'Non binary',
 }
+export const Genders = Object.values(Gender);
 
 export enum Genre {
   Acid = 'Acid',
@@ -119,6 +121,7 @@ export enum Genre {
   Vaporwave = 'Vaporwave',
   World = 'World',
 }
+export const Genres = Object.values(Genre);
 
 export enum Talent {
   Editing = 'Editing',
@@ -144,3 +147,4 @@ export enum Talent {
   Trumpet = 'Trumpet',
   Recording = 'Recording',
 }
+export const Talents = Object.values(Talent);
