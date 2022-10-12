@@ -7,6 +7,10 @@ import {
   validateName,
   validateLocation,
   validateBirthday,
+  validateBio,
+  validateSpotifyLink,
+  validateSoundcloudLink,
+  validateBandcampLink,
   validateGender,
   Genre,
   validateGenres,
@@ -113,9 +117,35 @@ export default function CreateAccountPage() {
     validationText: [bioValidationText],
   } = useValidation(validateBio);
 
-  const [spotifyLink, setSpotifyLink] = useState('');
-  const [soundcloudLink, setSoundcloudLink] = useState('');
-  const [bandcampLink, setBandcampLink] = useState('');
+  const {
+    value: [talents],
+    setter: [setTalents],
+    validationText: [talentsValidationText],
+  } = useValidation(validateTalents);
+
+  const {
+    value: [bio],
+    setter: [setBio],
+    validationText: [bioValidationText],
+  } = useValidation(validateBio);
+
+  const {
+    value: [spotifyLink],
+    setter: [setSpotifyLink],
+    validationText: [spotifyLinkValidationText],
+  } = useValidation(validateSpotifyLink);
+
+  const {
+    value: [soundcloudLink],
+    setter: [setSoundcloudLink],
+    validationText: [soundcloudLinkValidationText],
+  } = useValidation(validateSoundcloudLink);
+
+  const {
+    value: [bandcampLink],
+    setter: [setBandcampLink],
+    validationText: [bandcampLinkValidationText],
+  } = useValidation(validateBandcampLink);
 
   // search settings state
   const [rangeSetting, setRangeSetting] = useState('');
@@ -149,6 +179,13 @@ export default function CreateAccountPage() {
       nameValidationText={nameValidationText}
       locationValidationText={locationValidationText}
       birthdayValidationText={birthdayValidationText}
+      genderValidationText={genderValidationText}
+      genreValidationText={genresValidationText}
+      talentValidationText={talentsValidationText}
+      spotifyLinkValidationText={spotifyLinkValidationText}
+      soundcloudLinkValidationText={soundcloudLinkValidationText}
+      bandcampLinkValidationText={bandcampLinkValidationText}
+      bioValidationText={bioValidationText}
     />
   );
 
