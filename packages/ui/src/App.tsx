@@ -6,6 +6,7 @@ import PeddlNavbar from './components/MainNavbar/PeddlNavbar';
 
 import TitlePage from './content/TitlePage';
 import CreateAccountPage from './content/CreateAccount/CreateAccountPage';
+import TagSelection from './components/forms/TagSelection/TagSelection';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<TitlePage />} />
         <Route path="register" element={<CreateAccountPage />} />
+        <Route path="sample" element={<TagSelection />} />
       </Routes>
     </div>
   );

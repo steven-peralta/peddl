@@ -168,14 +168,14 @@ export const validateBio: ValidatorFunc = (bio) => {
 };
 
 export const validateSpotifyLink: ValidatorFunc = (
-    spotifyLink
+  spotifyLink
 ): ValidationResult => {
   if (
-      !String(spotifyLink)
-          .toLowerCase()
-          .match(
-              /[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/
-          )
+    !String(spotifyLink)
+      .toLowerCase()
+      .match(
+        /[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/
+      )
   ) {
     return {
       reason: 'Please enter a valid link',
@@ -187,14 +187,14 @@ export const validateSpotifyLink: ValidatorFunc = (
 };
 
 export const validateSoundcloudLink: ValidatorFunc = (
-    soundcloudLink
+  soundcloudLink
 ): ValidationResult => {
   if (
-      !String(soundcloudLink)
-          .toLowerCase()
-          .match(
-              /[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/
-          )
+    !String(soundcloudLink)
+      .toLowerCase()
+      .match(
+        /[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/
+      )
   ) {
     return {
       reason: 'Please enter a valid link',
@@ -206,14 +206,14 @@ export const validateSoundcloudLink: ValidatorFunc = (
 };
 
 export const validateBandcampLink: ValidatorFunc = (
-    bandcampLink
+  bandcampLink
 ): ValidationResult => {
   if (
-      !String(bandcampLink)
-          .toLowerCase()
-          .match(
-              /[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/
-          )
+    !String(bandcampLink)
+      .toLowerCase()
+      .match(
+        /[-a-zA-Z0-9@:%_+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/
+      )
   ) {
     return {
       reason: 'Please enter a valid link',
