@@ -15,87 +15,161 @@ export type NewProfileStepProps = EditLoginFormProps &
   EditLinksFormProps;
 
 export default function NewProfileStep({
-  birthdayValue,
+  email,
   onEmailInputChange,
-  onPasswordInputChange,
-  onConfirmPasswordInputChange,
-  onNameInputChange,
-  onBirthdayInputChange,
-  onLocationInputChange,
-  onGenderInputChange,
-  onGenreInputChange,
-  onTalentInputChange,
-  onBioInputChange,
-  onSpotifyLinkInputChange,
-  onSoundcloudLinkInputChange,
-  onBandcampLinkInputChange,
-  emailRequired,
-  passwordRequired,
-  confirmPasswordRequired,
+  onEmailInputBlur,
+  emailRequired = false,
   emailValidationText,
+
+  password,
+  onPasswordInputChange,
+  onPasswordInputBlur,
+  passwordRequired = false,
   passwordValidationText,
+
+  confirmPassword,
+  onConfirmPasswordInputChange,
+  onConfirmPasswordInputBlur,
+  confirmPasswordRequired = false,
   confirmPasswordValidationText,
-  nameRequired,
+
+  name,
+  onNameInputChange,
+  onNameInputBlur,
+  nameRequired = false,
   nameValidationText,
-  birthdayRequired,
+
+  birthday,
+  onBirthdayInputChange,
+  onBirthdayInputBlur,
+  birthdayRequired = false,
   birthdayValidationText,
-  locationRequired,
+
+  location,
+  onLocationInputChange,
+  onLocationInputBlur,
+  locationRequired = false,
   locationValidationText,
-  genderRequired,
+
+  gender,
+  onGenderInputChange,
+  onGenderInputBlur,
+  genderRequired = false,
   genderValidationText,
-  genreRequired,
+
+  genres,
+  onGenreInputChange,
+  onGenreInputBlur,
+  genreRequired = false,
   genreValidationText,
-  talentRequired,
+
+  talents,
+  onTalentInputChange,
+  onTalentInputBlur,
+  talentRequired = false,
   talentValidationText,
-  bioRequired,
+
+  bio,
+  onBioInputChange,
+  onBioInputBlur,
+  bioRequired = false,
   bioValidationText,
+
+  spotifyLink,
+  onSpotifyLinkInputChange,
+  onSpotifyLinkInputBlur,
+  spotifyLinkRequired = false,
+  spotifyLinkValidationText,
+
+  soundcloudLink,
+  onSoundcloudLinkInputChange,
+  onSoundcloudLinkInputBlur,
+  soundcloudLinkRequired = false,
+  soundcloudLinkValidationText,
+
+  bandcampLink,
+  onBandcampLinkInputChange,
+  onBandcampLinkInputBlur,
+  bandcampLinkRequired = false,
+  bandcampLinkValidationText,
 }: NewProfileStepProps) {
   return (
     <Form noValidate>
       <h2 className="mb-3">Login</h2>
       <EditLoginForm
-        onEmailInputChange={onEmailInputChange}
-        onPasswordInputChange={onPasswordInputChange}
-        onConfirmPasswordInputChange={onConfirmPasswordInputChange}
-        emailRequired={emailRequired}
-        passwordRequired={passwordRequired}
+        confirmPassword={confirmPassword}
         confirmPasswordRequired={confirmPasswordRequired}
-        emailValidationText={emailValidationText}
-        passwordValidationText={passwordValidationText}
         confirmPasswordValidationText={confirmPasswordValidationText}
+        email={email}
+        emailRequired={emailRequired}
+        emailValidationText={emailValidationText}
+        onConfirmPasswordInputBlur={onConfirmPasswordInputBlur}
+        onConfirmPasswordInputChange={onConfirmPasswordInputChange}
+        onEmailInputBlur={onEmailInputBlur}
+        onEmailInputChange={onEmailInputChange}
+        onPasswordInputBlur={onPasswordInputBlur}
+        onPasswordInputChange={onPasswordInputChange}
+        password={password}
+        passwordRequired={passwordRequired}
+        passwordValidationText={passwordValidationText}
       />
 
       <h2 className="mb-3">Personal Info</h2>
       <EditPersonalInfoForm
-        birthdayValue={birthdayValue}
-        onNameInputChange={onNameInputChange}
-        onBirthdayInputChange={onBirthdayInputChange}
-        onLocationInputChange={onLocationInputChange}
-        onGenderInputChange={onGenderInputChange}
-        onGenreInputChange={onGenreInputChange}
-        onTalentInputChange={onTalentInputChange}
-        onBioInputChange={onBioInputChange}
-        nameRequired={nameRequired}
-        nameValidationText={nameValidationText}
+        bio={bio}
+        bioRequired={bioRequired}
+        bioValidationText={bioValidationText}
+        birthday={birthday}
         birthdayRequired={birthdayRequired}
         birthdayValidationText={birthdayValidationText}
-        locationRequired={locationRequired}
-        locationValidationText={locationValidationText}
+        gender={gender}
         genderRequired={genderRequired}
         genderValidationText={genderValidationText}
         genreRequired={genreRequired}
+        genres={genres}
         genreValidationText={genreValidationText}
+        location={location}
+        locationRequired={locationRequired}
+        locationValidationText={locationValidationText}
+        name={name}
+        nameRequired={nameRequired}
+        nameValidationText={nameValidationText}
+        onBioInputBlur={onBioInputBlur}
+        onBioInputChange={onBioInputChange}
+        onBirthdayInputBlur={onBirthdayInputBlur}
+        onBirthdayInputChange={onBirthdayInputChange}
+        onGenderInputBlur={onGenderInputBlur}
+        onGenderInputChange={onGenderInputChange}
+        onGenreInputBlur={onGenreInputBlur}
+        onGenreInputChange={onGenreInputChange}
+        onLocationInputBlur={onLocationInputBlur}
+        onLocationInputChange={onLocationInputChange}
+        onNameInputBlur={onNameInputBlur}
+        onNameInputChange={onNameInputChange}
+        onTalentInputBlur={onTalentInputBlur}
+        onTalentInputChange={onTalentInputChange}
         talentRequired={talentRequired}
+        talents={talents}
         talentValidationText={talentValidationText}
-        bioRequired={bioRequired}
-        bioValidationText={bioValidationText}
       />
 
       <h2 className="mb-3">Links</h2>
       <EditLinksForm
-        onSpotifyLinkInputChange={onSpotifyLinkInputChange}
-        onSoundcloudLinkInputChange={onSoundcloudLinkInputChange}
+        bandcampLink={bandcampLink}
+        bandcampLinkRequired={bandcampLinkRequired}
+        bandcampLinkValidationText={bandcampLinkValidationText}
+        onBandcampLinkInputBlur={onBandcampLinkInputBlur}
         onBandcampLinkInputChange={onBandcampLinkInputChange}
+        onSoundcloudLinkInputBlur={onSoundcloudLinkInputBlur}
+        onSoundcloudLinkInputChange={onSoundcloudLinkInputChange}
+        onSpotifyLinkInputBlur={onSpotifyLinkInputBlur}
+        onSpotifyLinkInputChange={onSpotifyLinkInputChange}
+        soundcloudLink={soundcloudLink}
+        soundcloudLinkRequired={soundcloudLinkRequired}
+        soundcloudLinkValidationText={soundcloudLinkValidationText}
+        spotifyLink={spotifyLink}
+        spotifyLinkRequired={spotifyLinkRequired}
+        spotifyLinkValidationText={spotifyLinkValidationText}
       />
     </Form>
   );

@@ -1,47 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { ValidationResult, ValidatorFunc } from '@peddl/common';
+import React, { useState } from 'react';
+import { ValidationResult } from '@peddl/common';
 
-export const handleFormChange = <T, Element extends { value: T }>(
-  onChangeHandler: (value: T) => void
+export const handleFormChange = <Element extends { value: string }>(
+  onChangeHandler: (value: string) => void
 ) => {
   return (event: React.ChangeEvent<Element>) => {
     onChangeHandler(event.target.value);
   };
 };
 
-export const handleValidation = <T = string>(
-  validator: ValidatorFunc<T>,
-  validationTextSetter: React.Dispatch<string | undefined>
-) => {
-  return (value?: T) => {
-    const result = validator(value);
-    if (!result.success) {
-      validationTextSetter(result.reason);
-    } else {
-      validationTextSetter(undefined);
-    }
-  };
-};
-
-export function useValidation<T = string>(
-  validator: (value: T | undefined) => ValidationResult,
-  defaultValue?: T
+export function useValidation<T>(
+  validator: (value: T) => ValidationResult,
+  defaultValue: T
 ) {
-  const [value, setValue] = useState<T | undefined>(defaultValue);
+  const [value, setValue] = useState<T>(defaultValue);
   const [validationText, setValidationText] = useState<string | undefined>();
-
-  useEffect(() => {
-    const result = validator(value);
-    if (!result.success) {
-      setValidationText(result.reason);
-    } else {
-      setValidationText(undefined);
-    }
-  }, [validator, value]);
 
   return {
     value: [value],
     setter: [setValue],
     validationText: [validationText],
+    onBlur: [
+      () => {
+        const result = validator(value);
+        if (!result.success) {
+          setValidationText(result.reason);
+        } else {
+          setValidationText(undefined);
+        }
+      },
+    ],
   };
 }

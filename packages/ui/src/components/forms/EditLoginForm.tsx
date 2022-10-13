@@ -4,76 +4,98 @@ import { handleFormChange } from './utils';
 import FormInput from './FormInput';
 
 export type EditLoginFormProps = {
+  email: string;
   onEmailInputChange: (email: string) => void;
-  onPasswordInputChange: (password: string) => void;
-  onConfirmPasswordInputChange: (confirmPassword: string) => void;
+  onEmailInputBlur: () => void;
   emailRequired?: boolean;
-  passwordRequired?: boolean;
-  confirmPasswordRequired?: boolean;
   emailValidationText?: string;
+
+  password: string;
+  onPasswordInputChange: (password: string) => void;
+  onPasswordInputBlur: () => void;
+  passwordRequired?: boolean;
   passwordValidationText?: string;
+
+  confirmPassword: string;
+  onConfirmPasswordInputChange: (confirmPassword: string) => void;
+  onConfirmPasswordInputBlur: () => void;
+  confirmPasswordRequired?: boolean;
   confirmPasswordValidationText?: string;
 };
 
 export default function EditLoginForm({
+  email,
   onEmailInputChange,
-  onPasswordInputChange,
-  onConfirmPasswordInputChange,
-  emailValidationText,
-  passwordValidationText,
-  confirmPasswordValidationText,
+  onEmailInputBlur,
   emailRequired = false,
+  emailValidationText,
+
+  password,
+  onPasswordInputChange,
+  onPasswordInputBlur,
   passwordRequired = false,
+  passwordValidationText,
+
+  confirmPassword,
+  onConfirmPasswordInputChange,
+  onConfirmPasswordInputBlur,
   confirmPasswordRequired = false,
+  confirmPasswordValidationText,
 }: EditLoginFormProps) {
   return (
     <div>
       <FormInput
-        label="E-mail"
         htmlFor="email"
-        validationText={emailValidationText}
+        label="E-mail"
         required={emailRequired}
+        validationText={emailValidationText}
       >
         <Form.Control
           id="email"
-          type="email"
-          placeholder="name@example.com"
-          name="email"
-          onChange={handleFormChange(onEmailInputChange)}
-          required={emailRequired}
           isInvalid={!!emailValidationText}
+          name="email"
+          onBlur={onEmailInputBlur}
+          onChange={handleFormChange(onEmailInputChange)}
+          placeholder="name@example.com"
+          required={emailRequired}
+          type="email"
+          value={email}
         />
       </FormInput>
 
       <FormInput
-        label="Password"
         htmlFor="password"
-        validationText={passwordValidationText}
+        label="Password"
         required={passwordRequired}
+        validationText={passwordValidationText}
       >
         <Form.Control
           id="password"
-          type="password"
-          placeholder="Password"
-          name="password"
-          onChange={handleFormChange(onPasswordInputChange)}
           isInvalid={!!passwordValidationText}
+          name="password"
+          onBlur={onPasswordInputBlur}
+          onChange={handleFormChange(onPasswordInputChange)}
+          placeholder="Password"
+          type="password"
+          value={password}
         />
       </FormInput>
 
       <FormInput
-        label="Confirm password"
         htmlFor="confirmPassword"
-        validationText={confirmPasswordValidationText}
+        label="Confirm password"
         required={confirmPasswordRequired}
+        validationText={confirmPasswordValidationText}
       >
         <Form.Control
           id="confirmPassword"
-          type="password"
-          placeholder="Confirm Password"
-          name="confirmPassword"
-          onChange={handleFormChange(onConfirmPasswordInputChange)}
           isInvalid={!!confirmPasswordValidationText}
+          name="confirmPassword"
+          onBlur={onConfirmPasswordInputBlur}
+          onChange={handleFormChange(onConfirmPasswordInputChange)}
+          placeholder="Confirm Password"
+          type="password"
+          value={confirmPassword}
         />
       </FormInput>
     </div>

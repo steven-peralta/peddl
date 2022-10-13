@@ -21,15 +21,15 @@ export default function FormInput({
   return (
     <Form.Group className="mb-3">
       <Form.Label
-        htmlFor={htmlFor}
         className={required ? 'required-field' : ''}
+        htmlFor={htmlFor}
       >
         {label}
       </Form.Label>
       {children}
       {forceShowValidation ? (
         validationText && (
-          <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>
+          <Form.Control.Feedback style={{ display: 'block' }} type="invalid">
             {validationText}
           </Form.Control.Feedback>
         )

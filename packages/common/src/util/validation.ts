@@ -10,6 +10,13 @@ import {
 } from '../api';
 
 const bioMaxLength = 240;
+const textInputMaxLength = 1024;
+
+const emailRegex =
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+const nameRegex = /[a-zA-Z]*$/;
+const spotifyLinkRegex = /^https:\/\/open.spotify.com\/artist\/[A-z0-9?=-]+$/g;
 
 export type ValidationResult = {
   success?: true;
@@ -21,17 +28,20 @@ export type ValidatorFunc<T = string> = (
 ) => ValidationResult;
 
 export const validateEmail: ValidatorFunc = (email): ValidationResult => {
-  if (
-    !String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      )
-  ) {
+  if (!email) {
+    return { reason: 'Email is required.' };
+  }
+
+  if (!email.match(emailRegex)) {
     return {
       reason: 'Your email is invalid',
     };
   }
+
+  if (email.length > textInputMaxLength) {
+    return { reason: 'Your email is too long.' };
+  }
+
   return {
     success: true,
   };
@@ -41,19 +51,18 @@ export const validatePassword: ValidatorFunc = (password): ValidationResult => {
   if (!password || password === '') {
     return { reason: 'Your password is empty.' };
   }
-  if (
-    !String(password)
-      .toLowerCase()
-      .match(
-        /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/
-        // one num one special char and at least 6 char
-      )
-  ) {
+
+  if (password.length > textInputMaxLength) {
+    return { reason: 'Your password is too long.' };
+  }
+
+  if (!password.match(passwordRegex)) {
     return {
       reason:
         'Your password needs to be at least 6 characters long and have at least 1 number and 1 special character.',
     };
   }
+
   return {
     success: true,
   };
@@ -95,66 +104,72 @@ export const validateBirthday: ValidatorFunc<Date> = (
 };
 
 export const validateName: ValidatorFunc = (name): ValidationResult => {
-  if (
-    !String(name)
-      .toLowerCase()
-      .match(/[a-zA-Z]*$/)
-  ) {
+  if (!name) {
+    return { reason: 'Please specify a name' };
+  }
+
+  if (!name.match(nameRegex)) {
     return {
       reason: 'Please enter a valid name.',
     };
   }
+
+  if (name.length > textInputMaxLength) {
+    return { reason: 'Your name is too long.' };
+  }
+
   return {
     success: true,
   };
 };
 
-export const validateLocation: ValidatorFunc<Location> = (
-  location
-): ValidationResult => {
+export const validateLocation: ValidatorFunc = (location): ValidationResult => {
   if (!location) {
     return { reason: 'You need to specify a location.' };
   }
-  if (!Locations.includes(location)) {
+
+  if (!Locations.includes(location as Location)) {
     return {
       reason: `${location} is not a valid location`,
     };
   }
+
   return {
     success: true,
   };
 };
 
-export const validateGender: ValidatorFunc<Gender> = (
-  gender
-): ValidationResult => {
+export const validateGender: ValidatorFunc = (gender): ValidationResult => {
   if (gender) {
-    if (!Genders.includes(gender)) {
+    if (!Genders.includes(gender as Gender)) {
       return { reason: 'Invalid gender' };
     }
   }
+
   return { success: true };
 };
 
-export const validateGenres: ValidatorFunc<Genre[]> = (
+export const validateGenres: ValidatorFunc<string[]> = (
   genres
 ): ValidationResult => {
   if (genres) {
-    if (genres.some((genre) => !Genres.includes(genre))) {
+    if (genres.some((genre) => !Genres.includes(genre as Genre))) {
       return { reason: 'Invalid genre' };
     }
   }
+
   return { success: true };
 };
 
-export const validateTalents: ValidatorFunc<Talent[]> = (
+export const validateTalents: ValidatorFunc<string[]> = (
   talents
 ): ValidationResult => {
   if (talents) {
-    if (talents.some((talent) => !Talents.includes(talent))) {
+    if (talents.some((talent) => !Talents.includes(talent as Talent))) {
       return { reason: 'Invalid talent' };
     }
   }
+
   return { success: true };
 };
 
@@ -164,5 +179,16 @@ export const validateBio: ValidatorFunc = (bio) => {
       return { reason: 'Your bio is too long' };
     }
   }
+
+  return { success: true };
+};
+
+export const validateSpotifyLink: ValidatorFunc = (link) => {
+  if (link) {
+    if (!link.match(spotifyLinkRegex)) {
+      return { reason: 'Your spotify artist link is invalid.' };
+    }
+  }
+
   return { success: true };
 };

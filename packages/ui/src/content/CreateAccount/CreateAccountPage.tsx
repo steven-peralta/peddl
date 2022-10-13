@@ -8,15 +8,10 @@ import {
   validateLocation,
   validateBirthday,
   validateBio,
-  validateSpotifyLink,
-  validateSoundcloudLink,
-  validateBandcampLink,
   validateGender,
-  Genre,
   validateGenres,
-  Talent,
   validateTalents,
-  validateBio,
+  validateSpotifyLink,
 } from '@peddl/common';
 import Content from '../../components/Content';
 import NewProfileStep from './NewProfileStep';
@@ -52,100 +47,85 @@ export default function CreateAccountPage() {
     value: [email],
     setter: [setEmail],
     validationText: [emailValidationText],
-  } = useValidation(validateEmail);
+    onBlur: [emailInputOnBlur],
+  } = useValidation<string>(validateEmail, '');
 
   const {
     value: [password],
     setter: [setPassword],
     validationText: [passwordValidationText],
-  } = useValidation(validatePassword);
-
-  const [confirmPassword, setConfirmPassword] = useState('');
-
-  const [confirmPasswordValidationText, setConfirmPasswordValidationText] =
-    useState<string | undefined>();
-
-  const handleConfirmPasswordChange = (confirmNewPassword: string) => {
-    setConfirmPassword(confirmNewPassword);
-    const result = validateConfirmPassword(password, confirmNewPassword);
-    if (!result.success) {
-      setConfirmPasswordValidationText(result.reason);
-    } else {
-      setConfirmPasswordValidationText(undefined);
-    }
-  };
+    onBlur: [passwordInputOnBlur],
+  } = useValidation<string>(validatePassword, '');
 
   const {
     value: [name],
     setter: [setName],
     validationText: [nameValidationText],
-  } = useValidation(validateName);
+    onBlur: [nameInputOnBlur],
+  } = useValidation<string>(validateName, '');
 
   const {
     value: [birthday],
     setter: [setBirthday],
     validationText: [birthdayValidationText],
-  } = useValidation<Date>(validateBirthday, new Date());
+    onBlur: [birthdayInputOnBlur],
+  } = useValidation<Date | undefined>(validateBirthday, new Date());
 
   const {
     value: [location],
     setter: [setLocation],
     validationText: [locationValidationText],
-  } = useValidation(validateLocation);
+    onBlur: [locationInputOnBlur],
+  } = useValidation<string>(validateLocation, '');
 
   const {
     value: [gender],
     setter: [setGender],
     validationText: [genderValidationText],
-  } = useValidation(validateGender);
+    onBlur: [genderInputOnBlur],
+  } = useValidation<string>(validateGender, '');
 
   const {
     value: [genres],
     setter: [setGenres],
     validationText: [genreValidationText],
-  } = useValidation<Genre[]>(validateGenres);
+    onBlur: [genreInputOnBlur],
+  } = useValidation<string[]>(validateGenres, []);
 
   const {
     value: [talents],
     setter: [setTalents],
     validationText: [talentValidationText],
-  } = useValidation<Talent>(validateTalents);
+    onBlur: [talentsInputOnBlur],
+  } = useValidation<string[]>(validateTalents, []);
 
   const {
     value: [bio],
     setter: [setBio],
     validationText: [bioValidationText],
-  } = useValidation(validateBio);
-
-  const {
-    value: [talents],
-    setter: [setTalents],
-    validationText: [talentsValidationText],
-  } = useValidation(validateTalents);
-
-  const {
-    value: [bio],
-    setter: [setBio],
-    validationText: [bioValidationText],
-  } = useValidation(validateBio);
+    onBlur: [bioInputOnBlur],
+  } = useValidation<string>(validateBio, '');
 
   const {
     value: [spotifyLink],
     setter: [setSpotifyLink],
     validationText: [spotifyLinkValidationText],
-  } = useValidation(validateSpotifyLink);
+    onBlur: [spotifyLinkInputOnBlur],
+  } = useValidation<string>(validateSpotifyLink, '');
 
   const {
     value: [soundcloudLink],
     setter: [setSoundcloudLink],
     validationText: [soundcloudLinkValidationText],
-  } = useValidation(validateSoundcloudLink);
+    onBlur: [soundcloudLinkInputOnBlur],
+  } = useValidation<string>(validateEmail, '');
 
   const {
     value: [bandcampLink],
     setter: [setBandcampLink],
     validationText: [bandcampLinkValidationText],
-  } = useValidation(validateBandcampLink);
+    onBlur: [bandcampLinkInputOnBlur],
+  } = useValidation<string>(validateEmail, '');
 
   // search settings state
   const [rangeSetting, setRangeSetting] = useState('');
@@ -154,47 +134,88 @@ export default function CreateAccountPage() {
   const [genresSetting, setGenreSetting] = useState<string[]>([]);
   const [talentsSetting, setTalentSetting] = useState<string[]>([]);
 
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmPasswordValidationText, setConfirmPasswordValidationText] =
+    useState<string | undefined>();
+
+  const confirmPasswordInputBlur = () => {
+    const result = validateConfirmPassword(password, confirmPassword);
+    if (!result.success) {
+      setConfirmPasswordValidationText(result.reason);
+    } else {
+      setConfirmPasswordValidationText(undefined);
+    }
+  };
+
   const newProfileStep = (
     <NewProfileStep
-      birthdayValue={birthday ?? new Date()}
-      onEmailInputChange={setEmail}
-      onPasswordInputChange={setPassword}
-      onConfirmPasswordInputChange={handleConfirmPasswordChange}
-      onNameInputChange={setName}
-      onBirthdayInputChange={(date) => setBirthday(date ?? new Date())}
-      onLocationInputChange={setLocation}
-      onGenderInputChange={setGender}
-      onGenreInputChange={setGenres}
-      onTalentInputChange={setTalents}
-      onBioInputChange={setBio}
-      onSpotifyLinkInputChange={setSpotifyLink}
-      onSoundcloudLinkInputChange={setSoundcloudLink}
-      onBandcampLinkInputChange={setBandcampLink}
-      emailRequired
-      passwordRequired
-      confirmPasswordRequired
-      emailValidationText={emailValidationText}
-      passwordValidationText={passwordValidationText}
-      confirmPasswordValidationText={confirmPasswordValidationText}
-      nameValidationText={nameValidationText}
-      locationValidationText={locationValidationText}
-      birthdayValidationText={birthdayValidationText}
-      genderValidationText={genderValidationText}
-      genreValidationText={genresValidationText}
-      talentValidationText={talentsValidationText}
-      spotifyLinkValidationText={spotifyLinkValidationText}
-      soundcloudLinkValidationText={soundcloudLinkValidationText}
+      bandcampLink={bandcampLink}
       bandcampLinkValidationText={bandcampLinkValidationText}
+      bio={bio}
       bioValidationText={bioValidationText}
+      birthday={birthday ?? new Date()}
+      birthdayRequired
+      birthdayValidationText={birthdayValidationText}
+      confirmPassword={confirmPassword}
+      confirmPasswordRequired
+      confirmPasswordValidationText={confirmPasswordValidationText}
+      email={email}
+      emailRequired
+      emailValidationText={emailValidationText}
+      gender={gender}
+      genderValidationText={genderValidationText}
+      genres={genres}
+      genreValidationText={genreValidationText}
+      location={location}
+      locationRequired
+      locationValidationText={locationValidationText}
+      name={name}
+      nameRequired
+      nameValidationText={nameValidationText}
+      onBandcampLinkInputBlur={bandcampLinkInputOnBlur}
+      onBandcampLinkInputChange={setBandcampLink}
+      onBioInputBlur={bioInputOnBlur}
+      onBioInputChange={setBio}
+      onBirthdayInputBlur={birthdayInputOnBlur}
+      onBirthdayInputChange={(date) => setBirthday(date ?? new Date())}
+      onConfirmPasswordInputBlur={confirmPasswordInputBlur}
+      onConfirmPasswordInputChange={setConfirmPassword}
+      onEmailInputBlur={emailInputOnBlur}
+      onEmailInputChange={setEmail}
+      onGenderInputBlur={genderInputOnBlur}
+      onGenderInputChange={setGender}
+      onGenreInputBlur={genreInputOnBlur}
+      onGenreInputChange={setGenres}
+      onLocationInputBlur={locationInputOnBlur}
+      onLocationInputChange={setLocation}
+      onNameInputBlur={nameInputOnBlur}
+      onNameInputChange={setName}
+      onPasswordInputBlur={passwordInputOnBlur}
+      onPasswordInputChange={setPassword}
+      onSoundcloudLinkInputBlur={soundcloudLinkInputOnBlur}
+      onSoundcloudLinkInputChange={setSoundcloudLink}
+      onSpotifyLinkInputBlur={spotifyLinkInputOnBlur}
+      onSpotifyLinkInputChange={setSpotifyLink}
+      onTalentInputBlur={talentsInputOnBlur}
+      onTalentInputChange={setTalents}
+      password={password}
+      passwordRequired
+      passwordValidationText={passwordValidationText}
+      soundcloudLink={soundcloudLink}
+      soundcloudLinkValidationText={soundcloudLinkValidationText}
+      spotifyLink={spotifyLink}
+      spotifyLinkValidationText={spotifyLinkValidationText}
+      talents={talents}
+      talentValidationText={talentValidationText}
     />
   );
 
   const searchSettingsProp = (
     <SearchSettingsStep
-      onRangeSettingChange={setRangeSetting}
       onGenderSettingChange={setGenderSetting}
-      onLocationSettingChange={setLocationSetting}
       onGenreSettingInputChange={setGenreSetting}
+      onLocationSettingChange={setLocationSetting}
+      onRangeSettingChange={setRangeSetting}
       onTalentSettingInputChange={setTalentSetting}
     />
   );
@@ -218,16 +239,16 @@ export default function CreateAccountPage() {
         {renderStep()}
         <div className="d-flex justify-content-between mb-3">
           <Button
-            variant="secondary"
-            type="submit"
             onClick={() => setStep(step > 0 ? step - 1 : step)}
+            type="submit"
+            variant="secondary"
           >
             Back
           </Button>
           <Button
-            variant="primary"
-            type="submit"
             onClick={() => setStep(step < 3 ? step + 1 : step)}
+            type="submit"
+            variant="primary"
           >
             Next
           </Button>

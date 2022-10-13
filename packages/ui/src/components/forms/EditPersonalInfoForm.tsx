@@ -7,52 +7,90 @@ import { handleFormChange } from './utils';
 import FormInput from './FormInput';
 
 export type EditPersonalInfoFormProps = {
-  birthdayValue: Date;
+  name: string;
   onNameInputChange: (name: string) => void;
-  onBirthdayInputChange: (date: Date | null) => void;
-  onLocationInputChange: (location: string) => void;
-  onGenderInputChange: (gender: string) => void;
-  onGenreInputChange: (genres: string[]) => void;
-  onTalentInputChange: (talents: string[]) => void;
-  onBioInputChange: (bio: string) => void;
+  onNameInputBlur: () => void;
   nameRequired?: boolean;
-  birthdayRequired?: boolean;
-  locationRequired?: boolean;
-  genderRequired?: boolean;
-  genreRequired?: boolean;
-  talentRequired?: boolean;
-  bioRequired?: boolean;
   nameValidationText?: string;
+
+  birthday: Date;
+  onBirthdayInputChange: (date: Date | null) => void;
+  onBirthdayInputBlur: () => void;
+  birthdayRequired?: boolean;
   birthdayValidationText?: string;
+
+  location: string;
+  onLocationInputChange: (location: string) => void;
+  onLocationInputBlur: () => void;
+  locationRequired?: boolean;
   locationValidationText?: string;
+
+  gender: string;
+  onGenderInputChange: (gender: string) => void;
+  onGenderInputBlur: () => void;
+  genderRequired?: boolean;
   genderValidationText?: string;
+
+  genres: string[];
+  onGenreInputChange: (genres: string[]) => void;
+  onGenreInputBlur: () => void;
+  genreRequired?: boolean;
   genreValidationText?: string;
+
+  talents: string[];
+  onTalentInputChange: (talents: string[]) => void;
+  onTalentInputBlur: () => void;
+  talentRequired?: boolean;
   talentValidationText?: string;
+
+  bio: string;
+  onBioInputChange: (bio: string) => void;
+  onBioInputBlur: () => void;
+  bioRequired?: boolean;
   bioValidationText?: string;
 };
 
 export default function EditPersonalInfoForm({
-  birthdayValue,
+  name,
   onNameInputChange,
-  onBirthdayInputChange,
-  onLocationInputChange,
-  onGenderInputChange,
-  onGenreInputChange,
-  onTalentInputChange,
-  onBioInputChange,
+  onNameInputBlur,
   nameRequired = false,
-  birthdayRequired = false,
-  locationRequired = false,
-  genderRequired = false,
-  genreRequired = false,
-  talentRequired = false,
-  bioRequired = false,
   nameValidationText,
+
+  birthday,
+  onBirthdayInputChange,
+  onBirthdayInputBlur,
+  birthdayRequired = false,
   birthdayValidationText,
+
+  location,
+  onLocationInputChange,
+  onLocationInputBlur,
+  locationRequired = false,
   locationValidationText,
+
+  gender,
+  onGenderInputChange,
+  onGenderInputBlur,
+  genderRequired = false,
   genderValidationText,
+
+  genres,
+  onGenreInputChange,
+  onGenreInputBlur,
+  genreRequired = false,
   genreValidationText,
+
+  talents,
+  onTalentInputChange,
+  onTalentInputBlur,
+  talentRequired = false,
   talentValidationText,
+
+  bio,
+  onBioInputChange,
+  onBioInputBlur,
+  bioRequired = false,
   bioValidationText,
 }: EditPersonalInfoFormProps) {
   const minDate = new Date();
@@ -62,66 +100,73 @@ export default function EditPersonalInfoForm({
   return (
     <div>
       <FormInput
-        label="Name"
         htmlFor="name"
+        label="Name"
         required={nameRequired}
         validationText={nameValidationText}
       >
         <Form.Control
-          type="text"
-          placeholder="Name"
-          name="name"
-          onChange={handleFormChange(onNameInputChange)}
           isInvalid={!!nameValidationText}
+          name="name"
+          onBlur={onNameInputBlur}
+          onChange={handleFormChange(onNameInputChange)}
+          placeholder="Name"
+          type="text"
+          value={name}
         />
       </FormInput>
 
       <FormInput
-        label="Birthday"
+        forceShowValidation
         htmlFor="birthday"
+        label="Birthday"
         required={birthdayRequired}
         validationText={birthdayValidationText}
-        forceShowValidation
       >
         <DatePicker
           className="form-control"
+          dropdownMode="select"
+          maxDate={maxDate}
           name="birthday"
+          onBlur={onBirthdayInputBlur}
           onChange={onBirthdayInputChange}
           peekNextMonth
+          selected={birthday ?? undefined}
           showMonthDropdown
           showYearDropdown
-          dropdownMode="select"
-          value={birthdayValue.toDateString()}
-          selected={birthdayValue}
-          maxDate={maxDate}
+          value={birthday?.toDateString() ?? ''}
         />
       </FormInput>
 
       <FormInput
-        label="Location"
         htmlFor="location"
-        validationText={locationValidationText}
+        label="Location"
         required={locationRequired}
+        validationText={locationValidationText}
       >
         <Form.Control
-          type="text"
-          name="location"
-          placeholder="Enter location"
-          onChange={handleFormChange(onLocationInputChange)}
           isInvalid={!!locationValidationText}
+          name="location"
+          onBlur={onLocationInputBlur}
+          onChange={handleFormChange(onLocationInputChange)}
+          placeholder="Enter location"
+          type="text"
+          value={location}
         />
       </FormInput>
 
       <FormInput
-        label="Gender"
         htmlFor="gender"
+        label="Gender"
         required={genderRequired}
         validationText={genderValidationText}
       >
         <Form.Select
           aria-label="Default select example"
           name="gender"
+          onBlur={onGenderInputBlur}
           onChange={handleFormChange(onGenderInputChange)}
+          value={gender}
         >
           <option value={Gender.Man}>{Gender.Man}</option>
           <option value={Gender.Woman}>{Gender.Woman}</option>
@@ -133,47 +178,53 @@ export default function EditPersonalInfoForm({
 
       <FormInput
         forceShowValidation
-        label="Genres"
         htmlFor="genres"
+        label="Genres"
         required={genreRequired}
         validationText={genreValidationText}
       >
         <TagsInput
-          onChange={onGenreInputChange}
           name="genres"
+          onBlur={onGenreInputBlur}
+          onChange={onGenreInputChange}
           placeHolder="Genres"
+          value={genres}
         />
         <em>Press enter to add a new genre</em>
       </FormInput>
 
       <FormInput
         forceShowValidation
-        label="Talents"
         htmlFor="talents"
+        label="Talents"
         required={talentRequired}
         validationText={talentValidationText}
       >
         <TagsInput
-          onChange={onTalentInputChange}
           name="talents"
+          onBlur={onTalentInputBlur}
+          onChange={onTalentInputChange}
           placeHolder="Talents"
+          value={talents}
         />
         <em>Press enter to add new talent</em>
       </FormInput>
 
       <FormInput
-        label="Bio"
         htmlFor="bio"
+        label="Bio"
         required={bioRequired}
         validationText={bioValidationText}
       >
         <Form.Control
-          name="bio"
           as="textarea"
-          rows={3}
-          placeholder="Enter bio"
-          onChange={handleFormChange(onBioInputChange)}
           isInvalid={!!bioValidationText}
+          name="bio"
+          onBlur={onBioInputBlur}
+          onChange={handleFormChange(onBioInputChange)}
+          placeholder="Enter bio"
+          rows={3}
+          value={bio}
         />
       </FormInput>
     </div>
