@@ -53,6 +53,9 @@ export default function EditSearchSettingForm({
         required={rangeSettingRequired}
         validationText={rangeSettingValidationText}
       >
+        <div className="mt-4 pt-2 mb-2">
+          <Slider />
+        </div>
         {/* <Form.Range */}
         {/*  name="ageSetting" */}
         {/*  onChange={handleFormChange(onRangeSettingChange)} */}
@@ -61,10 +64,10 @@ export default function EditSearchSettingForm({
 
       <FormInput
         forceShowValidation
-        label="Gender"
         htmlFor="gendersSetting"
-        validationText={genderSettingValidationText}
+        label="Gender"
         required={genderSettingRequired}
+        validationText={genderSettingValidationText}
       >
         <TagSelection options={genderSelections} />
         <em>Press enter to add new tag</em>
@@ -72,10 +75,10 @@ export default function EditSearchSettingForm({
 
       <FormInput
         forceShowValidation
-        label="Locations"
         htmlFor="locationsSetting"
-        validationText={locationSettingValidationText}
+        label="Locations"
         required={locationSettingRequired}
+        validationText={locationSettingValidationText}
       >
         <TagSelection options={locationSelections} />
         <em>Press enter to add new tag</em>
@@ -83,10 +86,10 @@ export default function EditSearchSettingForm({
 
       <FormInput
         forceShowValidation
-        label="Genres"
         htmlFor="genresSetting"
-        validationText={genreSettingValidationText}
+        label="Genres"
         required={genreSettingRequired}
+        validationText={genreSettingValidationText}
       >
         <TagSelection options={genreSelections} />
         <em>Press enter to add new tag</em>
@@ -94,10 +97,10 @@ export default function EditSearchSettingForm({
 
       <FormInput
         forceShowValidation
-        label="Talents"
         htmlFor="talentsSetting"
-        validationText={talentSettingValidationText}
+        label="Talents"
         required={talentSettingRequired}
+        validationText={talentSettingValidationText}
       >
         <TagSelection options={talentSelections} />
         <em>Press enter to add new tag</em>
