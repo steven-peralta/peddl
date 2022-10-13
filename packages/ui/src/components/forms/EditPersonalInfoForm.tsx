@@ -1,10 +1,10 @@
 import { Form } from 'react-bootstrap';
 import React from 'react';
 import DatePicker from 'react-datepicker';
-import { TagsInput } from 'react-tag-input-component';
 import { Gender } from '@peddl/common';
-import { handleFormChange } from './utils';
+import { genreSelections, handleFormChange, talentSelections } from './utils';
 import FormInput from './FormInput';
+import TagSelection from './TagSelection/TagSelection';
 
 export type EditPersonalInfoFormProps = {
   name: string;
@@ -183,10 +183,10 @@ export default function EditPersonalInfoForm({
         required={genreRequired}
         validationText={genreValidationText}
       >
-        <TagsInput
-          name="genres"
+        <TagSelection
           onBlur={onGenreInputBlur}
           onChange={onGenreInputChange}
+          options={genreSelections}
           placeHolder="Genres"
           value={genres}
         />
@@ -200,10 +200,11 @@ export default function EditPersonalInfoForm({
         required={talentRequired}
         validationText={talentValidationText}
       >
-        <TagsInput
+        <TagSelection
           name="talents"
           onBlur={onTalentInputBlur}
           onChange={onTalentInputChange}
+          options={talentSelections}
           placeHolder="Talents"
           value={talents}
         />
