@@ -1,8 +1,13 @@
 import React from 'react';
-import { Form } from 'react-bootstrap';
-import { TagsInput } from 'react-tag-input-component';
-import { handleFormChange } from './utils';
+import {
+  genderSelections,
+  genreSelections,
+  locationSelections,
+  talentSelections,
+} from './utils';
 import FormInput from './FormInput';
+import TagSelection from './TagSelection/TagSelection';
+import Slider from '../Slider/Slider';
 
 export type EditSearchSettingFormProps = {
   onRangeSettingChange: (rangeSetting: string) => void;
@@ -48,10 +53,10 @@ export default function EditSearchSettingForm({
         required={rangeSettingRequired}
         validationText={rangeSettingValidationText}
       >
-        <Form.Range
-          name="ageSetting"
-          onChange={handleFormChange(onRangeSettingChange)}
-        />
+        {/* <Form.Range */}
+        {/*  name="ageSetting" */}
+        {/*  onChange={handleFormChange(onRangeSettingChange)} */}
+        {/* /> */}
       </FormInput>
 
       <FormInput
@@ -61,11 +66,7 @@ export default function EditSearchSettingForm({
         validationText={genderSettingValidationText}
         required={genderSettingRequired}
       >
-        <TagsInput
-          onChange={onGenderSettingChange}
-          name="gendersSetting"
-          placeHolder="Genders"
-        />
+        <TagSelection options={genderSelections} />
         <em>Press enter to add new tag</em>
       </FormInput>
 
@@ -76,11 +77,7 @@ export default function EditSearchSettingForm({
         validationText={locationSettingValidationText}
         required={locationSettingRequired}
       >
-        <TagsInput
-          onChange={onLocationSettingChange}
-          name="locationsSetting"
-          placeHolder="Locations"
-        />
+        <TagSelection options={locationSelections} />
         <em>Press enter to add new tag</em>
       </FormInput>
 
@@ -91,11 +88,7 @@ export default function EditSearchSettingForm({
         validationText={genreSettingValidationText}
         required={genreSettingRequired}
       >
-        <TagsInput
-          onChange={onGenreSettingInputChange}
-          name="genresSetting"
-          placeHolder="Genres"
-        />
+        <TagSelection options={genreSelections} />
         <em>Press enter to add new tag</em>
       </FormInput>
 
@@ -106,11 +99,7 @@ export default function EditSearchSettingForm({
         validationText={talentSettingValidationText}
         required={talentSettingRequired}
       >
-        <TagsInput
-          onChange={onTalentSettingInputChange}
-          name="talentsSetting"
-          placeHolder="Talents"
-        />
+        <TagSelection options={talentSelections} />
         <em>Press enter to add new tag</em>
       </FormInput>
     </div>

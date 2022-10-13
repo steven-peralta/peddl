@@ -18,6 +18,9 @@ import NewProfileStep from './NewProfileStep';
 import UploadMediaStep from './UploadMediaStep';
 import SearchSettingsStep from './SearchSettingsStep';
 import { useValidation } from '../../components/forms/utils';
+import TagSelection, {
+  TagSelectionOption,
+} from '../../components/forms/TagSelection/TagSelection';
 
 const enum CreateAccountSteps {
   NewProfile,
