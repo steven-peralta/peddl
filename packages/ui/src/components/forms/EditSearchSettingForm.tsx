@@ -53,8 +53,6 @@ export default function EditSearchSettingForm({
         required={rangeSettingRequired}
         validationText={rangeSettingValidationText}
       >
-        <Slider min={18} max={100} />
-
         {/* <Form.Range */}
         {/*  name="ageSetting" */}
         {/*  onChange={handleFormChange(onRangeSettingChange)} */}
