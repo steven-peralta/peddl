@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
-import { Genres } from '@peddl/common';
 
-export type TagSelectionProps = {
-  value: object;
+export type TagSelectionOption = {
+  value: string;
   label: string;
 };
-const genres = Genres.map((genre) => {
-  return { value: genre, label: genre };
-});
-const options: TagSelectionProps[] = [{ genres }];
 
-export default function TagSelection() {
+export type TagSelectionProps = {
+  options: TagSelectionOption[];
+};
+
+export default function TagSelection({ options }: TagSelectionProps) {
   const [values, setValues] = useState<TagSelectionProps[]>([]);
 
   return (
@@ -19,7 +18,7 @@ export default function TagSelection() {
       <Select
         isMulti
         options={options}
-        onChange={(values) => setValues(values)}
+        onChange={(value) => setValues(values)}
       />
     </div>
   );
