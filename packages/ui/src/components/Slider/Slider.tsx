@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { Range, getTrackBackground } from 'react-range';
 
-const STEP = 1;
-const MIN = 18;
-const MAX = 100;
-
 export type SliderProps = {
   step: number;
   min: number;
@@ -12,7 +8,7 @@ export type SliderProps = {
   onChange: (values: number[]) => void;
 };
 
-function Slider({ step = 1, min = 0, max = 100, onChange }: SliderProps) {
+function Slider({ step = 1, min = 18, max = 100, onChange }: SliderProps) {
   const [values, setValues] = React.useState([20, 40]);
   return (
     <div
@@ -63,6 +59,7 @@ function Slider({ step = 1, min = 0, max = 100, onChange }: SliderProps) {
           </div>
         )}
         renderTrack={({ props, children }) => (
+          // eslint-disable-next-line jsx-a11y/no-static-element-interactions
           <div
             onMouseDown={props.onMouseDown}
             onTouchStart={props.onTouchStart}

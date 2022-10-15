@@ -1,0 +1,18 @@
+
+.splashLogo{
+    width: 350px;
+    height:86px;
+
+}
+.imageContainer{
+    text-align: center;
+    padding-bottom: 4rem;
+}
+
+.Tpage{
+    background-color: black;
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+    width:100%;
+    margin: 0 auto;
+}
