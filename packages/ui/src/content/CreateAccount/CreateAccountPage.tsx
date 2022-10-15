@@ -129,7 +129,7 @@ export default function CreateAccountPage() {
   } = useValidation<string>(validateEmail, '');
 
   // search settings state
-  const [rangeSetting, setRangeSetting] = useState('');
+  const [rangeSetting, setRangeSetting] = React.useState<number[]>([]);
   const [gendersSetting, setGenderSetting] = useState<readonly string[]>([]);
   const [locationsSetting, setLocationSetting] = useState<readonly string[]>(
     []

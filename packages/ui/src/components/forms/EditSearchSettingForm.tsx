@@ -10,7 +10,7 @@ import TagSelection from './TagSelection/TagSelection';
 import Slider from '../Slider/Slider';
 
 export type EditSearchSettingFormProps = {
-  onRangeSettingChange: (rangeSetting: string) => void;
+  onRangeSettingChange: (rangeSetting: number[]) => void;
   rangeSettingRequired?: boolean;
   rangeSettingValidationText?: string;
   onGenderSettingChange: (gendersSetting: readonly string[]) => void;
