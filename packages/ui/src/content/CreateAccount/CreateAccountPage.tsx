@@ -130,10 +130,12 @@ export default function CreateAccountPage() {
 
   // search settings state
   const [rangeSetting, setRangeSetting] = useState('');
-  const [gendersSetting, setGenderSetting] = useState<string[]>([]);
-  const [locationsSetting, setLocationSetting] = useState<string[]>([]);
-  const [genresSetting, setGenreSetting] = useState<string[]>([]);
-  const [talentsSetting, setTalentSetting] = useState<string[]>([]);
+  const [gendersSetting, setGenderSetting] = useState<readonly string[]>([]);
+  const [locationsSetting, setLocationSetting] = useState<readonly string[]>(
+    []
+  );
+  const [genresSetting, setGenreSetting] = useState<readonly string[]>([]);
+  const [talentsSetting, setTalentSetting] = useState<readonly string[]>([]);
 
   const [confirmPassword, setConfirmPassword] = useState('');
   const [confirmPasswordValidationText, setConfirmPasswordValidationText] =
