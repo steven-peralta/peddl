@@ -89,14 +89,12 @@ export default function CreateAccountPage() {
   } = useValidation<string>(validateGender, '');
 
   const {
-    value: [genres],
     setter: [setGenres],
     validationText: [genreValidationText],
     onBlur: [genreInputOnBlur],
   } = useValidation<string[]>(validateGenres, []);
 
   const {
-    value: [talents],
     setter: [setTalents],
     validationText: [talentValidationText],
     onBlur: [talentsInputOnBlur],
@@ -167,7 +165,6 @@ export default function CreateAccountPage() {
       emailValidationText={emailValidationText}
       gender={gender}
       genderValidationText={genderValidationText}
-      genres={genres}
       genreValidationText={genreValidationText}
       location={location}
       locationRequired
@@ -187,7 +184,6 @@ export default function CreateAccountPage() {
       onEmailInputChange={setEmail}
       onGenderInputBlur={genderInputOnBlur}
       onGenderInputChange={setGender}
-      onGenreInputBlur={genreInputOnBlur}
       onGenreInputChange={setGenres}
       onLocationInputBlur={locationInputOnBlur}
       onLocationInputChange={setLocation}
@@ -199,7 +195,6 @@ export default function CreateAccountPage() {
       onSoundcloudLinkInputChange={setSoundcloudLink}
       onSpotifyLinkInputBlur={spotifyLinkInputOnBlur}
       onSpotifyLinkInputChange={setSpotifyLink}
-      onTalentInputBlur={talentsInputOnBlur}
       onTalentInputChange={setTalents}
       password={password}
       passwordRequired
@@ -208,7 +203,6 @@ export default function CreateAccountPage() {
       soundcloudLinkValidationText={soundcloudLinkValidationText}
       spotifyLink={spotifyLink}
       spotifyLinkValidationText={spotifyLinkValidationText}
-      talents={talents}
       talentValidationText={talentValidationText}
     />
   );

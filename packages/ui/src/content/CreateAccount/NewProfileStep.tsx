@@ -57,15 +57,11 @@ export default function NewProfileStep({
   genderRequired = false,
   genderValidationText,
 
-  genres,
   onGenreInputChange,
-  onGenreInputBlur,
   genreRequired = false,
   genreValidationText,
 
-  talents,
   onTalentInputChange,
-  onTalentInputBlur,
   talentRequired = false,
   talentValidationText,
 
@@ -126,7 +122,6 @@ export default function NewProfileStep({
         genderRequired={genderRequired}
         genderValidationText={genderValidationText}
         genreRequired={genreRequired}
-        genres={genres}
         genreValidationText={genreValidationText}
         location={location}
         locationRequired={locationRequired}
@@ -140,16 +135,13 @@ export default function NewProfileStep({
         onBirthdayInputChange={onBirthdayInputChange}
         onGenderInputBlur={onGenderInputBlur}
         onGenderInputChange={onGenderInputChange}
-        onGenreInputBlur={onGenreInputBlur}
         onGenreInputChange={onGenreInputChange}
         onLocationInputBlur={onLocationInputBlur}
         onLocationInputChange={onLocationInputChange}
         onNameInputBlur={onNameInputBlur}
         onNameInputChange={onNameInputChange}
-        onTalentInputBlur={onTalentInputBlur}
         onTalentInputChange={onTalentInputChange}
         talentRequired={talentRequired}
-        talents={talents}
         talentValidationText={talentValidationText}
       />
 
