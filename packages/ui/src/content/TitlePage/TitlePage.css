@@ -5,12 +5,16 @@
 
 }
 .imageContainer{
-    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
     padding-bottom: 4rem;
+}
+img{
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .Tpage{
-    background-color: black;
     padding-top: 8rem;
     padding-bottom: 8rem;
     width:100%;

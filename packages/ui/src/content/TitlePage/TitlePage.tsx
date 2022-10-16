@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Container } from 'react-bootstrap';
 import './TitlePage.css';
-import logo from './peddlLogo.svg';
+import logo from './logoBlk.svg';
 
 export default function TitlePage() {
   return (
