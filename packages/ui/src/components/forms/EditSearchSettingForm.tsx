@@ -72,6 +72,7 @@ export default function EditSearchSettingForm({
         <TagSelection
           onChange={onGenderSettingChange}
           options={genderSelections}
+          values={genders}
         />
         <em>Press enter to add new tag</em>
       </FormInput>

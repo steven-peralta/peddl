@@ -31,11 +31,13 @@ export type EditPersonalInfoFormProps = {
   genderRequired?: boolean;
   genderValidationText?: string;
 
-  onGenreInputChange: (genres: readonly string[]) => void;
+  genres: TagSelectionOption[];
+  onGenreInputChange: (genres: TagSelectionOption[]) => void;
   genreRequired?: boolean;
   genreValidationText?: string;
 
-  onTalentInputChange: (talents: readonly string[]) => void;
+  talents: TagSelectionOption[];
+  onTalentInputChange: (talents: TagSelectionOption[]) => void;
   talentRequired?: boolean;
   talentValidationText?: string;
 
@@ -71,10 +73,12 @@ export default function EditPersonalInfoForm({
   genderRequired = false,
   genderValidationText,
 
+  genres,
   onGenreInputChange,
   genreRequired = false,
   genreValidationText,
 
+  talents,
   onTalentInputChange,
   talentRequired = false,
   talentValidationText,
