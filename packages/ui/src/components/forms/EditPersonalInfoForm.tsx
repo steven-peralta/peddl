@@ -4,7 +4,7 @@ import DatePicker from 'react-datepicker';
 import { Gender, Location } from '@peddl/common';
 import { genreSelections, handleFormChange, talentSelections } from './utils';
 import FormInput from './FormInput';
-import TagSelection from './TagSelection/TagSelection';
+import TagSelection, { TagSelectionOption } from './TagSelection/TagSelection';
 
 export type EditPersonalInfoFormProps = {
   name: string;
@@ -182,7 +182,11 @@ export default function EditPersonalInfoForm({
         required={genreRequired}
         validationText={genreValidationText}
       >
-        <TagSelection onChange={onGenreInputChange} options={genreSelections} />
+        <TagSelection
+          onChange={onGenreInputChange}
+          options={genreSelections}
+          values={genres}
+        />
         <em>Press enter to add a new genre</em>
       </FormInput>
 
@@ -196,6 +200,7 @@ export default function EditPersonalInfoForm({
         <TagSelection
           onChange={onTalentInputChange}
           options={talentSelections}
+          values={talents}
         />
         <em>Press enter to add new talent</em>
       </FormInput>

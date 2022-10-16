@@ -6,28 +6,40 @@ import {
   talentSelections,
 } from './utils';
 import FormInput from './FormInput';
-import TagSelection from './TagSelection/TagSelection';
+import TagSelection, { TagSelectionOption } from './TagSelection/TagSelection';
 import Slider from '../Slider/Slider';
 
 export type EditSearchSettingFormProps = {
   onRangeSettingChange: (rangeSetting: number[]) => void;
   rangeSettingRequired?: boolean;
   rangeSettingValidationText?: string;
-  onGenderSettingChange: (gendersSetting: readonly string[]) => void;
+
+  genders: TagSelectionOption[];
+  onGenderSettingChange: (gendersSetting: TagSelectionOption[]) => void;
   genderSettingRequired?: boolean;
   genderSettingValidationText?: string;
-  onLocationSettingChange: (locationsSetting: readonly string[]) => void;
+
+  locations: TagSelectionOption[];
+  onLocationSettingChange: (locationsSetting: TagSelectionOption[]) => void;
   locationSettingRequired?: boolean;
   locationSettingValidationText?: string;
-  onGenreSettingInputChange: (genresSetting: readonly string[]) => void;
+
+  genres: TagSelectionOption[];
+  onGenreSettingInputChange: (genresSetting: TagSelectionOption[]) => void;
   genreSettingRequired?: boolean;
   genreSettingValidationText?: string;
-  onTalentSettingInputChange: (talentsSetting: readonly string[]) => void;
+
+  talents: TagSelectionOption[];
+  onTalentSettingInputChange: (talentsSetting: TagSelectionOption[]) => void;
   talentSettingRequired?: boolean;
   talentSettingValidationText?: string;
 };
 
 export default function EditSearchSettingForm({
+  genders,
+  locations,
+  genres,
+  talents,
   onRangeSettingChange,
   rangeSettingRequired = false,
   rangeSettingValidationText,
@@ -54,7 +66,7 @@ export default function EditSearchSettingForm({
         validationText={rangeSettingValidationText}
       >
         <div className="mt-4 pt-2 mb-2">
-          <Slider />
+          <Slider max={100} min={18} onChange={onRangeSettingChange} step={1} />
         </div>
         {/* <Form.Range */}
         {/*  name="ageSetting" */}
@@ -87,6 +99,7 @@ export default function EditSearchSettingForm({
         <TagSelection
           onChange={onLocationSettingChange}
           options={locationSelections}
+          values={locations}
         />
         <em>Press enter to add new tag</em>
       </FormInput>
@@ -101,6 +114,7 @@ export default function EditSearchSettingForm({
         <TagSelection
           onChange={onGenreSettingInputChange}
           options={genreSelections}
+          values={genres}
         />
         <em>Press enter to add new tag</em>
       </FormInput>
@@ -115,6 +129,7 @@ export default function EditSearchSettingForm({
         <TagSelection
           onChange={onTalentSettingInputChange}
           options={talentSelections}
+          values={talents}
         />
         <em>Press enter to add new tag</em>
       </FormInput>

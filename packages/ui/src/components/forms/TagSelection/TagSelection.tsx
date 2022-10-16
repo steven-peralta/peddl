@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Select from 'react-select';
 
 export type TagSelectionOption = {
@@ -8,17 +8,25 @@ export type TagSelectionOption = {
 
 export type TagSelectionProps = {
   options: TagSelectionOption[];
+  onBlur?: () => void;
+  onChange: (values: readonly TagSelectionOption[]) => void;
+  values: TagSelectionOption[];
 };
 
-export default function TagSelection({ options }: TagSelectionProps) {
-  const [values, setValues] = useState<TagSelectionProps[]>([]);
-
+export default function TagSelection({
+  options,
+  onBlur,
+  onChange,
+  values,
+}: TagSelectionProps) {
   return (
     <div>
       <Select
         isMulti
+        onBlur={onBlur}
+        onChange={onChange}
         options={options}
-        onChange={(value) => setValues(values)}
+        value={values}
       />
     </div>
   );

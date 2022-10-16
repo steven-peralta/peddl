@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Range, getTrackBackground } from 'react-range';
 
 export type SliderProps = {
@@ -89,8 +89,7 @@ function Slider({ step = 1, min = 18, max = 100, onChange }: SliderProps) {
             </div>
           </div>
         )}
-        rtl={rtl}
-        step={STEP}
+        step={step}
         values={values}
       />
       {/* <span> */}
