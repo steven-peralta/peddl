@@ -7,7 +7,7 @@ import {
   Locations,
   Talent,
   Talents,
-} from '../api';
+} from '../models';
 
 const bioMaxLength = 240;
 const textInputMaxLength = 1024;
@@ -17,6 +17,8 @@ const emailRegex =
 const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
 const nameRegex = /[a-zA-Z]*$/;
 const spotifyLinkRegex = /^https:\/\/open.spotify.com\/artist\/[A-z0-9?=-]+$/g;
+const soundcloudLinkRegex = /^([a-z0-9-_])\w+$/g;
+const bandcampLinkRegex = /^([a-z0-9-_])\w+$/g;
 
 export type ValidationResult = {
   success?: true;
@@ -187,6 +189,25 @@ export const validateSpotifyLink: ValidatorFunc = (link) => {
   if (link) {
     if (!link.match(spotifyLinkRegex)) {
       return { reason: 'Your spotify artist link is invalid.' };
+    }
+  }
+
+  return { success: true };
+};
+
+export const validateSoundcloudLink: ValidatorFunc = (link) => {
+  if (link) {
+    if (!link.match(soundcloudLinkRegex)) {
+      return { reason: 'Your Soundcloud artist link is invalid.' };
+    }
+  }
+  return { success: true };
+};
+
+export const validateBandcampLink: ValidatorFunc = (link) => {
+  if (link) {
+    if (!link.match(bandcampLinkRegex)) {
+      return { reason: 'Your bandcamp artist link is invalid.' };
     }
   }
 

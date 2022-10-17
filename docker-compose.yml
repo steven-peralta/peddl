@@ -15,11 +15,11 @@ services:
     networks:
       - default-network
   api:
-    image: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-api:latest
+    image: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-models:latest
     build:
       context: .
       args:
-        - BUILD_CONTEXT=api
+        - BUILD_CONTEXT=models
     depends_on:
       - mongo
     networks:

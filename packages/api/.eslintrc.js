@@ -13,4 +13,7 @@ module.exports = {
       project: './',
     },
   },
+  rules: {
+    'dot-notation': 'off',
+  },
 };
