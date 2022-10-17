@@ -18,5 +18,6 @@ module.exports = {
     'react/require-default-props': 'off',
     'react/jsx-props-no-spreading': 'off',
     'react/jsx-sort-props': 'warn',
+    'no-nested-ternary': 'off',
   },
 };

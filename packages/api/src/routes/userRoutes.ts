@@ -31,21 +31,21 @@ const setupUserRoutes = (app: Express, db: Db) => {
       if (!user) {
         res.status(404);
         res.json({ reason: 'User not found' });
+        return;
+      }
+      const { _id: userId, password: userHash, salt } = user;
+      const hash = crypto.createHmac('sha512', salt);
+      hash.update(password);
+      if (hash.digest('base64') === userHash) {
+        const token: JWTToken = {
+          userId,
+          time: new Date(),
+        };
+        res.status(200);
+        res.send(jwt.sign(token, jwtSecret, { algorithm: 'HS256' }));
       } else {
-        const { _id: userId, password: userHash, salt } = user;
-        const hash = crypto.createHmac('sha512', salt);
-        hash.update(password);
-        if (hash.digest('base64') === userHash) {
-          const token: JWTToken = {
-            userId,
-            time: new Date(),
-          };
-          res.status(200);
-          res.send(jwt.sign(token, jwtSecret, { algorithm: 'HS256' }));
-        } else {
-          res.status(401);
-          res.json({ reason: 'Incorrect email or password ' });
-        }
+        res.status(401);
+        res.json({ reason: 'Incorrect email or password ' });
       }
     })
   );
@@ -56,29 +56,30 @@ const setupUserRoutes = (app: Express, db: Db) => {
       const data = body as UserFormData;
       const validationResults = validateUserFormData(data);
 
-      if (!validationResults.success) {
+      if (!validationResults.isValid) {
         res.status(400);
         res.json(validationResults);
-      } else {
-        const { email, password } = data;
-        const users = db.collection<WithoutID<User>>('users');
-        const existingUser = await users.findOne({ email });
+        return;
+      }
 
-        if (!existingUser) {
-          const salt = crypto.randomBytes(16).toString('base64');
-          const hash = crypto.createHmac('sha512', salt);
-          hash.update(password);
-          await users.insertOne({
-            email,
-            password: hash.digest('base64'),
-            salt,
-          });
-          res.status(201);
-          res.end();
-        } else {
-          res.status(409);
-          res.json({ reason: 'User already exists' });
-        }
+      const { email, password } = data;
+      const users = db.collection<WithoutID<User>>('users');
+      const existingUser = await users.findOne({ email });
+
+      if (!existingUser) {
+        const salt = crypto.randomBytes(16).toString('base64');
+        const hash = crypto.createHmac('sha512', salt);
+        hash.update(password);
+        await users.insertOne({
+          email,
+          password: hash.digest('base64'),
+          salt,
+        });
+        res.status(201);
+        res.end();
+      } else {
+        res.status(409);
+        res.json({ reason: 'User already exists' });
       }
     })
   );
@@ -96,7 +97,7 @@ const setupUserRoutes = (app: Express, db: Db) => {
       const data = req.body as CreateProfileFormData;
       const validationResults = validateProfileFormData(data);
 
-      if (!validationResults.success) {
+      if (!validationResults?.isValid) {
         res.status(400);
         res.json(validationResults);
         return;

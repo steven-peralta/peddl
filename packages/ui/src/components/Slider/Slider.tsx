@@ -6,10 +6,16 @@ export type SliderProps = {
   min: number;
   max: number;
   onChange: (values: number[]) => void;
+  values: [number, number];
 };
 
-function Slider({ step = 1, min = 18, max = 100, onChange }: SliderProps) {
-  const [values, setValues] = React.useState([20, 40]);
+export default function Slider({
+  step = 1,
+  min = 18,
+  max = 100,
+  values,
+  onChange,
+}: SliderProps) {
   return (
     <div
       style={{
@@ -21,10 +27,7 @@ function Slider({ step = 1, min = 18, max = 100, onChange }: SliderProps) {
       <Range
         max={max}
         min={min}
-        onChange={(v) => {
-          setValues(v);
-          onChange(v);
-        }}
+        onChange={onChange}
         renderThumb={({ index, props, isDragged }) => (
           <div
             className="form-label"
@@ -92,14 +95,6 @@ function Slider({ step = 1, min = 18, max = 100, onChange }: SliderProps) {
         step={step}
         values={values}
       />
-      {/* <span> */}
-      {/*  onchange value 1: */}
-      {/*  <span id="output">{values[0].toFixed(1)}</span> */}
-      {/*  onchange value 2: */}
-      {/*  <span id="output">{values[1].toFixed(1)}</span> */}
-      {/* </span> */}
     </div>
   );
 }
-
-export default Slider;

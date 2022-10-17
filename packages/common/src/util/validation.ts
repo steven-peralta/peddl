@@ -21,7 +21,7 @@ const soundcloudLinkRegex = /^([a-z0-9-_])\w+$/g;
 const bandcampLinkRegex = /^([a-z0-9-_])\w+$/g;
 
 export type ValidationResult = {
-  success?: true;
+  isValid: boolean;
   reason?: string;
 };
 
@@ -31,42 +31,44 @@ export type ValidatorFunc<T = string> = (
 
 export const validateEmail: ValidatorFunc = (email): ValidationResult => {
   if (!email) {
-    return { reason: 'Email is required.' };
+    return { isValid: false, reason: 'Email is required.' };
   }
 
   if (!email.match(emailRegex)) {
     return {
+      isValid: false,
       reason: 'Your email is invalid',
     };
   }
 
   if (email.length > textInputMaxLength) {
-    return { reason: 'Your email is too long.' };
+    return { isValid: false, reason: 'Your email is too long.' };
   }
 
   return {
-    success: true,
+    isValid: true,
   };
 };
 
 export const validatePassword: ValidatorFunc = (password): ValidationResult => {
   if (!password || password === '') {
-    return { reason: 'Your password is empty.' };
+    return { isValid: false, reason: 'Your password is empty.' };
   }
 
   if (password.length > textInputMaxLength) {
-    return { reason: 'Your password is too long.' };
+    return { isValid: false, reason: 'Your password is too long.' };
   }
 
   if (!password.match(passwordRegex)) {
     return {
+      isValid: false,
       reason:
         'Your password needs to be at least 6 characters long and have at least 1 number and 1 special character.',
     };
   }
 
   return {
-    success: true,
+    isValid: true,
   };
 };
 
@@ -76,11 +78,12 @@ export const validateConfirmPassword = (
 ): ValidationResult => {
   if (password !== confirmPassword) {
     return {
+      isValid: false,
       reason: 'Your passwords do not match',
     };
   }
   return {
-    success: true,
+    isValid: true,
   };
 };
 
@@ -93,129 +96,134 @@ export const validateBirthday: ValidatorFunc<Date> = (
     const maxDate = new Date();
     maxDate.setFullYear(new Date().getFullYear() + 120);
     if (date > minDate) {
-      return { reason: 'You need to be at least 18 to use Peddl.' };
+      return {
+        isValid: false,
+        reason: 'You need to be at least 18 to use Peddl.',
+      };
     }
     if (date >= maxDate) {
-      return { reason: "You're too old." };
+      return { isValid: false, reason: "You're too old." };
     }
   } else {
-    return { reason: 'Please specify a date.' };
+    return { isValid: false, reason: 'Please specify a date.' };
   }
 
-  return { success: true };
+  return { isValid: true };
 };
 
 export const validateName: ValidatorFunc = (name): ValidationResult => {
   if (!name) {
-    return { reason: 'Please specify a name' };
+    return { isValid: false, reason: 'Please specify a name' };
   }
 
   if (!name.match(nameRegex)) {
     return {
+      isValid: false,
       reason: 'Please enter a valid name.',
     };
   }
 
   if (name.length > textInputMaxLength) {
-    return { reason: 'Your name is too long.' };
+    return { isValid: false, reason: 'Your name is too long.' };
   }
 
   return {
-    success: true,
+    isValid: true,
   };
 };
 
 export const validateLocation: ValidatorFunc = (location): ValidationResult => {
   if (!location) {
-    return { reason: 'You need to specify a location.' };
+    return { isValid: false, reason: 'You need to specify a location.' };
   }
 
   if (!Locations.includes(location as Location)) {
     return {
+      isValid: false,
       reason: `${location} is not a valid location`,
     };
   }
 
   return {
-    success: true,
+    isValid: true,
   };
 };
 
 export const validateGender: ValidatorFunc = (gender): ValidationResult => {
   if (gender) {
     if (!Genders.includes(gender as Gender)) {
-      return { reason: 'Invalid gender' };
+      return { isValid: false, reason: 'Invalid gender' };
     }
   }
 
-  return { success: true };
+  return { isValid: true };
 };
 
-export const validateGenres: ValidatorFunc<
-  {
-    value: string;
-    label: string;
-  }[]
-> = (genres): ValidationResult => {
+export const validateGenres: ValidatorFunc<string[]> = (
+  genres
+): ValidationResult => {
   if (genres) {
-    if (genres.some((genre) => !Genres.includes(genre.label as Genre))) {
-      return { reason: 'Invalid genre' };
+    if (genres.some((genre) => !Genres.includes(genre as Genre))) {
+      return { isValid: false, reason: 'Invalid genre' };
     }
   }
 
-  return { success: true };
+  return { isValid: true };
 };
 
-export const validateTalents: ValidatorFunc<
-  {
-    value: string;
-    label: string;
-  }[]
-> = (talents): ValidationResult => {
+export const validateTalents: ValidatorFunc<string[]> = (
+  talents
+): ValidationResult => {
   if (talents) {
-    if (talents.some((talent) => !Talents.includes(talent.label as Talent))) {
-      return { reason: 'Invalid talent' };
+    if (talents.some((talent) => !Talents.includes(talent as Talent))) {
+      return { isValid: false, reason: 'Invalid talent' };
     }
   }
 
-  return { success: true };
+  return { isValid: true };
 };
 
 export const validateBio: ValidatorFunc = (bio) => {
   if (bio) {
     if (bio.length > bioMaxLength) {
-      return { reason: 'Your bio is too long' };
+      return { isValid: false, reason: 'Your bio is too long' };
     }
   }
 
-  return { success: true };
+  return { isValid: true };
 };
 
 export const validateSpotifyLink: ValidatorFunc = (link) => {
   if (link) {
     if (!link.match(spotifyLinkRegex)) {
-      return { reason: 'Your spotify artist link is invalid.' };
+      return { isValid: false, reason: 'Your spotify artist link is invalid.' };
     }
   }
 
-  return { success: true };
+  return { isValid: true };
 };
 
 export const validateSoundcloudLink: ValidatorFunc = (link) => {
   if (link) {
     if (!link.match(soundcloudLinkRegex)) {
-      return { reason: 'Your Soundcloud artist link is invalid.' };
+      return {
+        isValid: false,
+        reason: 'Your Soundcloud artist link is invalid.',
+      };
     }
   }
-  return { success: true };
+  return { isValid: true };
 };
 
 export const validateBandcampLink: ValidatorFunc = (link) => {
   if (link) {
     if (!link.match(bandcampLinkRegex)) {
-      return { reason: 'Your bandcamp artist link is invalid.' };
+      return {
+        isValid: false,
+        reason: 'Your bandcamp artist link is invalid.',
+      };
     }
   }
 
-  return { success: true };
+  return { isValid: true };
 };

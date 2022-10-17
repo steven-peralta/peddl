@@ -23,15 +23,15 @@ export const validateUserFormData = ({
   const emailResults = validateEmail(email);
   const passwordResults = validatePassword(password);
 
-  if (!emailResults.success) {
+  if (!emailResults.isValid) {
     return emailResults;
   }
 
-  if (!passwordResults.success) {
+  if (!passwordResults.isValid) {
     return passwordResults;
   }
 
-  return { success: true };
+  return { isValid: true };
 };
 
 export const validateProfileFormData = ({
@@ -57,45 +57,45 @@ export const validateProfileFormData = ({
   const soundcloudLinkResults = validateSoundcloudLink(soundcloudLink);
   const bandcampLinkResults = validateBandcampLink(bandcampLink);
 
-  if (!nameResults.success) {
+  if (!nameResults.isValid) {
     return nameResults;
   }
 
-  if (!birthdayResults.success) {
+  if (!birthdayResults.isValid) {
     return birthdayResults;
   }
 
-  if (!locationResults.success) {
+  if (!locationResults.isValid) {
     return locationResults;
   }
 
-  if (!genderResults.success) {
+  if (!genderResults.isValid) {
     return genderResults;
   }
 
-  if (!genreResults.success) {
+  if (!genreResults.isValid) {
     return genreResults;
   }
 
-  if (!talentResults.success) {
+  if (!talentResults.isValid) {
     return talentResults;
   }
 
-  if (!bioResults.success) {
+  if (!bioResults.isValid) {
     return bioResults;
   }
 
-  if (!spotifyLinkResults.success) {
+  if (!spotifyLinkResults.isValid) {
     return spotifyLinkResults;
   }
 
-  if (!soundcloudLinkResults.success) {
+  if (!soundcloudLinkResults.isValid) {
     return soundcloudLinkResults;
   }
 
-  if (!bandcampLinkResults.success) {
+  if (!bandcampLinkResults.isValid) {
     return bandcampLinkResults;
   }
 
-  return { success: true };
+  return { isValid: true };
 };

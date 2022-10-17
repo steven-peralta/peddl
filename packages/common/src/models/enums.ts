@@ -1,9 +1,17 @@
+export type TagOption = { value: string; label: string };
+
+export const getTagOptions = ([key, value]: [string, string]) => {
+  return { value: key, label: value };
+};
+
 export enum Location {
   AustinTX = 'Austin, TX',
   DenverCO = 'Denver, CO',
   ChicagoIL = 'Chicago, IL',
 }
 export const Locations = Object.values(Location);
+export const LocationTagOptions =
+  Object.entries(Location).map<TagOption>(getTagOptions);
 
 export enum Gender {
   Man = 'Man',
@@ -13,6 +21,8 @@ export enum Gender {
   NonBinary = 'Non binary',
 }
 export const Genders = Object.values(Gender);
+export const GenderTagOptions =
+  Object.entries(Gender).map<TagOption>(getTagOptions);
 
 export enum Genre {
   Acid = 'Acid',
@@ -122,6 +132,8 @@ export enum Genre {
   World = 'World',
 }
 export const Genres = Object.values(Genre);
+export const GenreTagOptions =
+  Object.entries(Genre).map<TagOption>(getTagOptions);
 
 export enum Talent {
   Editing = 'Editing',
@@ -148,3 +160,5 @@ export enum Talent {
   Recording = 'Recording',
 }
 export const Talents = Object.values(Talent);
+export const TalentTagOptions =
+  Object.entries(Talent).map<TagOption>(getTagOptions);
