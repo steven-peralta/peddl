@@ -4,7 +4,7 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import PeddlNavbar from './components/MainNavbar/PeddlNavbar';
 
-import TitlePage from './content/TitlePage';
+import TitlePage from './content/TitlePage/TitlePage';
 import CreateAccountPage from './content/CreateAccount/CreateAccountPage';
 
 function App() {
@@ -12,8 +12,8 @@ function App() {
     <div className="App">
       <PeddlNavbar />
       <Routes>
-        <Route path="/" element={<TitlePage />} />
-        <Route path="register" element={<CreateAccountPage />} />
+        <Route element={<TitlePage />} path="/" />
+        <Route element={<CreateAccountPage />} path="register" />
       </Routes>
     </div>
   );

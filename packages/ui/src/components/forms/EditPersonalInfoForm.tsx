@@ -1,10 +1,10 @@
 import { Form } from 'react-bootstrap';
 import React from 'react';
 import DatePicker from 'react-datepicker';
-import { Gender } from '@peddl/common';
+import { Gender, Location } from '@peddl/common';
 import { genreSelections, handleFormChange, talentSelections } from './utils';
 import FormInput from './FormInput';
-import TagSelection from './TagSelection/TagSelection';
+import TagSelection, { TagSelectionOption } from './TagSelection/TagSelection';
 
 export type EditPersonalInfoFormProps = {
   name: string;
@@ -31,15 +31,13 @@ export type EditPersonalInfoFormProps = {
   genderRequired?: boolean;
   genderValidationText?: string;
 
-  genres: string[];
-  onGenreInputChange: (genres: string[]) => void;
-  onGenreInputBlur: () => void;
+  genres: TagSelectionOption[];
+  onGenreInputChange: (genres: TagSelectionOption[]) => void;
   genreRequired?: boolean;
   genreValidationText?: string;
 
-  talents: string[];
-  onTalentInputChange: (talents: string[]) => void;
-  onTalentInputBlur: () => void;
+  talents: TagSelectionOption[];
+  onTalentInputChange: (talents: TagSelectionOption[]) => void;
   talentRequired?: boolean;
   talentValidationText?: string;
 
@@ -77,13 +75,11 @@ export default function EditPersonalInfoForm({
 
   genres,
   onGenreInputChange,
-  onGenreInputBlur,
   genreRequired = false,
   genreValidationText,
 
   talents,
   onTalentInputChange,
-  onTalentInputBlur,
   talentRequired = false,
   talentValidationText,
 
@@ -97,6 +93,7 @@ export default function EditPersonalInfoForm({
   minDate.setFullYear(new Date().getFullYear() - 18);
   const maxDate = new Date();
   maxDate.setFullYear(new Date().getFullYear() + 120);
+
   return (
     <div>
       <FormInput
@@ -144,15 +141,17 @@ export default function EditPersonalInfoForm({
         required={locationRequired}
         validationText={locationValidationText}
       >
-        <Form.Control
-          isInvalid={!!locationValidationText}
+        <Form.Select
+          aria-label="Default select example"
           name="location"
           onBlur={onLocationInputBlur}
           onChange={handleFormChange(onLocationInputChange)}
-          placeholder="Enter location"
-          type="text"
           value={location}
-        />
+        >
+          <option value={Location.AustinTX}>{Location.AustinTX}</option>
+          <option value={Location.DenverCO}>{Location.DenverCO}</option>
+          <option value={Location.ChicagoIL}>{Location.ChicagoIL}</option>
+        </Form.Select>
       </FormInput>
 
       <FormInput
@@ -184,11 +183,9 @@ export default function EditPersonalInfoForm({
         validationText={genreValidationText}
       >
         <TagSelection
-          onBlur={onGenreInputBlur}
           onChange={onGenreInputChange}
           options={genreSelections}
-          placeHolder="Genres"
-          value={genres}
+          values={genres}
         />
         <em>Press enter to add a new genre</em>
       </FormInput>
@@ -201,12 +198,9 @@ export default function EditPersonalInfoForm({
         validationText={talentValidationText}
       >
         <TagSelection
-          name="talents"
-          onBlur={onTalentInputBlur}
           onChange={onTalentInputChange}
           options={talentSelections}
-          placeHolder="Talents"
-          value={talents}
+          values={talents}
         />
         <em>Press enter to add new talent</em>
       </FormInput>

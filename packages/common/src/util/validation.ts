@@ -151,11 +151,14 @@ export const validateGender: ValidatorFunc = (gender): ValidationResult => {
   return { success: true };
 };
 
-export const validateGenres: ValidatorFunc<string[]> = (
-  genres
-): ValidationResult => {
+export const validateGenres: ValidatorFunc<
+  {
+    value: string;
+    label: string;
+  }[]
+> = (genres): ValidationResult => {
   if (genres) {
-    if (genres.some((genre) => !Genres.includes(genre as Genre))) {
+    if (genres.some((genre) => !Genres.includes(genre.label as Genre))) {
       return { reason: 'Invalid genre' };
     }
   }
@@ -163,11 +166,14 @@ export const validateGenres: ValidatorFunc<string[]> = (
   return { success: true };
 };
 
-export const validateTalents: ValidatorFunc<string[]> = (
-  talents
-): ValidationResult => {
+export const validateTalents: ValidatorFunc<
+  {
+    value: string;
+    label: string;
+  }[]
+> = (talents): ValidationResult => {
   if (talents) {
-    if (talents.some((talent) => !Talents.includes(talent as Talent))) {
+    if (talents.some((talent) => !Talents.includes(talent.label as Talent))) {
       return { reason: 'Invalid talent' };
     }
   }

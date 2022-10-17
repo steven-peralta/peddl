@@ -1,11 +1,14 @@
-import * as React from 'react';
+import React from 'react';
 import { Range, getTrackBackground } from 'react-range';
 
-const STEP = 1;
-const MIN = 18;
-const MAX = 100;
+export type SliderProps = {
+  step: number;
+  min: number;
+  max: number;
+  onChange: (values: number[]) => void;
+};
 
-const Slider: React.FC<{ rtl: boolean }> = ({ rtl }) => {
+function Slider({ step = 1, min = 18, max = 100, onChange }: SliderProps) {
   const [values, setValues] = React.useState([20, 40]);
   return (
     <div
@@ -16,35 +19,32 @@ const Slider: React.FC<{ rtl: boolean }> = ({ rtl }) => {
       }}
     >
       <Range
-        max={MAX}
-        min={MIN}
-        onChange={(values) => setValues(values)}
+        max={max}
+        min={min}
+        onChange={(v) => {
+          setValues(v);
+          onChange(v);
+        }}
         renderThumb={({ index, props, isDragged }) => (
           <div
+            className="form-label"
             {...props}
             style={{
               ...props.style,
-              height: '42px',
-              width: '42px',
-              borderRadius: '4px',
-              backgroundColor: '#FFF',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              boxShadow: '0px 2px 6px #AAA',
             }}
           >
             <div
               style={{
                 position: 'absolute',
                 top: '-28px',
+                left: '-14px',
                 color: '#fff',
                 fontWeight: 'bold',
                 fontSize: '14px',
                 fontFamily: 'Arial,Helvetica Neue,Helvetica,sans-serif',
                 padding: '4px',
                 borderRadius: '4px',
-                backgroundColor: '#548BF4',
+                backgroundColor: 'black',
               }}
             >
               {values[index].toFixed(1)}
@@ -53,18 +53,19 @@ const Slider: React.FC<{ rtl: boolean }> = ({ rtl }) => {
               style={{
                 height: '16px',
                 width: '5px',
-                backgroundColor: isDragged ? '#548BF4' : '#CCC',
+                backgroundColor: isDragged ? 'black' : '#CCC',
               }}
             />
           </div>
         )}
         renderTrack={({ props, children }) => (
+          // eslint-disable-next-line jsx-a11y/no-static-element-interactions
           <div
             onMouseDown={props.onMouseDown}
             onTouchStart={props.onTouchStart}
             style={{
               ...props.style,
-              height: '36px',
+              height: '.5rem',
               display: 'flex',
               width: '100%',
             }}
@@ -77,10 +78,9 @@ const Slider: React.FC<{ rtl: boolean }> = ({ rtl }) => {
                 borderRadius: '4px',
                 background: getTrackBackground({
                   values,
-                  colors: ['#ccc', '#548BF4', '#ccc'],
-                  min: MIN,
-                  max: MAX,
-                  rtl,
+                  colors: ['#ccc', 'black', '#ccc'],
+                  min,
+                  max,
                 }),
                 alignSelf: 'center',
               }}
@@ -89,12 +89,17 @@ const Slider: React.FC<{ rtl: boolean }> = ({ rtl }) => {
             </div>
           </div>
         )}
-        rtl={rtl}
-        step={STEP}
+        step={step}
         values={values}
       />
+      {/* <span> */}
+      {/*  onchange value 1: */}
+      {/*  <span id="output">{values[0].toFixed(1)}</span> */}
+      {/*  onchange value 2: */}
+      {/*  <span id="output">{values[1].toFixed(1)}</span> */}
+      {/* </span> */}
     </div>
   );
-};
+}
 
 export default Slider;

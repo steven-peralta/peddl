@@ -18,9 +18,7 @@ import NewProfileStep from './NewProfileStep';
 import UploadMediaStep from './UploadMediaStep';
 import SearchSettingsStep from './SearchSettingsStep';
 import { useValidation } from '../../components/forms/utils';
-import TagSelection, {
-  TagSelectionOption,
-} from '../../components/forms/TagSelection/TagSelection';
+import { TagSelectionOption } from '../../components/forms/TagSelection/TagSelection';
 
 const enum CreateAccountSteps {
   NewProfile,
@@ -92,15 +90,13 @@ export default function CreateAccountPage() {
     value: [genres],
     setter: [setGenres],
     validationText: [genreValidationText],
-    onBlur: [genreInputOnBlur],
-  } = useValidation<string[]>(validateGenres, []);
+  } = useValidation<TagSelectionOption[]>(validateGenres, []);
 
   const {
     value: [talents],
     setter: [setTalents],
     validationText: [talentValidationText],
-    onBlur: [talentsInputOnBlur],
-  } = useValidation<string[]>(validateTalents, []);
+  } = useValidation<TagSelectionOption[]>(validateTalents, []);
 
   const {
     value: [bio],
@@ -131,11 +127,13 @@ export default function CreateAccountPage() {
   } = useValidation<string>(validateEmail, '');
 
   // search settings state
-  const [rangeSetting, setRangeSetting] = useState('');
-  const [gendersSetting, setGenderSetting] = useState<string[]>([]);
-  const [locationsSetting, setLocationSetting] = useState<string[]>([]);
-  const [genresSetting, setGenreSetting] = useState<string[]>([]);
-  const [talentsSetting, setTalentSetting] = useState<string[]>([]);
+  const [rangeSetting, setRangeSetting] = React.useState<number[]>([]);
+  const [gendersSetting, setGenderSetting] = useState<TagSelectionOption[]>([]);
+  const [locationsSetting, setLocationSetting] = useState<TagSelectionOption[]>(
+    []
+  );
+  const [genresSetting, setGenreSetting] = useState<TagSelectionOption[]>([]);
+  const [talentsSetting, setTalentSetting] = useState<TagSelectionOption[]>([]);
 
   const [confirmPassword, setConfirmPassword] = useState('');
   const [confirmPasswordValidationText, setConfirmPasswordValidationText] =
@@ -187,7 +185,6 @@ export default function CreateAccountPage() {
       onEmailInputChange={setEmail}
       onGenderInputBlur={genderInputOnBlur}
       onGenderInputChange={setGender}
-      onGenreInputBlur={genreInputOnBlur}
       onGenreInputChange={setGenres}
       onLocationInputBlur={locationInputOnBlur}
       onLocationInputChange={setLocation}
@@ -199,7 +196,6 @@ export default function CreateAccountPage() {
       onSoundcloudLinkInputChange={setSoundcloudLink}
       onSpotifyLinkInputBlur={spotifyLinkInputOnBlur}
       onSpotifyLinkInputChange={setSpotifyLink}
-      onTalentInputBlur={talentsInputOnBlur}
       onTalentInputChange={setTalents}
       password={password}
       passwordRequired
@@ -215,11 +211,15 @@ export default function CreateAccountPage() {
 
   const searchSettingsProp = (
     <SearchSettingsStep
+      genders={gendersSetting}
+      genres={genresSetting}
+      locations={locationsSetting}
       onGenderSettingChange={setGenderSetting}
       onGenreSettingInputChange={setGenreSetting}
       onLocationSettingChange={setLocationSetting}
       onRangeSettingChange={setRangeSetting}
       onTalentSettingInputChange={setTalentSetting}
+      talents={talents}
     />
   );
 
