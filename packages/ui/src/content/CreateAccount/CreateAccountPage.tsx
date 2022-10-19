@@ -106,7 +106,6 @@ export default function CreateAccountPage() {
     setter: [setEmail],
     validationText: [emailValidationText],
     isValid: [emailIsValid],
-    onBlur: [emailInputOnBlur],
   } = useValidation<string>(validateEmail, '', true);
 
   const {
@@ -114,7 +113,6 @@ export default function CreateAccountPage() {
     setter: [setPassword],
     validationText: [passwordValidationText],
     isValid: [passwordIsValid],
-    onBlur: [passwordInputOnBlur],
   } = useValidation<string>(validatePassword, '', true);
 
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -155,7 +153,6 @@ export default function CreateAccountPage() {
     setter: [setName],
     validationText: [nameValidationText],
     isValid: [nameIsValid],
-    onBlur: [nameInputOnBlur],
   } = useValidation<string>(validateName, '', true);
 
   const {
@@ -163,8 +160,7 @@ export default function CreateAccountPage() {
     setter: [setBirthday],
     validationText: [birthdayValidationText],
     isValid: [birthdayIsValid],
-    onBlur: [birthdayInputOnBlur],
-  } = useValidation<Date>(validateBirthday, new Date(), true);
+  } = useValidation<Date | null>(validateBirthday, null, true);
 
   const [location, setLocation] = useState('');
 
@@ -173,7 +169,6 @@ export default function CreateAccountPage() {
     setter: [setGender],
     validationText: [genderValidationText],
     isValid: [genderIsValid],
-    onBlur: [genderInputOnBlur],
   } = useValidation<string>(validateGender, '');
 
   const [genres, setGenres] = useState<readonly TagOption[]>([]);
@@ -185,7 +180,6 @@ export default function CreateAccountPage() {
     setter: [setBio],
     validationText: [bioValidationText],
     isValid: [bioIsValid],
-    onBlur: [bioInputOnBlur],
   } = useValidation<string>(validateBio, '');
 
   const {
@@ -193,7 +187,6 @@ export default function CreateAccountPage() {
     setter: [setSpotifyLink],
     validationText: [spotifyLinkValidationText],
     isValid: [spotifyLinkIsValid],
-    onBlur: [spotifyLinkInputOnBlur],
   } = useValidation<string>(validateSpotifyLink, '');
 
   const {
@@ -201,7 +194,6 @@ export default function CreateAccountPage() {
     setter: [setSoundcloudLink],
     validationText: [soundcloudLinkValidationText],
     isValid: [soundcloudLinkIsValid],
-    onBlur: [soundcloudLinkInputOnBlur],
   } = useValidation<string>(validateSoundcloudLink, '');
 
   const {
@@ -209,7 +201,6 @@ export default function CreateAccountPage() {
     setter: [setBandcampLink],
     validationText: [bandcampLinkValidationText],
     isValid: [bandcampLinkIsValid],
-    onBlur: [bandcampLinkInputOnBlur],
   } = useValidation<string>(validateBandcampLink, '');
 
   // search settings state
@@ -248,7 +239,6 @@ export default function CreateAccountPage() {
           id="email"
           isInvalid={!!emailValidationText}
           name="email"
-          onBlur={emailInputOnBlur}
           onChange={handleFormChange(setEmail)}
           placeholder="name@example.com"
           required
@@ -266,7 +256,6 @@ export default function CreateAccountPage() {
           id="password"
           isInvalid={!!passwordValidationText}
           name="password"
-          onBlur={passwordInputOnBlur}
           onChange={handleFormChange(setPassword)}
           placeholder="Password"
           type="password"
@@ -301,7 +290,6 @@ export default function CreateAccountPage() {
         <Form.Control
           isInvalid={!!nameValidationText}
           name="name"
-          onBlur={nameInputOnBlur}
           onChange={handleFormChange(setName)}
           placeholder="Name"
           type="text"
@@ -320,8 +308,7 @@ export default function CreateAccountPage() {
           dropdownMode="select"
           maxDate={maxDate}
           name="birthday"
-          onBlur={birthdayInputOnBlur}
-          onChange={(date) => setBirthday(date ?? new Date())}
+          onChange={(date) => setBirthday(date)}
           peekNextMonth
           selected={birthday ?? undefined}
           showMonthDropdown
@@ -349,7 +336,6 @@ export default function CreateAccountPage() {
         <Form.Select
           aria-label="Default select example"
           name="gender"
-          onBlur={genderInputOnBlur}
           onChange={handleFormChange(setGender)}
           value={gender}
         >
@@ -381,7 +367,6 @@ export default function CreateAccountPage() {
           as="textarea"
           isInvalid={!!bioValidationText}
           name="bio"
-          onBlur={bioInputOnBlur}
           onChange={handleFormChange(setBio)}
           placeholder="Enter bio"
           rows={3}
@@ -398,7 +383,6 @@ export default function CreateAccountPage() {
       >
         <Form.Control
           name="spotify-link"
-          onBlur={spotifyLinkInputOnBlur}
           onChange={handleFormChange(setSpotifyLink)}
           placeholder="https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2?si=a464340973414399"
           type="text"
@@ -415,7 +399,6 @@ export default function CreateAccountPage() {
           <InputGroup.Text>https://soundcloud.com/</InputGroup.Text>
           <Form.Control
             name="soundcloud-link"
-            onBlur={soundcloudLinkInputOnBlur}
             onChange={handleFormChange(setSoundcloudLink)}
             placeholder="Soundcloud username"
             type="text"
@@ -433,7 +416,6 @@ export default function CreateAccountPage() {
           <InputGroup.Text>https://</InputGroup.Text>
           <Form.Control
             name="bandcamp-link"
-            onBlur={bandcampLinkInputOnBlur}
             onChange={handleFormChange(setBandcampLink)}
             placeholder="Bandcamp username"
             type="text"
@@ -516,9 +498,9 @@ export default function CreateAccountPage() {
       {renderStep()}
       <PrevNextButtons
         nextDisabled={!newProfileFormsValid}
-        onNextClick={() => setStep(step > 0 ? step - 1 : step)}
-        onPrevClick={() => setStep(step < 2 ? step + 1 : step)}
-        prevHidden
+        onNextClick={() => setStep(step < 2 ? step + 1 : step)}
+        onPrevClick={() => setStep(step > 0 ? step - 1 : step)}
+        prevHidden={step === 0}
       />
     </Content>
   );

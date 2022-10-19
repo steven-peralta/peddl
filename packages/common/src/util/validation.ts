@@ -14,7 +14,7 @@ const textInputMaxLength = 1024;
 
 const emailRegex =
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$/;
 const nameRegex = /[a-zA-Z]*$/;
 const spotifyLinkRegex = /^https:\/\/open.spotify.com\/artist\/[A-z0-9?=-]+$/g;
 const soundcloudLinkRegex = /^([a-z0-9-_])\w+$/g;
@@ -31,13 +31,13 @@ export type ValidatorFunc<T = string> = (
 
 export const validateEmail: ValidatorFunc = (email): ValidationResult => {
   if (!email) {
-    return { isValid: false, reason: 'Email is required.' };
+    return { isValid: false, reason: 'Your email is required.' };
   }
 
   if (!email.match(emailRegex)) {
     return {
       isValid: false,
-      reason: 'Your email is invalid',
+      reason: 'Your email is invalid.',
     };
   }
 
@@ -52,7 +52,7 @@ export const validateEmail: ValidatorFunc = (email): ValidationResult => {
 
 export const validatePassword: ValidatorFunc = (password): ValidationResult => {
   if (!password || password === '') {
-    return { isValid: false, reason: 'Your password is empty.' };
+    return { isValid: false, reason: 'Your password is required.' };
   }
 
   if (password.length > textInputMaxLength) {
@@ -63,7 +63,7 @@ export const validatePassword: ValidatorFunc = (password): ValidationResult => {
     return {
       isValid: false,
       reason:
-        'Your password needs to be at least 6 characters long and have at least 1 number and 1 special character.',
+        'Your password needs to be at least 6 characters long and have at least 1 number and 1 of the following characters: !@#$%^&*.',
     };
   }
 
@@ -79,7 +79,7 @@ export const validateConfirmPassword = (
   if (password !== confirmPassword) {
     return {
       isValid: false,
-      reason: 'Your passwords do not match',
+      reason: 'Your passwords do not match.',
     };
   }
   return {
@@ -87,7 +87,7 @@ export const validateConfirmPassword = (
   };
 };
 
-export const validateBirthday: ValidatorFunc<Date> = (
+export const validateBirthday: ValidatorFunc<Date | null> = (
   date
 ): ValidationResult => {
   if (date) {
@@ -105,7 +105,7 @@ export const validateBirthday: ValidatorFunc<Date> = (
       return { isValid: false, reason: "You're too old." };
     }
   } else {
-    return { isValid: false, reason: 'Please specify a date.' };
+    return { isValid: false, reason: 'Your birthday is required.' };
   }
 
   return { isValid: true };
@@ -113,13 +113,13 @@ export const validateBirthday: ValidatorFunc<Date> = (
 
 export const validateName: ValidatorFunc = (name): ValidationResult => {
   if (!name) {
-    return { isValid: false, reason: 'Please specify a name' };
+    return { isValid: false, reason: 'Your name is required.' };
   }
 
   if (!name.match(nameRegex)) {
     return {
       isValid: false,
-      reason: 'Please enter a valid name.',
+      reason: 'Your name is invalid.',
     };
   }
 
@@ -134,13 +134,13 @@ export const validateName: ValidatorFunc = (name): ValidationResult => {
 
 export const validateLocation: ValidatorFunc = (location): ValidationResult => {
   if (!location) {
-    return { isValid: false, reason: 'You need to specify a location.' };
+    return { isValid: false, reason: 'Your location is required.' };
   }
 
   if (!Locations.includes(location as Location)) {
     return {
       isValid: false,
-      reason: `${location} is not a valid location`,
+      reason: `${location} is not a valid location.`,
     };
   }
 
@@ -152,7 +152,7 @@ export const validateLocation: ValidatorFunc = (location): ValidationResult => {
 export const validateGender: ValidatorFunc = (gender): ValidationResult => {
   if (gender) {
     if (!Genders.includes(gender as Gender)) {
-      return { isValid: false, reason: 'Invalid gender' };
+      return { isValid: false, reason: `${gender} is not a valid gender.` };
     }
   }
 
@@ -164,7 +164,10 @@ export const validateGenres: ValidatorFunc<string[]> = (
 ): ValidationResult => {
   if (genres) {
     if (genres.some((genre) => !Genres.includes(genre as Genre))) {
-      return { isValid: false, reason: 'Invalid genre' };
+      return {
+        isValid: false,
+        reason: `One of the specified genres is invalid.`,
+      };
     }
   }
 
@@ -176,7 +179,10 @@ export const validateTalents: ValidatorFunc<string[]> = (
 ): ValidationResult => {
   if (talents) {
     if (talents.some((talent) => !Talents.includes(talent as Talent))) {
-      return { isValid: false, reason: 'Invalid talent' };
+      return {
+        isValid: false,
+        reason: 'One of the specified talents is invalid.',
+      };
     }
   }
 
@@ -186,7 +192,7 @@ export const validateTalents: ValidatorFunc<string[]> = (
 export const validateBio: ValidatorFunc = (bio) => {
   if (bio) {
     if (bio.length > bioMaxLength) {
-      return { isValid: false, reason: 'Your bio is too long' };
+      return { isValid: false, reason: 'Your bio is too long.' };
     }
   }
 
@@ -196,7 +202,7 @@ export const validateBio: ValidatorFunc = (bio) => {
 export const validateSpotifyLink: ValidatorFunc = (link) => {
   if (link) {
     if (!link.match(spotifyLinkRegex)) {
-      return { isValid: false, reason: 'Your spotify artist link is invalid.' };
+      return { isValid: false, reason: 'Your Spotify artist link is invalid.' };
     }
   }
 
@@ -208,7 +214,7 @@ export const validateSoundcloudLink: ValidatorFunc = (link) => {
     if (!link.match(soundcloudLinkRegex)) {
       return {
         isValid: false,
-        reason: 'Your Soundcloud artist link is invalid.',
+        reason: 'Your Soundcloud username link is invalid.',
       };
     }
   }
@@ -220,7 +226,7 @@ export const validateBandcampLink: ValidatorFunc = (link) => {
     if (!link.match(bandcampLinkRegex)) {
       return {
         isValid: false,
-        reason: 'Your bandcamp artist link is invalid.',
+        reason: 'Your Bandcamp username link is invalid.',
       };
     }
   }

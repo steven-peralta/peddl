@@ -16,37 +16,32 @@ export function useValidation<T>(
 ) {
   const [value, setValue] = useState<T>(defaultValue);
   const [validationText, setValidationText] = useState<string | undefined>();
-  const [isValid, setIsValid] = useState<boolean>(!(required && !value));
-  const [initialValidation, setInitialValidation] = useState(false);
-
-  const performValidation = () => {
-    const { reason, isValid: isValueValid } = validator(value);
-    if (reason) {
-      setValidationText(reason);
-    } else {
-      setValidationText(undefined);
-    }
-    setIsValid(isValueValid);
-  };
+  const [isValid, setIsValid] = useState(!(required && !value));
+  const [initialChange, setInitialChange] = useState(false);
 
   useEffect(() => {
-    if (initialValidation) {
-      performValidation();
+    if (initialChange) {
+      const { reason, isValid: isValueValid } = validator(value);
+      if (reason) {
+        setValidationText(reason);
+      } else {
+        setValidationText(undefined);
+      }
+      setIsValid(isValueValid);
     }
-  });
+  }, [initialChange, validator, value]);
 
   return {
     value: [value],
-    setter: [setValue],
-    validationText: [validationText],
-    isValid: [isValid],
-    onBlur: [
-      () => {
-        if (!initialValidation) {
-          performValidation();
+    setter: [
+      (v: T) => {
+        if (!initialChange) {
+          setInitialChange(true);
         }
-        setInitialValidation(true);
+        setValue(v);
       },
     ],
+    validationText: [validationText],
+    isValid: [isValid],
   };
 }
