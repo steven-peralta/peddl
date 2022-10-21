@@ -6,6 +6,7 @@ import PeddlNavbar from './components/MainNavbar/PeddlNavbar';
 
 import TitlePage from './content/TitlePage/TitlePage';
 import CreateAccountPage from './content/CreateAccount/CreateAccountPage';
+import LoginPage from './content/LoginPage/LoginPage';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route element={<TitlePage />} path="/" />
         <Route element={<CreateAccountPage />} path="register" />
+        <Route element={<LoginPage />} path="login" />
       </Routes>
     </div>
   );

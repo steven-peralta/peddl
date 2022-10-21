@@ -3,6 +3,7 @@ import './PeddlNavbar.css';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import { Link } from 'react-router-dom';
 import {
   OffcanvasBody,
   OffcanvasHeader,
@@ -12,10 +13,10 @@ import peddlLogo from '../../peddlLogo.svg';
 
 export default function PeddlNavbar() {
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" className="mb-3">
+    <Navbar bg="dark" className="mb-3" expand="lg" variant="dark">
       <Container fluid>
         <Navbar.Brand>
-          <img className="logo" src={peddlLogo} alt="peddlLogo" />
+          <img alt="peddlLogo" className="logo" src={peddlLogo} />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Offcanvas placement="end">
@@ -24,8 +25,8 @@ export default function PeddlNavbar() {
           </OffcanvasHeader>
           <OffcanvasBody>
             <Nav className="flex-grow-1 pe-3">
-              <Nav.Link href="#">Login</Nav.Link>
-              <Nav.Link href="#">Register</Nav.Link>
+              <Link to="/login">Login</Link>
+              <Link to="/register">Register</Link>
             </Nav>
           </OffcanvasBody>
         </Navbar.Offcanvas>
