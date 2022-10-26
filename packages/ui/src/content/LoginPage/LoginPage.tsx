@@ -41,9 +41,7 @@ export default function LoginPage() {
               </div>
             </div>
             <div className="button-container">
-              <Button className="signInBtn" type="submit">
-                Sign in
-              </Button>
+              <Button className="signInBtn">Sign in</Button>
             </div>
           </Form>
         </div>

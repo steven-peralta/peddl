@@ -5,7 +5,7 @@ import {
   CreateProfileFormData,
   Profile,
   User,
-  UserFormData,
+  CreateUserFormData,
   WithoutID,
 } from '@peddl/common';
 import asyncHandler from 'express-async-handler';
@@ -25,7 +25,7 @@ const setupUserRoutes = (app: Express, db: Db) => {
     '/v1/auth',
     asyncHandler(async (req, res) => {
       const { body } = req;
-      const { email, password } = body as UserFormData;
+      const { email, password } = body as CreateUserFormData;
       const users = db.collection<User>('users');
       const user = await users.findOne({ email });
       if (!user) {
@@ -53,7 +53,7 @@ const setupUserRoutes = (app: Express, db: Db) => {
     '/v1/users',
     asyncHandler(async (req, res) => {
       const { body } = req;
-      const data = body as UserFormData;
+      const data = body as CreateUserFormData;
       const validationResults = validateUserFormData(data);
 
       if (!validationResults.isValid) {

@@ -7,7 +7,11 @@ export type User = {
   salt: string;
 };
 
-export type UserFormData = Omit<User, '_id' | 'salt'>;
+export type CreateUserFormData = Omit<User, '_id' | 'salt'>;
+
+export type LoginResponse = { token: string };
+
+export type CreateUserResponse = LoginResponse;
 
 export type Profile = {
   _id: string;

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Form, InputGroup } from 'react-bootstrap';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
 import {
   validateEmail,
   validatePassword,
@@ -22,11 +22,14 @@ import {
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';
 import Content from '../../components/Content';
-import UploadMediaStep from './UploadMediaStep';
-import { handleFormChange, useValidation } from '../../components/forms/utils';
 
-import FormInput from '../../components/forms/FormInput';
+import FormInput from '../../components/FormInput';
 import Slider from '../../components/Slider/Slider';
+import { useRequest, useValidation } from '../../utils/hooks';
+import handleFormChange from '../../utils/form';
+import { createUser } from '../../utils/api';
+import UploadMediaBox from '../../components/UploadMediaBox/UploadMediaBox';
+import convertToImageElement from '../../utils/convertToImageElement';
 
 const enum CreateAccountSteps {
   NewProfile,
@@ -54,6 +57,10 @@ type PrevNextButtonsProps = {
   prevHidden?: boolean;
   nextDisabled?: boolean;
   prevDisabled?: boolean;
+  nextText?: string;
+  prevText?: string;
+  nextLoading?: boolean;
+  nextVariant?: string;
 };
 
 function PrevNextButtons({
@@ -63,6 +70,10 @@ function PrevNextButtons({
   prevHidden,
   nextDisabled,
   prevDisabled,
+  nextText,
+  prevText,
+  nextLoading,
+  nextVariant,
 }: PrevNextButtonsProps) {
   const justification = nextHidden
     ? 'justify-content-start'
@@ -77,15 +88,25 @@ function PrevNextButtons({
         style={{ display: prevHidden ? 'none' : undefined }}
         variant="secondary"
       >
-        Back
+        {prevText || 'Back'}
       </Button>
       <Button
         disabled={nextDisabled}
         onClick={onNextClick}
         style={{ display: nextHidden ? 'none' : undefined }}
-        variant="primary"
+        variant={nextVariant || 'primary'}
       >
-        Next
+        {nextLoading && (
+          <Spinner
+            animation="border"
+            aria-hidden="true"
+            as="span"
+            className="me-2"
+            role="status"
+            size="sm"
+          />
+        )}
+        {nextText || 'Next'}
       </Button>
     </div>
   );
@@ -96,6 +117,14 @@ export default function CreateAccountPage() {
   minDate.setFullYear(new Date().getFullYear() - 18);
   const maxDate = new Date();
   maxDate.setFullYear(new Date().getFullYear() + 120);
+
+  const {
+    isLoading: [createUserLoading],
+    requestFunc: [doCreateUser],
+    responseData: [createUserResponse],
+    error: [createUserError],
+    status: [createUserStatus],
+  } = useRequest(createUser);
 
   const [step, setStep] = useState<CreateAccountSteps>(
     CreateAccountSteps.NewProfile
@@ -213,6 +242,16 @@ export default function CreateAccountPage() {
   );
   const [genresSetting, setGenreSetting] = useState<readonly TagOption[]>([]);
   const [talentsSetting, setTalentSetting] = useState<readonly TagOption[]>([]);
+
+  const [images, setImages] = useState<HTMLImageElement[]>(new Array(6));
+  const [uploadBoxDisabled, setUploadBoxDisabled] = useState<boolean[]>([
+    false,
+    true,
+    true,
+    true,
+    true,
+    true,
+  ]);
 
   const newProfileFormsValid =
     emailIsValid &&
@@ -427,7 +466,68 @@ export default function CreateAccountPage() {
     </Form>
   );
 
-  const searchSettingsProp = (
+  const handleUpload = (gridPos: number) => {
+    return (event: ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        convertToImageElement(file)
+          .then((img) => {
+            if (img) {
+              images[gridPos] = img;
+              setImages([...images]);
+              if (gridPos < 5) {
+                uploadBoxDisabled[gridPos + 1] = false;
+                setUploadBoxDisabled([...uploadBoxDisabled]);
+              }
+            }
+          })
+          .catch((err: Error) => {
+            console.error(err);
+          });
+      }
+    };
+  };
+
+  const uploadMediaStep = (
+    <div className="d-flex flex-column justify-content-center">
+      <div className="d-flex flex-row justify-content-center mt-0">
+        <UploadMediaBox
+          disabled={uploadBoxDisabled[0]}
+          image={images[0]}
+          onUpload={handleUpload(0)}
+        />
+        <UploadMediaBox
+          disabled={uploadBoxDisabled[1]}
+          image={images[1]}
+          onUpload={handleUpload(1)}
+        />
+        <UploadMediaBox
+          disabled={uploadBoxDisabled[2]}
+          image={images[2]}
+          onUpload={handleUpload(2)}
+        />
+      </div>
+      <div className="d-flex flex-row justify-content-center mt-3">
+        <UploadMediaBox
+          disabled={uploadBoxDisabled[3]}
+          image={images[3]}
+          onUpload={handleUpload(3)}
+        />
+        <UploadMediaBox
+          disabled={uploadBoxDisabled[4]}
+          image={images[4]}
+          onUpload={handleUpload(4)}
+        />
+        <UploadMediaBox
+          disabled={uploadBoxDisabled[5]}
+          image={images[5]}
+          onUpload={handleUpload(5)}
+        />
+      </div>
+    </div>
+  );
+
+  const searchSettingsStep = (
     <Form noValidate>
       <FormInput htmlFor="ageSetting" label="Age">
         <div className="mt-4 pt-2 mb-2">
@@ -475,8 +575,12 @@ export default function CreateAccountPage() {
           options={TalentTagOptions}
           value={talentsSetting}
         />
-        <em>Press enter to add new tag</em>
       </FormInput>
+      {createUserError && (
+        <p className="small text-danger">
+          {`An error occurred when trying to create a new user: ${createUserError.message}`}
+        </p>
+      )}
     </Form>
   );
 
@@ -485,9 +589,9 @@ export default function CreateAccountPage() {
       case CreateAccountSteps.NewProfile:
         return newProfileStep;
       case CreateAccountSteps.UploadMedia:
-        return <UploadMediaStep />;
+        return uploadMediaStep;
       case CreateAccountSteps.SearchSettings:
-        return searchSettingsProp;
+        return searchSettingsStep;
       default:
         return newProfileStep;
     }
@@ -497,9 +601,32 @@ export default function CreateAccountPage() {
     <Content title={getPageTitle(step)}>
       {renderStep()}
       <PrevNextButtons
-        nextDisabled={!newProfileFormsValid}
-        onNextClick={() => setStep(step < 2 ? step + 1 : step)}
+        nextDisabled={!newProfileFormsValid || createUserLoading}
+        nextLoading={createUserLoading}
+        nextText={step === CreateAccountSteps.SearchSettings ? 'Done' : 'Next'}
+        nextVariant={
+          createUserError
+            ? 'danger'
+            : createUserStatus === 201
+            ? 'success'
+            : 'primary'
+        }
+        onNextClick={() => {
+          if (step === CreateAccountSteps.SearchSettings) {
+            doCreateUser({ email, password })
+              .then(() => {
+                console.log(createUserResponse);
+                // bring us to the next page
+              })
+              .catch(() => {
+                console.log(createUserError);
+              });
+          } else {
+            setStep(step + 1);
+          }
+        }}
         onPrevClick={() => setStep(step > 0 ? step - 1 : step)}
+        prevDisabled={createUserLoading}
         prevHidden={step === 0}
       />
     </Content>

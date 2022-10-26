@@ -1,6 +1,6 @@
 import {
   CreateProfileFormData,
-  UserFormData,
+  CreateUserFormData,
   validateBandcampLink,
   validateBio,
   validateBirthday,
@@ -19,7 +19,7 @@ import {
 export const validateUserFormData = ({
   email,
   password,
-}: UserFormData): ValidationResult => {
+}: CreateUserFormData): ValidationResult => {
   const emailResults = validateEmail(email);
   const passwordResults = validatePassword(password);
 
