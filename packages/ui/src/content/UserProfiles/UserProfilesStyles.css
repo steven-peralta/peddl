@@ -1,0 +1,10 @@
+.carousel-inner{
+    height: 538px !important;
+    background-color: black;
+}
+
+.userImg{
+    background-size: cover;
+    width: 100%;
+    height: auto;
+}

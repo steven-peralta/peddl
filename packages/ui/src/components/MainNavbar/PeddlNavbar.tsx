@@ -13,7 +13,7 @@ import peddlLogo from '../../peddlLogo.svg';
 
 export default function PeddlNavbar() {
   return (
-    <Navbar bg="dark" className="mb-3" expand="lg" variant="dark">
+    <Navbar bg="dark" expand="lg" variant="dark">
       <Container fluid>
         <Navbar.Brand>
           <img alt="peddlLogo" className="logo" src={peddlLogo} />
