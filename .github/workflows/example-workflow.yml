@@ -24,7 +24,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Docker build
-      - run: docker build -t peddl-api --build-arg BUILD_CONTEXT=api .
+        run: docker build -t peddl-api --build-arg BUILD_CONTEXT=api .
 
       - name: Docker tag
         run: docker tag peddl-api:${{ github.sha }} 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-api:${{ github.sha }}
