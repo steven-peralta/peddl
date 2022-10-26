@@ -9,6 +9,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Docker Layer Caching
+        uses: satackey/action-docker-layer-caching@v0.0.11
+
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -24,7 +27,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Docker build
-        run: docker build -t peddl-api --build-arg BUILD_CONTEXT=api .
+        run: docker build -t peddl-api:${{ github.sha }} --build-arg BUILD_CONTEXT=api .
 
       - name: Docker tag
         run: docker tag peddl-api:${{ github.sha }} 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-api:${{ github.sha }}
