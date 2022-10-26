@@ -16,8 +16,9 @@ class Server {
 
   constructor(
     port: string = process.env['PORT'] ?? '8080',
-    mongoConnectionURL = 'mongodb://admin:admin@localhost:27017',
-    dbName = 'peddl'
+    mongoConnectionURL = process.env['MONGO_URI'] ??
+      'mongodb://admin:admin@localhost:27017',
+    dbName = process.env['MONGO_DB'] ?? 'peddl'
   ) {
     this.app = express();
     this.mongoClient = new MongoClient(mongoConnectionURL);
