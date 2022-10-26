@@ -3,7 +3,6 @@ ARG BUILD_CONTEXT
 
 WORKDIR /build
 COPY package.json .
-COPY yarn.lock .
 COPY tsconfig.json .
 COPY .yarnrc.yml .
 COPY ./packages/common/package.json packages/common/
