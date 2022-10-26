@@ -1,6 +1,8 @@
 name: '[Staging] Build & deploy API'
 on:
   push:
+    branches:
+      - staging
     paths:
       - packages/api/**
 jobs:
