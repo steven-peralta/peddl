@@ -9,6 +9,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-      - run: docker build --build-arg BUILD_CONTEXT=api .
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Authenticate with AWS
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Docker build
+      - run: docker build -t peddl-api --build-arg BUILD_CONTEXT=api .
+
+      - name: Docker tag
+        run: docker tag peddl-api:${{ github.sha }} 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-api:${{ github.sha }}
+
+      - name: Docker push
+        run: docker push 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-api:${{ github.sha }}
