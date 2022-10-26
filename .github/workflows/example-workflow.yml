@@ -1,5 +1,6 @@
 name: example-workflow
 run-name: testing example workflow
+on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
