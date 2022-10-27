@@ -7,7 +7,7 @@ on:
       - packages/api/**
 
 jobs:
-  build:
+  api:
     uses: ./.github/workflows/build.yml
     with:
       project: api
