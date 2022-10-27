@@ -1,4 +1,5 @@
 services:
+
   nginx:
     image: nginx
     volumes:
@@ -10,29 +11,51 @@ services:
       - wss
     ports:
       - "80:80"
+
   mongo:
     image: mongo
+    volumes:
+      - "mongodbdata:/data/db"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
     networks:
       - default-network
+
   api:
-    image: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-models:latest
+    image: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-api:${API_TAG:-latest}
     build:
       context: .
       args:
-        - BUILD_CONTEXT=models
+        - BUILD_CONTEXT=api
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      MONGO_DB: ${MONGO_DB}
+      MONGO_URI: ${MONGO_URI}
+      PORT: 8080
     depends_on:
       - mongo
     networks:
       - default-network
+
   wss:
-    image: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-wss:latest
+    image: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-wss:${WSS_TAG:-latest}
     build:
       context: .
       args:
         - BUILD_CONTEXT=wss
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      MONGO_DB: ${MONGO_DB}
+      MONGO_URI: ${MONGO_URI}
+      PORT: 8000
     depends_on:
       - mongo
     networks:
       - default-network
+
 networks:
   default-network: {}
+volumes:
+  mongodbdata:

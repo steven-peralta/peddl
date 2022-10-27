@@ -22,7 +22,7 @@ const jwtSecret = process.env['JWT_TOKEN_SECRET'] ?? 'foobar';
 
 const setupUserRoutes = (app: Express, db: Db) => {
   app.post(
-    '/v1/auth',
+    '/auth',
     asyncHandler(async (req, res) => {
       const { body } = req;
       const { email, password } = body as CreateUserFormData;
@@ -50,7 +50,7 @@ const setupUserRoutes = (app: Express, db: Db) => {
     })
   );
   app.post(
-    '/v1/users',
+    '/users',
     asyncHandler(async (req, res) => {
       const { body } = req;
       const data = body as CreateUserFormData;
@@ -85,7 +85,7 @@ const setupUserRoutes = (app: Express, db: Db) => {
   );
 
   app.post(
-    '/v1/profiles',
+    '/profiles',
     expressjwt({ secret: jwtSecret, algorithms: ['HS256'] }),
     asyncHandler(async (req: JWTRequest<JWTToken>, res) => {
       const { auth } = req;
