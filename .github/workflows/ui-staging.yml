@@ -1,0 +1,26 @@
+name: 'UI Workflow'
+
+on:
+  push:
+    branches:
+      - staging
+#    paths:
+#      - packages/ui/**
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install deps
+        run: yarn
+
+      - name: Build UI
+        run: yarn ui build

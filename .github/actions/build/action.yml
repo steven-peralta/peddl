@@ -1,4 +1,4 @@
-name: 'Build'
+name: 'Build and Push to ECR'
 description: 'Builds Docker image and pushes to AWS ECR'
 inputs:
   project:

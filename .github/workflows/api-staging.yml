@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - staging
-#    paths:
-#      - packages/api/**
+    paths:
+      - packages/api/**
 
 jobs:
   deploy:
