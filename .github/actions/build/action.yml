@@ -3,27 +3,39 @@ description: 'Builds Docker image and pushes to AWS ECR'
 inputs:
   project:
     required: true
-    type: string
+    description: The name of the project we're building
+  aws_access_key_id:
+    required: true
+    description: AWS access key ID
+  aws_secret_access_key:
+    required: true
+    description: AWS secret access key
+
 
 runs:
   using: composite
   steps:
     - name: Authenticate with AWS
+      shell: bash
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-access-key-id: ${{ inputs.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
 
     - name: Login to ECR
+      shell: bash
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
     - name: Docker build
+      shell: bash
       run: docker build -t peddl-${{ inputs.project }}:${{ github.sha }} --build-arg BUILD_CONTEXT=${{ inputs.project }} .
 
     - name: Docker tag
+      shell: bash
       run: docker tag peddl-${{ inputs.project }}:${{ github.sha }} 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-${{ inputs.project }}:${{ github.sha }}
 
     - name: Docker push
+      shell: bash
       run: docker push 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-${{ inputs.project }}:${{ github.sha }}
