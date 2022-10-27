@@ -10,7 +10,6 @@ import {
 } from 'react-bootstrap-icons';
 import sampleImg from './George_Harrison_1974.jpeg';
 import sampleImg2 from './George-Harrison-Credit-Michael-Ochs-Archives-Getty-Images@1400x1050.jpeg';
-import sampleImg3 from './209608.jpeg';
 
 export default function UserProfiles() {
   const [isLiked, setIsLiked] = useState(false);
@@ -28,10 +27,6 @@ export default function UserProfiles() {
 
         <Carousel.Item>
           <img alt="Second slide" className="userImg" src={sampleImg2} />
-        </Carousel.Item>
-
-        <Carousel.Item>
-          <img alt="Third slide" className="userImg" src={sampleImg3} />
         </Carousel.Item>
       </Carousel>
       <Container className="userInfo d-grid gap-1">
@@ -53,11 +48,10 @@ export default function UserProfiles() {
               style={{
                 width: '48px',
                 height: '48px',
-                backgroundColor: isLiked ? 'grey' : '',
-                border: isLiked ? 'grey' : '',
+                backgroundColor: isLiked ? 'red' : 'white',
               }}
             >
-              <HeartFill />
+              <HeartFill style={{ color: isLiked ? 'white' : 'red' }} />
             </Button>
           </div>
           <div className="d-flex mt-2">

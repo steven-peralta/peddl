@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Button, Container, Form } from 'react-bootstrap';
+import { FloatingLabel, Button, Container, Form } from 'react-bootstrap';
 import './LoginStyles.css';
+import { Eye } from 'react-bootstrap-icons';
 
 export default function LoginPage() {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -12,38 +13,25 @@ export default function LoginPage() {
       <div className="mb-3 p-5">
         <h1 className="mb-3">Sign in</h1>
         <div>
-          <Form>
-            <div className="input-container mb-2">
-              <input
-                className="form-control"
-                name="email"
-                placeholder="Email"
-                required
-                type="text"
-              />
-            </div>
-            <div className="input-group mb-3">
-              <input
-                className="form-control"
-                name="pass"
+          <FloatingLabel
+            className="mb-3"
+            controlId="floatingInput"
+            label="Email address"
+          >
+            <Form.Control placeholder="name@example.com" type="email" />
+          </FloatingLabel>
+          <div className="d-flex flex-row align-items-center mb-3">
+            <FloatingLabel controlId="floatingPassword" label="Password">
+              <Form.Control
                 placeholder="Password"
-                required
                 type={passwordShown ? 'text' : 'password'}
               />
-              <div className="input-group-append">
-                <Button
-                  className="btn"
-                  onClick={togglePassword}
-                  variant="outline-primary"
-                >
-                  Show
-                </Button>
-              </div>
-            </div>
-            <div className="button-container">
-              <Button className="signInBtn">Sign in</Button>
-            </div>
-          </Form>
+            </FloatingLabel>
+            <Eye onClick={togglePassword} />
+          </div>
+          <div className="button-container">
+            <Button className="signInBtn">Sign in</Button>
+          </div>
         </div>
       </div>
     </Container>
