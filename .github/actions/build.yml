@@ -1,5 +1,5 @@
 name: 'Build'
-
+description: 'Builds Docker image and pushes to AWS ECR'
 inputs:
   project:
     required: true
