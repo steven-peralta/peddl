@@ -15,7 +15,7 @@ class Server {
   db?: Db;
 
   constructor(
-    port: string = process.env['PORT'] ?? '8080',
+    port: string = process.env['PORT'] ?? '80870',
     mongoConnectionURL = process.env['MONGO_URI'] ??
       'mongodb://admin:admin@localhost:27017',
     dbName = process.env['MONGO_DB'] ?? 'peddl'
