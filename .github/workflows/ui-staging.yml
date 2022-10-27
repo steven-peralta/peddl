@@ -19,12 +19,13 @@ jobs:
         with:
           node-version: '16'
 
-      - run: corepack enable && yarn set version 3.2.3
-
-      - run: yarn --version
+      - name: Install Yarn v3
+        run: corepack enable && yarn set version 3.2.3
 
       - name: Install deps
         run: yarn
+
+      - run: ls -la node_modules/@peddl
 
       - name: Build UI
         run: yarn ui build
