@@ -15,12 +15,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: ls
-        run: ls packages/ui/src/content/CreateAccount
-
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
+
+      - run: yarn --version
 
       - name: Install deps
         run: yarn
