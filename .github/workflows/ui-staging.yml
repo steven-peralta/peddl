@@ -25,7 +25,8 @@ jobs:
       - name: Install deps
         run: yarn
 
-      - run: ls -la node_modules/@peddl
+      - name: Build common
+        run: yarn common build
 
       - name: Build UI
         run: yarn ui build
