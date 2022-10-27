@@ -57,3 +57,5 @@ package-lock.json
 .rollup.cache
 
 .env
+
+!.github/actions/build
