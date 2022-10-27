@@ -20,14 +20,17 @@ export default function LoginPage() {
           >
             <Form.Control placeholder="name@example.com" type="email" />
           </FloatingLabel>
-          <div className="d-flex flex-row align-items-center mb-3">
+          <div className="d-flex flex-row align-items-center mb-3 justify-content-between">
             <FloatingLabel controlId="floatingPassword" label="Password">
               <Form.Control
                 placeholder="Password"
                 type={passwordShown ? 'text' : 'password'}
               />
             </FloatingLabel>
-            <Eye onClick={togglePassword} />
+            <Eye
+              onClick={togglePassword}
+              style={{ color: passwordShown ? 'red' : 'grey' }}
+            />
           </div>
           <div className="button-container">
             <Button className="signInBtn">Sign in</Button>
