@@ -14,7 +14,7 @@ export default function TitlePage() {
         <div className="btn d-grid gap-3 mx-auto">
           <Link to="/register">
             <Button className="accountButton" size="lg" variant="primary">
-              Create an accountafsdfasdf
+              Create an accountafsdfasdftgfgsd
             </Button>
           </Link>
           <Link to="/login">
