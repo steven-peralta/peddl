@@ -15,7 +15,7 @@ export default function PeddlNavbar() {
   return (
     <Navbar bg="dark" expand="lg" variant="dark">
       <Container fluid>
-        <Navbar.Brand>
+        <Navbar.Brand href="/">
           <img alt="peddlLogo" className="logo" src={peddlLogo} />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -25,8 +25,19 @@ export default function PeddlNavbar() {
           </OffcanvasHeader>
           <OffcanvasBody>
             <Nav className="flex-grow-1 pe-3">
-              <Link to="/login">Login</Link>
-              <Link to="/register">Register</Link>
+              <Link
+                className="mb-3"
+                style={{ textDecoration: 'none', color: 'black' }}
+                to="/login"
+              >
+                Login
+              </Link>
+              <Link
+                style={{ textDecoration: 'none', color: 'black' }}
+                to="/register"
+              >
+                Register
+              </Link>
             </Nav>
           </OffcanvasBody>
         </Navbar.Offcanvas>

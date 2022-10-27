@@ -8,7 +8,7 @@ type PageProps = {
 export default function Content({ title, children }: PageProps) {
   return (
     <Container>
-      <h1 className="mb-3">{title}</h1>
+      <h1 className="mb-3 mt-3">{title}</h1>
       {children}
     </Container>
   );
