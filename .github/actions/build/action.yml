@@ -15,18 +15,13 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Authenticate with AWS
-      shell: bash
-      uses: aws-actions/configure-aws-credentials@v1
+    - uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ inputs.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
 
-    - name: Login to ECR
-      shell: bash
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+    - uses: aws-actions/amazon-ecr-login@v1
 
     - name: Docker build
       shell: bash
