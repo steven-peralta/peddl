@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     environment: staging
-    uses: ./.github/workflows/build.yml@main
+    uses: ./.github/workflows/build.yml
     with:
       project: api
     secrets:
