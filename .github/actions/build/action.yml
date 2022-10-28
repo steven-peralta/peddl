@@ -23,21 +23,10 @@ runs:
         aws-access-key-id: ${{ inputs.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
-
     - uses: aws-actions/amazon-ecr-login@v1
-
-    - uses: docker/setup-qemu-action@v2
-      with:
-        platforms: arm64
-
-    - uses: docker/setup-buildx-action@v2
-      with:
-        platforms: linux/amd64,linux/arm64
-
     - uses: docker/build-push-action@v3
       with:
         build-args: |
           BUILD_CONTEXT=${{ inputs.project }}
         push: true
         tags: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-${{ inputs.project }}-${{ inputs.context }}:${{ github.sha }},177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-${{ inputs.project }}-${{ inputs.context }}:latest
-        platforms: linux/amd64,linux/arm64
