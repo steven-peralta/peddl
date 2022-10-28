@@ -18,7 +18,7 @@ jobs:
       - name: Build and push to ECR
         uses: ./.github/actions/build
         with:
-          context: staging
+          environment: staging
           project: api
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

@@ -1,9 +1,9 @@
 name: 'Build and Push to ECR'
 description: 'Builds Docker image and pushes to AWS ECR'
 inputs:
-  context:
+  environment:
     required: true
-    description: Build context. Staging or production.
+    description: Build environment. Staging or production.
   project:
     required: true
     description: The name of the project we're building
@@ -27,6 +27,6 @@ runs:
     - uses: docker/build-push-action@v3
       with:
         build-args: |
-          BUILD_CONTEXT=${{ inputs.project }}
+          ENVIRONMENT=${{ inputs.project }}
         push: true
-        tags: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-${{ inputs.project }}-${{ inputs.context }}:${{ github.sha }},177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-${{ inputs.project }}-${{ inputs.context }}:latest
+        tags: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-${{ inputs.project }}-${{ inputs.environment }}:${{ github.sha }},177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-${{ inputs.project }}-${{ inputs.environment }}:latest

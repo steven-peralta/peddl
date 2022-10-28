@@ -30,7 +30,7 @@ jobs:
         run: yarn common build
 
       - name: Build UI
-        run: NODE_ENV=test yarn ui build
+        run: REACT_APP_ENVIRONMENT=staging yarn ui build
 
       - name: Sync with S3 bucket
         uses: jakejarvis/s3-sync-action@v0.5.1

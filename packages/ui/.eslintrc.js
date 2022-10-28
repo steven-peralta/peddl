@@ -19,5 +19,6 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     'react/jsx-sort-props': 'warn',
     'no-nested-ternary': 'off',
+    'dot-notation': 'off',
   },
 };
