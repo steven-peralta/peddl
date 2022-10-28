@@ -9,7 +9,7 @@ const baseURL =
   process.env.NODE_ENV === 'production'
     ? 'https://api.peddl.chat/v1'
     : process.env.NODE_ENV === 'test'
-    ? 'https://api-staging.peddl.chat/v1/'
+    ? 'http://api-staging.peddl.chat/v1/'
     : 'http://localhost:8080/v1';
 
 const axiosInstance = axios.create({
