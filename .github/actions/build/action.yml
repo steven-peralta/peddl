@@ -30,5 +30,7 @@ runs:
 
     - uses: docker/build-push-action@v3
       with:
+        build-args:
+          - BUILD_CONTEXT=${{ inputs.project }}
         push: true
         tags: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-${{ inputs.project }}-${{ inputs.context }}:latest
