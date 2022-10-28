@@ -25,10 +25,6 @@ services:
 
   api:
     image: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-api:${API_TAG:-latest}
-    build:
-      context: .
-      args:
-        - BUILD_CONTEXT=api
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       MONGO_DB: ${MONGO_DB}
@@ -41,10 +37,6 @@ services:
 
   wss:
     image: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-wss:${WSS_TAG:-latest}
-    build:
-      context: .
-      args:
-        - BUILD_CONTEXT=wss
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       MONGO_DB: ${MONGO_DB}
