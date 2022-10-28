@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - staging
-#    paths:
-#      - packages/wss/**
+    paths:
+      - packages/wss/**
 
 jobs:
   deploy:
