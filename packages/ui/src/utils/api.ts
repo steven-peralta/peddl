@@ -8,7 +8,8 @@ import axios, { AxiosResponse } from 'axios';
 const baseURL =
   process.env['REACT_APP_ENVIRONMENT'] === 'staging'
     ? 'http://api-staging.peddl.chat/v1/'
-    : process.env.NODE_ENV === 'production'
+    : process.env['REACT_APP_ENVIRONMENT'] === 'production' ||
+      process.env.NODE_ENV === 'production'
     ? 'https://api.peddl.chat/v1'
     : 'http://localhost:8080/v1';
 

@@ -26,7 +26,7 @@ services:
   api:
     image: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-api-${ENVIRONMENT:-staging}:${API_TAG:-latest}
     environment:
-      NODE_ENV: ${NODE_ENV:-development}
+      NODE_ENV: ${ENVIRONMENT:-development}
       MONGO_DB: ${MONGO_DB}
       MONGO_URI: ${MONGO_URI}
       PORT: 8080
@@ -38,7 +38,7 @@ services:
   wss:
     image: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-wss-${ENVIRONMENT:-staging}:${WSS_TAG:-latest}
     environment:
-      NODE_ENV: ${NODE_ENV:-development}
+      NODE_ENV: ${ENVIRONMENT:-development}
       MONGO_DB: ${MONGO_DB}
       MONGO_URI: ${MONGO_URI}
       PORT: 8000
