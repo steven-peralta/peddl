@@ -4,7 +4,7 @@
 }
 
 .userImg{
-    background-size: cover;
     width: 100%;
-    vertical-align: center;
+    height: 538px;
+    object-fit: cover;
 }

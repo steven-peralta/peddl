@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FloatingLabel, Button, Container, Form } from 'react-bootstrap';
 import './LoginStyles.css';
-import { Eye } from 'react-bootstrap-icons';
+import { Eye, EyeSlash } from 'react-bootstrap-icons';
 
 export default function LoginPage() {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -20,17 +20,26 @@ export default function LoginPage() {
           >
             <Form.Control placeholder="name@example.com" type="email" />
           </FloatingLabel>
-          <div className="d-flex flex-row align-items-center mb-3 justify-content-between">
-            <FloatingLabel controlId="floatingPassword" label="Password">
+          <div className="d-flex flex-row align-items-center mb-3">
+            <FloatingLabel
+              className="align-items-start"
+              controlId="floatingPassword"
+              label="Password"
+              style={{ width: '228px' }}
+            >
               <Form.Control
                 placeholder="Password"
                 type={passwordShown ? 'text' : 'password'}
               />
             </FloatingLabel>
-            <Eye
-              onClick={togglePassword}
-              style={{ color: passwordShown ? 'red' : 'grey' }}
-            />
+            <div className="justify-content-end input-group-btn align-items-end">
+              <Button
+                className="passBtn btn-outline-primary"
+                onClick={togglePassword}
+              >
+                {passwordShown ? <EyeSlash /> : <Eye />}
+              </Button>
+            </div>
           </div>
           <div className="button-container">
             <Button className="signInBtn">Sign in</Button>

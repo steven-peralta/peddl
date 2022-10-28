@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Badge, Button, Carousel, Container } from 'react-bootstrap';
 import './UserProfilesStyles.css';
 import {
+  ArrowLeft,
+  ArrowRight,
   CloudyFill,
   GeoAlt,
   HeartFill,
@@ -64,19 +66,13 @@ export default function UserProfiles() {
             <b>Genres</b>
             <div className="d-flex flex-row mt-1">
               <div className="me-2">
-                <Badge bg="light" text="dark">
-                  Psychedelia
-                </Badge>{' '}
+                <Badge bg="secondary">Psychedelia</Badge>{' '}
               </div>
               <div className="me-2">
-                <Badge bg="light" text="dark">
-                  Boyband
-                </Badge>{' '}
+                <Badge bg="secondary">Boyband</Badge>{' '}
               </div>
               <div className="me-2">
-                <Badge bg="light" text="dark">
-                  Blues
-                </Badge>{' '}
+                <Badge bg="secondary">Blues</Badge>{' '}
               </div>
             </div>
           </div>
@@ -84,43 +80,47 @@ export default function UserProfiles() {
             <b>Talents</b>
             <div className="d-flex flex-row mt-1">
               <div className="me-2">
-                <Badge bg="light" text="dark">
-                  Guitar
-                </Badge>{' '}
+                <Badge bg="secondary">Guitar</Badge>{' '}
               </div>
               <div className="me-2">
-                <Badge bg="light" text="dark">
-                  Vocals
-                </Badge>{' '}
+                <Badge bg="secondary">Vocals</Badge>{' '}
               </div>
               <div className="me-2">
-                <Badge bg="light" text="dark">
-                  Composition
-                </Badge>{' '}
+                <Badge bg="secondary">Composition</Badge>{' '}
               </div>
             </div>
           </div>
           <div className="d-flex flex-column mb-3">
             <b>Links</b>
-            <div className="d-flex flex-row align-items-center mt-1">
-              <XDiamondFill className="me-1" />
+            <div className="d-flex flex-row align-items-center mt-1 mb-2">
+              <XDiamondFill className="me-1" style={{ color: '#007AFF' }} />
               <a className="m-0 p-0" href=" ">
                 thebeatles.bandcamp.com
               </a>
             </div>
-            <div className="d-flex flex-row align-items-center">
-              <CloudyFill className="me-1" />
+            <div className="d-flex flex-row align-items-center mb-2">
+              <CloudyFill className="me-1" style={{ color: '#007AFF' }} />
               <a className="m-0 p-0" href=" ">
                 soundcloud.com/thebeatles
               </a>
             </div>
-            <div className="d-flex flex-row align-items-center">
-              <Spotify className="me-1" />
+            <div className="d-flex flex-row align-items-center mb-2">
+              <Spotify className="me-1" style={{ color: '#007AFF' }} />
               <a className="m-0 p-0" href=" ">
                 spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2
               </a>
             </div>
           </div>
+        </div>
+        <div className="d-flex flex-row justify-content-between mb-4">
+          <Button className="btn-secondary">
+            <ArrowLeft className="me-2" />
+            Prev
+          </Button>
+          <Button>
+            Next
+            <ArrowRight className="ms-2" />
+          </Button>
         </div>
       </Container>
     </div>
