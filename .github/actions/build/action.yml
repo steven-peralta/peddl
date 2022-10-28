@@ -30,6 +30,9 @@ runs:
       with:
         platforms: linux/amd64,linux/arm64
 
+    - shell: sh
+      run: docker run -it --rm --privileged tonistiigi/binfmt --install all
+
     - uses: docker/build-push-action@v3
       with:
         build-args: |
