@@ -30,7 +30,7 @@ jobs:
         run: yarn common build
 
       - name: Build UI
-        run: yarn ui build
+        run: NODE_ENV=test yarn ui build
 
       - name: Sync with S3 bucket
         uses: jakejarvis/s3-sync-action@v0.5.1
