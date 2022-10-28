@@ -24,7 +24,7 @@ services:
       - default-network
 
   api:
-    image: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-api:${API_TAG:-latest}
+    image: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-api-${CONTEXT:-staging}:${API_TAG:-latest}
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       MONGO_DB: ${MONGO_DB}
@@ -36,7 +36,7 @@ services:
       - default-network
 
   wss:
-    image: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-wss:${WSS_TAG:-latest}
+    image: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-wss-${CONTEXT:-staging}:${WSS_TAG:-latest}
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       MONGO_DB: ${MONGO_DB}
