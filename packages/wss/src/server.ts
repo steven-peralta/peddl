@@ -22,4 +22,4 @@ wss.on('connection', (socket) => {
 });
 
 httpServer.listen(port);
-console.log(`wss server started fasdfon port ${port}.`);
+console.log(`wss server started on port ${port}.`);
