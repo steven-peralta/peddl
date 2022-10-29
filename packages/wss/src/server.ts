@@ -1,7 +1,6 @@
 import express from 'express';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
-import APP_NAME from '@peddl/common';
 
 const app = express();
 
@@ -23,4 +22,4 @@ wss.on('connection', (socket) => {
 });
 
 httpServer.listen(port);
-console.log(`${APP_NAME} wss server started on port ${port}.`);
+console.log(`wss server started on port ${port}.`);
