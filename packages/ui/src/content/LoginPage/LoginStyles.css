@@ -4,3 +4,9 @@ input{
 .signInBtn{
     width: 100%;
 }
+
+.passBtn{
+    background-color: white !important;
+    border-color: lightgrey !important;
+    height: 58px;
+}
