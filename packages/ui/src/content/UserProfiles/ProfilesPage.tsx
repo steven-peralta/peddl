@@ -1,129 +1,41 @@
-import React, { useState } from 'react';
-import { Badge, Button, Carousel, Container } from 'react-bootstrap';
-import './UserProfilesStyles.css';
-import {
-  ArrowLeft,
-  ArrowRight,
-  CloudyFill,
-  GeoAlt,
-  HeartFill,
-  Spotify,
-  XDiamondFill,
-} from 'react-bootstrap-icons';
+import React from 'react';
+import { Button, Container } from 'react-bootstrap';
+import '../../components/Profiles/UserProfilesStyles.css';
+import { ArrowLeft, ArrowRight } from 'react-bootstrap-icons';
+import { Genre, Talent } from '@peddl/common';
+import Profiles from '../../components/Profiles/Profile';
 import sampleImg from './George_Harrison_1974.jpeg';
 import sampleImg2 from './George-Harrison-Credit-Michael-Ochs-Archives-Getty-Images@1400x1050.jpeg';
 
+const images = [new Image(), new Image()];
+images[0].src = sampleImg;
+images[1].src = sampleImg2;
+
 export default function ProfilesPage() {
-  const [isLiked, setIsLiked] = useState(false);
-
-  const handleLike = () => {
-    setIsLiked((current) => !current);
-  };
-
   return (
     <div>
-      <Carousel>
-        <Carousel.Item>
-          <img alt="First slide" className="userImg" src={sampleImg} />
-        </Carousel.Item>
+      <Profiles
+        bandcampLink="bandcampLink.com"
+        bio="I love music"
+        birthday={new Date()}
+        genres={[Genre.Ambient, Genre.Acid]}
+        images={images}
+        location="Austin, tx"
+        name="Bob"
+        soundcloudLink="soundcloudLink.com"
+        spotifyLink="spotifyLink.com"
+        talents={[Talent.DJ, Talent.Composition]}
+      />
 
-        <Carousel.Item>
-          <img alt="Second slide" className="userImg" src={sampleImg2} />
-        </Carousel.Item>
-      </Carousel>
-      <Container className="userInfo d-grid gap-1">
-        <div className="mt-3">
-          <div className="d-flex flex-row justify-content-between align-items-center">
-            <div className="d-flex flex-column">
-              <div className="d-flex flex-row align-items-end mb-2">
-                <h2 className="m-0 p-0 me-1">George</h2>
-                <p className="m-0 p-0">58</p>
-              </div>
-              <div className="d-flex flex-row align-items-center">
-                <GeoAlt className="me-1" style={{ color: 'grey' }} />
-                <p className="m-0 p-0" style={{ color: 'grey' }}>
-                  Liverpool, UK
-                </p>
-              </div>
-            </div>
-            <Button
-              className="btn-outline-danger"
-              onClick={handleLike}
-              style={{
-                width: '48px',
-                height: '48px',
-                backgroundColor: isLiked ? 'red' : 'white',
-              }}
-            >
-              <HeartFill style={{ color: isLiked ? 'white' : 'red' }} />
-            </Button>
-          </div>
-          <div className="d-flex mt-2">
-            <p>
-              I am really quite simple. I plant flowers and watch them grow... I
-              stay at home and watch the river flow.
-            </p>
-          </div>
-          <div className="d-flex flex-column mb-3">
-            <b>Genres</b>
-            <div className="d-flex flex-row mt-1">
-              <div className="me-2">
-                <Badge bg="secondary">Psychedelia</Badge>{' '}
-              </div>
-              <div className="me-2">
-                <Badge bg="secondary">Boyband</Badge>{' '}
-              </div>
-              <div className="me-2">
-                <Badge bg="secondary">Blues</Badge>{' '}
-              </div>
-            </div>
-          </div>
-          <div className="d-flex flex-column mb-3">
-            <b>Talents</b>
-            <div className="d-flex flex-row mt-1">
-              <div className="me-2">
-                <Badge bg="secondary">Guitar</Badge>{' '}
-              </div>
-              <div className="me-2">
-                <Badge bg="secondary">Vocals</Badge>{' '}
-              </div>
-              <div className="me-2">
-                <Badge bg="secondary">Composition</Badge>{' '}
-              </div>
-            </div>
-          </div>
-          <div className="d-flex flex-column mb-3">
-            <b>Links</b>
-            <div className="d-flex flex-row align-items-center mt-1 mb-2">
-              <XDiamondFill className="me-1" style={{ color: '#007AFF' }} />
-              <a className="m-0 p-0" href=" ">
-                thebeatles.bandcamp.com
-              </a>
-            </div>
-            <div className="d-flex flex-row align-items-center mb-2">
-              <CloudyFill className="me-1" style={{ color: '#007AFF' }} />
-              <a className="m-0 p-0" href=" ">
-                soundcloud.com/thebeatles
-              </a>
-            </div>
-            <div className="d-flex flex-row align-items-center mb-2">
-              <Spotify className="me-1" style={{ color: '#007AFF' }} />
-              <a className="m-0 p-0" href=" ">
-                spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className="d-flex flex-row justify-content-between mb-4">
-          <Button className="btn-secondary">
-            <ArrowLeft className="me-2" />
-            Prev
-          </Button>
-          <Button>
-            Next
-            <ArrowRight className="ms-2" />
-          </Button>
-        </div>
+      <Container className="d-flex flex-row justify-content-between mb-4">
+        <Button className="btn-secondary">
+          <ArrowLeft className="me-2" />
+          Prev
+        </Button>
+        <Button>
+          Next
+          <ArrowRight className="ms-2" />
+        </Button>
       </Container>
     </div>
   );

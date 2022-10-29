@@ -8,7 +8,7 @@ import TitlePage from './content/TitlePage/TitlePage';
 import CreateAccountPage from './content/CreateAccount/CreateAccountPage';
 import LoginPage from './content/LoginPage/LoginPage';
 import ProfilesPage from './content/UserProfiles/ProfilesPage';
-import { RequireAuth } from './components/AuthProvider';
+// import { RequireAuth } from './components/AuthProvider';
 
 function App() {
   return (
@@ -20,9 +20,9 @@ function App() {
         <Route element={<LoginPage />} path="login" />
         <Route
           element={
-            <RequireAuth>
-              <ProfilesPage />
-            </RequireAuth>
+            // <RequireAuth>
+            <ProfilesPage />
+            // </RequireAuth>
           }
           path="profiles"
         />
