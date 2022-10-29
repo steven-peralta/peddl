@@ -40,8 +40,10 @@ export default function UserProfiles() {
                 <p className="m-0 p-0">58</p>
               </div>
               <div className="d-flex flex-row align-items-center">
-                <GeoAlt className="me-1" />
-                <p className="m-0 p-0">Liverpool, UK</p>
+                <GeoAlt className="me-1" style={{ color: 'grey' }} />
+                <p className="m-0 p-0" style={{ color: 'grey' }}>
+                  Liverpool, UK
+                </p>
               </div>
             </div>
             <Button

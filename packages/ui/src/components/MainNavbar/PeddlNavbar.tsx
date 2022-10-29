@@ -25,17 +25,10 @@ export default function PeddlNavbar() {
           </OffcanvasHeader>
           <OffcanvasBody>
             <Nav className="flex-grow-1 pe-3">
-              <Link
-                className="mb-3"
-                style={{ textDecoration: 'none', color: 'black' }}
-                to="/login"
-              >
+              <Link className="nav-link" to="/login">
                 Login
               </Link>
-              <Link
-                style={{ textDecoration: 'none', color: 'black' }}
-                to="/register"
-              >
+              <Link className="nav-link" to="/register">
                 Register
               </Link>
             </Nav>
