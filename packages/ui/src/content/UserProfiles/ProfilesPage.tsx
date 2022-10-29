@@ -13,7 +13,7 @@ import {
 import sampleImg from './George_Harrison_1974.jpeg';
 import sampleImg2 from './George-Harrison-Credit-Michael-Ochs-Archives-Getty-Images@1400x1050.jpeg';
 
-export default function UserProfiles() {
+export default function ProfilesPage() {
   const [isLiked, setIsLiked] = useState(false);
 
   const handleLike = () => {

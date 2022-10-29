@@ -1,7 +1,34 @@
-import { ValidationResult } from '@peddl/common';
+import { LoginFormData, ValidationResult } from '@peddl/common';
 import { useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
-import { ApiRequestFunc } from './api';
+import { ApiRequestFunc, authenticate } from './api';
+
+export function useAuth() {
+  const [isAuthed, setAuthed] = useState(false);
+  const [token, setToken] = useState<string | undefined>(undefined);
+
+  const loginCallback = async (loginForm: LoginFormData) => {
+    const res = await authenticate(loginForm);
+    if (res.status === 200 && res.data) {
+      setToken(res.data.token);
+      setAuthed(true);
+      return res.data.token;
+    }
+    return undefined;
+  };
+
+  const logoutCallback = async () => {
+    setToken(undefined);
+    setAuthed(false);
+  };
+
+  return {
+    isAuthed: [isAuthed],
+    token: [token],
+    login: [loginCallback],
+    logout: [logoutCallback],
+  };
+}
 
 export function useRequest<T, R>(
   requestFunc: ApiRequestFunc<T, R>,
@@ -12,14 +39,14 @@ export function useRequest<T, R>(
   const [error, setError] = useState<AxiosError<T, R> | undefined>();
   const [status, setStatus] = useState<number | undefined>();
 
-  const requestCallback = async (data: T) => {
+  const requestCallback = async (data: T, token?: string) => {
     setIsLoading(true);
 
     if (fakeData) {
       setResponse(fakeData);
     } else {
       try {
-        const request = await requestFunc(data);
+        const request = await requestFunc(data, token);
         setResponse(request.data);
         setStatus(request.status);
       } catch (e) {

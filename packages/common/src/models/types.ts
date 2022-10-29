@@ -11,6 +11,8 @@ export type CreateUserFormData = Omit<User, '_id' | 'salt'>;
 
 export type LoginResponse = { token: string };
 
+export type LoginFormData = CreateUserFormData;
+
 export type CreateUserResponse = LoginResponse;
 
 export type Profile = {

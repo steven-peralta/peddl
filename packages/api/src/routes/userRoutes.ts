@@ -42,7 +42,7 @@ const setupUserRoutes = (app: Express, db: Db) => {
           time: new Date(),
         };
         res.status(200);
-        res.send(jwt.sign(token, jwtSecret, { algorithm: 'HS256' }));
+        res.json({ token: jwt.sign(token, jwtSecret, { algorithm: 'HS256' }) });
       } else {
         res.status(401);
         res.json({ reason: 'Incorrect email or password ' });

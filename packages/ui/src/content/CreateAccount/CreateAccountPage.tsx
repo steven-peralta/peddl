@@ -18,6 +18,8 @@ import {
   LocationTagOptions,
   validateSoundcloudLink,
   validateBandcampLink,
+  Genre,
+  Talent,
 } from '@peddl/common';
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';
@@ -25,9 +27,9 @@ import Content from '../../components/Content';
 
 import FormInput from '../../components/FormInput';
 import Slider from '../../components/Slider/Slider';
-import { useRequest, useValidation } from '../../utils/hooks';
+import { useAuth, useRequest, useValidation } from '../../utils/hooks';
 import handleFormChange from '../../utils/form';
-import { createUser } from '../../utils/api';
+import { createProfile, createUser } from '../../utils/api';
 import UploadMediaBox from '../../components/UploadMediaBox/UploadMediaBox';
 import convertToImageElement from '../../utils/convertToImageElement';
 
@@ -125,6 +127,14 @@ export default function CreateAccountPage() {
     error: [createUserError],
     status: [createUserStatus],
   } = useRequest(createUser);
+
+  const {
+    login: [doLogin],
+  } = useAuth();
+
+  const {
+    requestFunc: [doCreateProfile],
+  } = useRequest(createProfile);
 
   const [step, setStep] = useState<CreateAccountSteps>(
     CreateAccountSteps.NewProfile
@@ -616,7 +626,27 @@ export default function CreateAccountPage() {
             doCreateUser({ email, password })
               .then(() => {
                 console.log(createUserResponse);
-                // bring us to the next page
+                doLogin({ email, password }).then((token) => {
+                  if (token) {
+                    doCreateProfile(
+                      {
+                        name,
+                        birthday: birthday ?? new Date(),
+                        location: location as Location,
+                        gender: gender as Gender,
+                        genres: genres.map((value) => value.label) as Genre[],
+                        talents: talents.map(
+                          (value) => value.label
+                        ) as Talent[],
+                        bio,
+                        spotifyLink,
+                        soundcloudLink,
+                        bandcampLink,
+                      },
+                      token
+                    );
+                  }
+                });
               })
               .catch(() => {
                 console.log(createUserError);
