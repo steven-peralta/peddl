@@ -3,7 +3,7 @@ name: 'WSS Workflow'
 on:
   push:
     branches:
-      - staging
+      - main
     paths:
       - packages/wss/**
 

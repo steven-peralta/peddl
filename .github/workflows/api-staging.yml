@@ -3,7 +3,7 @@ name: 'API Workflow'
 on:
   push:
     branches:
-      - staging
+      - main
     paths:
       - packages/api/**
 
