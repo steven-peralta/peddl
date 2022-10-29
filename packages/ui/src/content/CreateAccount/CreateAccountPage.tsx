@@ -253,15 +253,8 @@ export default function CreateAccountPage() {
   const [genresSetting, setGenreSetting] = useState<readonly TagOption[]>([]);
   const [talentsSetting, setTalentSetting] = useState<readonly TagOption[]>([]);
 
-  const [images, setImages] = useState<HTMLImageElement[]>(new Array(6));
-  const [uploadBoxDisabled, setUploadBoxDisabled] = useState<boolean[]>([
-    false,
-    true,
-    true,
-    true,
-    true,
-    true,
-  ]);
+  const [images, setImages] = useState<HTMLImageElement[]>([]);
+  const [uploadBoxEnabled, setUploadBoxEnabled] = useState<boolean[]>([true]);
 
   const newProfileFormsValid =
     emailIsValid &&
@@ -485,10 +478,8 @@ export default function CreateAccountPage() {
             if (img) {
               images[gridPos] = img;
               setImages([...images]);
-              if (gridPos < 5) {
-                uploadBoxDisabled[gridPos + 1] = false;
-                setUploadBoxDisabled([...uploadBoxDisabled]);
-              }
+              uploadBoxEnabled[gridPos + 1] = true;
+              setUploadBoxEnabled([...uploadBoxEnabled]);
             }
           })
           .catch((err: Error) => {
@@ -498,40 +489,65 @@ export default function CreateAccountPage() {
     };
   };
 
+  const handleTrashButton = (gridPos: number) => {
+    return () => {
+      images.splice(gridPos, 1);
+      setImages([...images]);
+      uploadBoxEnabled.splice(gridPos, 1);
+      setUploadBoxEnabled([...uploadBoxEnabled]);
+    };
+  };
+
   const uploadMediaStep = (
     <div className="d-flex flex-column justify-content-center">
       <div className="d-flex flex-row justify-content-center mt-0">
         <UploadMediaBox
-          disabled={uploadBoxDisabled[0]}
+          enabled={uploadBoxEnabled[0]}
           image={images[0]}
+          onClickTrash={handleTrashButton(0)}
           onUpload={handleUpload(0)}
+          showTrashButton={!!images[0]}
         />
+
         <UploadMediaBox
-          disabled={uploadBoxDisabled[1]}
+          enabled={uploadBoxEnabled[1]}
           image={images[1]}
+          onClickTrash={handleTrashButton(1)}
           onUpload={handleUpload(1)}
+          showTrashButton={!!images[1]}
         />
+
         <UploadMediaBox
-          disabled={uploadBoxDisabled[2]}
+          enabled={uploadBoxEnabled[2]}
           image={images[2]}
+          onClickTrash={handleTrashButton(2)}
           onUpload={handleUpload(2)}
+          showTrashButton={!!images[2]}
         />
       </div>
-      <div className="d-flex flex-row justify-content-center mt-3">
+      <div className="d-flex flex-row justify-content-center mt-3 mb-3">
         <UploadMediaBox
-          disabled={uploadBoxDisabled[3]}
+          enabled={uploadBoxEnabled[3]}
           image={images[3]}
+          onClickTrash={handleTrashButton(3)}
           onUpload={handleUpload(3)}
+          showTrashButton={!!images[3]}
         />
+
         <UploadMediaBox
-          disabled={uploadBoxDisabled[4]}
+          enabled={uploadBoxEnabled[4]}
           image={images[4]}
+          onClickTrash={handleTrashButton(4)}
           onUpload={handleUpload(4)}
+          showTrashButton={!!images[4]}
         />
+
         <UploadMediaBox
-          disabled={uploadBoxDisabled[5]}
+          enabled={uploadBoxEnabled[5]}
           image={images[5]}
+          onClickTrash={handleTrashButton(5)}
           onUpload={handleUpload(5)}
+          showTrashButton={!!images[5]}
         />
       </div>
     </div>
@@ -611,7 +627,7 @@ export default function CreateAccountPage() {
     <Content title={getPageTitle(step)}>
       {renderStep()}
       <PrevNextButtons
-        nextDisabled={!newProfileFormsValid || createUserLoading}
+        // nextDisabled={!newProfileFormsValid || createUserLoading}
         nextLoading={createUserLoading}
         nextText={step === CreateAccountSteps.SearchSettings ? 'Done' : 'Next'}
         nextVariant={
