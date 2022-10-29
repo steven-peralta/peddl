@@ -27,6 +27,6 @@ runs:
     - uses: docker/build-push-action@v3
       with:
         build-args: |
-          ENVIRONMENT=${{ inputs.project }}
+          PROJECT=${{ inputs.project }}
         push: true
         tags: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-${{ inputs.project }}-${{ inputs.environment }}:${{ github.sha }},177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-${{ inputs.project }}-${{ inputs.environment }}:latest
