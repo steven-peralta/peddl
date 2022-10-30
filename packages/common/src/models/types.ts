@@ -13,7 +13,7 @@ export type LoginResponse = { token: string };
 
 export type LoginFormData = CreateUserFormData;
 
-export type CreateUserResponse = LoginResponse;
+export type CreateUserResponse = Omit<User, 'password' | 'email' | 'salt'>;
 
 export type Profile = {
   _id: string;
@@ -35,5 +35,19 @@ export type CreateProfileFormData = Omit<
   Profile,
   '_id' | 'createdBy' | 'createdAt'
 >;
+
+export type Settings = {
+  _id: string;
+  createdBy: string;
+  ageRange: [number, number];
+  genders: Gender[];
+  genres: Genre[];
+  talents: Talent[];
+  locations: Location[];
+};
+
+export type CreateSettingsFormData = Omit<Settings, '_id' | 'createdBy'>;
+
+export type CreateSettingsResponse = { _id: string };
 
 export type WithoutID<T> = Omit<T, '_id'>;
