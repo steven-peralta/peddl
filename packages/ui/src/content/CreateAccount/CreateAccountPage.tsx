@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
+import { Form, InputGroup } from 'react-bootstrap';
 import {
   validateEmail,
   validatePassword,
@@ -18,20 +18,27 @@ import {
   LocationTagOptions,
   validateSoundcloudLink,
   validateBandcampLink,
+  CreateUserResponse,
+  CreateUserFormData,
+  CreateSettingsFormData,
+  CreateSettingsResponse,
   Genre,
   Talent,
+  CreateProfileFormData,
 } from '@peddl/common';
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';
+import axios, { AxiosError } from 'axios';
 import Content from '../../components/Content';
 
 import FormInput from '../../components/FormInput';
 import Slider from '../../components/Slider/Slider';
-import { useAuth, useRequest, useValidation } from '../../utils/hooks';
+import { useAuth, useValidation } from '../../utils/hooks';
 import handleFormChange from '../../utils/form';
-import { createProfile, createUser } from '../../utils/api';
 import UploadMediaBox from '../../components/UploadMediaBox/UploadMediaBox';
 import convertToImageElement from '../../utils/convertToImageElement';
+import axiosInstance from '../../utils/axiosInstance';
+import PrevNextButtons from '../../components/PrevNextButtons';
 
 const enum CreateAccountSteps {
   NewProfile,
@@ -52,68 +59,6 @@ const getPageTitle = (currentStep: CreateAccountSteps) => {
   }
 };
 
-type PrevNextButtonsProps = {
-  onNextClick: () => void;
-  onPrevClick: () => void;
-  nextHidden?: boolean;
-  prevHidden?: boolean;
-  nextDisabled?: boolean;
-  prevDisabled?: boolean;
-  nextText?: string;
-  prevText?: string;
-  nextLoading?: boolean;
-  nextVariant?: string;
-};
-
-function PrevNextButtons({
-  onNextClick,
-  onPrevClick,
-  nextHidden,
-  prevHidden,
-  nextDisabled,
-  prevDisabled,
-  nextText,
-  prevText,
-  nextLoading,
-  nextVariant,
-}: PrevNextButtonsProps) {
-  const justification = nextHidden
-    ? 'justify-content-start'
-    : prevHidden
-    ? 'justify-content-end'
-    : 'justify-content-between';
-  return (
-    <div className={`d-flex ${justification} mb-3`}>
-      <Button
-        disabled={prevDisabled}
-        onClick={onPrevClick}
-        style={{ display: prevHidden ? 'none' : undefined }}
-        variant="secondary"
-      >
-        {prevText || 'Back'}
-      </Button>
-      <Button
-        disabled={nextDisabled}
-        onClick={onNextClick}
-        style={{ display: nextHidden ? 'none' : undefined }}
-        variant={nextVariant || 'primary'}
-      >
-        {nextLoading && (
-          <Spinner
-            animation="border"
-            aria-hidden="true"
-            as="span"
-            className="me-2"
-            role="status"
-            size="sm"
-          />
-        )}
-        {nextText || 'Next'}
-      </Button>
-    </div>
-  );
-}
-
 export default function CreateAccountPage() {
   const minDate = new Date();
   minDate.setFullYear(new Date().getFullYear() - 18);
@@ -121,20 +66,12 @@ export default function CreateAccountPage() {
   maxDate.setFullYear(new Date().getFullYear() + 120);
 
   const {
-    isLoading: [createUserLoading],
-    requestFunc: [doCreateUser],
-    responseData: [createUserResponse],
-    error: [createUserError],
-    status: [createUserStatus],
-  } = useRequest(createUser);
-
-  const {
     login: [doLogin],
   } = useAuth();
 
-  const {
-    requestFunc: [doCreateProfile],
-  } = useRequest(createProfile);
+  const [loading, setLoading] = useState(false);
+
+  const [requestError, setRequestError] = useState<AxiosError | undefined>();
 
   const [step, setStep] = useState<CreateAccountSteps>(
     CreateAccountSteps.NewProfile
@@ -602,9 +539,9 @@ export default function CreateAccountPage() {
           value={talentsSetting}
         />
       </FormInput>
-      {createUserError && (
+      {requestError && (
         <p className="small text-danger">
-          {`An error occurred when trying to create a new user: ${createUserError.message}`}
+          {`An error occurred when trying to create a new user: ${requestError.message}`}
         </p>
       )}
     </Form>
@@ -627,24 +564,49 @@ export default function CreateAccountPage() {
     <Content title={getPageTitle(step)}>
       {renderStep()}
       <PrevNextButtons
-        // nextDisabled={!newProfileFormsValid || createUserLoading}
-        nextLoading={createUserLoading}
+        nextDisabled={!newProfileFormsValid || loading}
+        nextLoading={loading}
         nextText={step === CreateAccountSteps.SearchSettings ? 'Done' : 'Next'}
-        nextVariant={
-          createUserError
-            ? 'danger'
-            : createUserStatus === 201
-            ? 'success'
-            : 'primary'
-        }
+        nextVariant={requestError ? 'danger' : 'primary'}
         onNextClick={() => {
           if (step === CreateAccountSteps.SearchSettings) {
-            doCreateUser({ email, password })
-              .then(() => {
-                console.log(createUserResponse);
+            setLoading(true);
+            axiosInstance
+              .post<CreateUserFormData, CreateUserResponse>('/users', {
+                email,
+                password,
+              })
+              .then((user) => {
                 doLogin({ email, password }).then((token) => {
-                  if (token) {
-                    doCreateProfile(
+                  Promise.all([
+                    axiosInstance.post<
+                      CreateSettingsFormData,
+                      CreateSettingsResponse
+                    >(
+                      // eslint-disable-next-line no-underscore-dangle
+                      `/users/${user._id}/settings`,
+                      {
+                        genders: gendersSetting.map(
+                          (value) => value.label
+                        ) as Gender[],
+                        genres: genresSetting.map(
+                          (value) => value.label
+                        ) as Genre[],
+                        talents: talentsSetting.map(
+                          (value) => value.label
+                        ) as Talent[],
+                        locations: locationsSetting.map(
+                          (value) => value.label
+                        ) as Location[],
+                        ageRange: rangeSetting,
+                      },
+                      { headers: { Authorization: `Bearer ${token}` } }
+                    ),
+                    axiosInstance.post<
+                      CreateProfileFormData,
+                      CreateSettingsResponse
+                    >(
+                      '/profiles',
                       {
                         name,
                         birthday: birthday ?? new Date(),
@@ -659,20 +621,30 @@ export default function CreateAccountPage() {
                         soundcloudLink,
                         bandcampLink,
                       },
-                      token
-                    );
-                  }
+                      { headers: { Authorization: `Bearer ${token}` } }
+                    ),
+                  ])
+                    .then(() => setLoading(false))
+                    .catch((err) => {
+                      if (err === axios.isAxiosError(err)) {
+                        setRequestError(err);
+                        setLoading(false);
+                      }
+                    });
                 });
               })
-              .catch(() => {
-                console.log(createUserError);
+              .catch((err) => {
+                if (err === axios.isAxiosError(err)) {
+                  setRequestError(err);
+                  setLoading(false);
+                }
               });
           } else {
             setStep(step + 1);
           }
         }}
         onPrevClick={() => setStep(step > 0 ? step - 1 : step)}
-        prevDisabled={createUserLoading}
+        prevDisabled={loading}
         prevHidden={step === 0}
       />
     </Content>

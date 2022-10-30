@@ -7,6 +7,9 @@ import {
   User,
   CreateUserFormData,
   WithoutID,
+  CreateSettingsFormData,
+  Settings,
+  CreateUserResponse,
 } from '@peddl/common';
 import asyncHandler from 'express-async-handler';
 import jwt from 'jsonwebtoken';
@@ -70,16 +73,43 @@ const setupUserRoutes = (app: Express, db: Db) => {
         const salt = crypto.randomBytes(16).toString('base64');
         const hash = crypto.createHmac('sha512', salt);
         hash.update(password);
-        await users.insertOne({
+        const newUser = await users.insertOne({
           email,
           password: hash.digest('base64'),
           salt,
         });
+        res.json({ _id: `${newUser.insertedId}` } as CreateUserResponse);
         res.status(201);
         res.end();
       } else {
         res.status(409);
         res.json({ reason: 'User already exists' });
+      }
+    })
+  );
+
+  app.post(
+    '/users/:userId/settings',
+    expressjwt({ secret: jwtSecret, algorithms: ['HS256'] }),
+    asyncHandler(async (req: JWTRequest<JWTToken>, res) => {
+      const { auth } = req;
+      if (!auth) {
+        res.sendStatus(401);
+        return;
+      }
+      const { userId } = auth;
+      const data = req.body as CreateSettingsFormData;
+
+      const settings = db.collection<WithoutID<Settings>>('settings');
+      const existingSettings = await settings.findOne({ createdBy: userId });
+
+      if (!existingSettings) {
+        await settings.insertOne({ ...data, createdBy: userId });
+        res.status(201);
+        res.end();
+      } else {
+        res.status(409);
+        res.json({ reason: 'Settings already exist for that user.' });
       }
     })
   );
