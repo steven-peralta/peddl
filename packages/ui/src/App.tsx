@@ -9,6 +9,7 @@ import CreateAccountPage from './content/CreateAccount/CreateAccountPage';
 import LoginPage from './content/LoginPage/LoginPage';
 import ProfilesPage from './content/UserProfiles/ProfilesPage';
 import { RequireAuth } from './components/AuthProvider';
+import LogoutPage from './content/LogoutPage';
 
 function App() {
   return (
@@ -25,6 +26,14 @@ function App() {
             </RequireAuth>
           }
           path="profiles"
+        />
+        <Route
+          element={
+            <RequireAuth>
+              <LogoutPage />
+            </RequireAuth>
+          }
+          path="logout"
         />
       </Routes>
     </div>

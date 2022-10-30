@@ -17,19 +17,19 @@ export interface Profile extends Model {
   birthday: Date;
   location: Location;
   gender: Gender;
-  genres: Genre[];
-  talents: Talent[];
-  bio: string;
-  spotifyLink: string;
-  soundcloudUsername: string;
-  bandcampUsername: string;
+  genres?: Genre[];
+  talents?: Talent[];
+  bio?: string;
+  spotifyLink?: string;
+  soundcloudUsername?: string;
+  bandcampUsername?: string;
 }
 
 export interface Settings extends Model {
   createdBy: string;
-  ageRange: [number, number];
-  genders: Gender[];
-  genres: Genre[];
-  talents: Talent[];
-  locations: Location[];
+  ageRange?: [number, number];
+  genders?: Gender[];
+  genres?: Genre[];
+  talents?: Talent[];
+  locations?: Location[];
 }

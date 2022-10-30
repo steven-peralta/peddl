@@ -1,129 +1,105 @@
 import React, { useState } from 'react';
-import { Badge, Button, Carousel, Container } from 'react-bootstrap';
-import './UserProfilesStyles.css';
-import {
-  ArrowLeft,
-  ArrowRight,
-  CloudyFill,
-  GeoAlt,
-  HeartFill,
-  Spotify,
-  XDiamondFill,
-} from 'react-bootstrap-icons';
-import sampleImg from './George_Harrison_1974.jpeg';
-import sampleImg2 from './George-Harrison-Credit-Michael-Ochs-Archives-Getty-Images@1400x1050.jpeg';
+import { Container } from 'react-bootstrap';
+import '../../components/Profiles/UserProfilesStyles.css';
+import { ArrowLeft, ArrowRight } from 'react-bootstrap-icons';
+import { Gender, Genre, Location, Profile, Talent } from '@peddl/common';
+import Profiles from '../../components/Profiles/Profile';
+import gHarrison1 from './George_Harrison_1974.jpeg';
+import gHarrison2 from './George-Harrison-Credit-Michael-Ochs-Archives-Getty-Images@1400x1050.jpeg';
+import jRoss from './ClUnIz6XEAAxtPp.jpeg';
+import jHendrix1 from './Hendrix1372884431.webp';
+import jHendrix2 from './hendrix.jpeg';
+import jHendrix3 from './jimihendrix.jpeg';
+import PrevNextButtons from '../../components/PrevNextButtons';
+
+const imgGroup1 = [new Image()];
+const imgGroup2 = [new Image(), new Image()];
+const imgGroup3 = [new Image(), new Image(), new Image()];
+imgGroup1[0].src = jRoss;
+imgGroup2[0].src = gHarrison1;
+imgGroup2[1].src = gHarrison2;
+imgGroup3[0].src = jHendrix1;
+imgGroup3[1].src = jHendrix2;
+imgGroup3[2].src = jHendrix3;
+const imageArray = [imgGroup1, imgGroup2, imgGroup3];
+
+const profiles: Profile[] = [
+  {
+    _id: '78272',
+    name: 'Julia Ross',
+    genres: [
+      Genre.Alternative,
+      Genre.RnB,
+      Genre.LoFi,
+      Genre.Bubblegum,
+      Genre.Electronic,
+    ],
+    talents: [Talent.DJ, Talent.Vocals],
+    location: Location.AustinTX,
+    bio: 'Where words fail, music speaks - Hans Anderson',
+    birthday: new Date('1987-02-02'),
+    gender: Gender.Woman,
+    createdBy: '7832293',
+    createdAt: new Date(),
+  },
+  {
+    _id: '78272',
+    name: 'George Harrison',
+    genres: [Genre.LoFi, Genre.Bass, Genre.Bedroom],
+    talents: [Talent.Guitar, Talent.Vocals],
+    location: Location.AustinTX,
+    bio: "I think music in itself is healing. It's an explosive expression of humanity. It's something we are all touched by. No matter what culture we are from, everyone loves music.",
+    birthday: new Date('1943-02-23'),
+    gender: Gender.Man,
+    createdBy: '7832293',
+    createdAt: new Date(),
+    spotifyLink:
+      'https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2?si=2N06lAyqQPmIIY-Ze8GLXA',
+    soundcloudLink: 'https://soundcloud.com/thebeatles',
+  },
+  {
+    _id: '78272',
+    name: 'Jimi Hendrix',
+    genres: [Genre.Alternative, Genre.RnB, Genre.LoFi, Genre.Blues, Genre.Funk],
+    talents: [Talent.Guitar, Talent.Drums, Talent.ElectricGuitar],
+    location: Location.AustinTX,
+    bio: 'Music does not lie. If there is something to be changed in this world, then it can only happen through music.',
+    birthday: new Date('1942-11-27'),
+    gender: Gender.Man,
+    createdBy: '7832293',
+    createdAt: new Date(),
+    spotifyLink:
+      'https://open.spotify.com/artist/776Uo845nYHJpNaStv1Ds4?si=PFeXcIw-T2muVj6bDvzAAg',
+    soundcloudLink: 'https://soundcloud.com/jimihendrix',
+  },
+];
 
 export default function ProfilesPage() {
-  const [isLiked, setIsLiked] = useState(false);
-
-  const handleLike = () => {
-    setIsLiked((current) => !current);
-  };
+  const [profileIndex, setProfileIndex] = useState(0);
 
   return (
     <div>
-      <Carousel>
-        <Carousel.Item>
-          <img alt="First slide" className="userImg" src={sampleImg} />
-        </Carousel.Item>
-
-        <Carousel.Item>
-          <img alt="Second slide" className="userImg" src={sampleImg2} />
-        </Carousel.Item>
-      </Carousel>
-      <Container className="userInfo d-grid gap-1">
-        <div className="mt-3">
-          <div className="d-flex flex-row justify-content-between align-items-center">
-            <div className="d-flex flex-column">
-              <div className="d-flex flex-row align-items-end mb-2">
-                <h2 className="m-0 p-0 me-1">George</h2>
-                <p className="m-0 p-0">58</p>
-              </div>
-              <div className="d-flex flex-row align-items-center">
-                <GeoAlt className="me-1" style={{ color: 'grey' }} />
-                <p className="m-0 p-0" style={{ color: 'grey' }}>
-                  Liverpool, UK
-                </p>
-              </div>
-            </div>
-            <Button
-              className="btn-outline-danger"
-              onClick={handleLike}
-              style={{
-                width: '48px',
-                height: '48px',
-                backgroundColor: isLiked ? 'red' : 'white',
-              }}
-            >
-              <HeartFill style={{ color: isLiked ? 'white' : 'red' }} />
-            </Button>
-          </div>
-          <div className="d-flex mt-2">
-            <p>
-              I am really quite simple. I plant flowers and watch them grow... I
-              stay at home and watch the river flow.
-            </p>
-          </div>
-          <div className="d-flex flex-column mb-3">
-            <b>Genres</b>
-            <div className="d-flex flex-row mt-1">
-              <div className="me-2">
-                <Badge bg="secondary">Psychedelia</Badge>{' '}
-              </div>
-              <div className="me-2">
-                <Badge bg="secondary">Boyband</Badge>{' '}
-              </div>
-              <div className="me-2">
-                <Badge bg="secondary">Blues</Badge>{' '}
-              </div>
-            </div>
-          </div>
-          <div className="d-flex flex-column mb-3">
-            <b>Talents</b>
-            <div className="d-flex flex-row mt-1">
-              <div className="me-2">
-                <Badge bg="secondary">Guitar</Badge>{' '}
-              </div>
-              <div className="me-2">
-                <Badge bg="secondary">Vocals</Badge>{' '}
-              </div>
-              <div className="me-2">
-                <Badge bg="secondary">Composition</Badge>{' '}
-              </div>
-            </div>
-          </div>
-          <div className="d-flex flex-column mb-3">
-            <b>Links</b>
-            <div className="d-flex flex-row align-items-center mt-1 mb-2">
-              <XDiamondFill className="me-1" style={{ color: '#007AFF' }} />
-              <a className="m-0 p-0" href=" ">
-                thebeatles.bandcamp.com
-              </a>
-            </div>
-            <div className="d-flex flex-row align-items-center mb-2">
-              <CloudyFill className="me-1" style={{ color: '#007AFF' }} />
-              <a className="m-0 p-0" href=" ">
-                soundcloud.com/thebeatles
-              </a>
-            </div>
-            <div className="d-flex flex-row align-items-center mb-2">
-              <Spotify className="me-1" style={{ color: '#007AFF' }} />
-              <a className="m-0 p-0" href=" ">
-                spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className="d-flex flex-row justify-content-between mb-4">
-          <Button className="btn-secondary">
-            <ArrowLeft className="me-2" />
-            Prev
-          </Button>
-          <Button>
-            Next
-            <ArrowRight className="ms-2" />
-          </Button>
-        </div>
+      <Profiles
+        bandcampLink={profiles[profileIndex].bandcampLink}
+        bio={profiles[profileIndex].bio}
+        birthday={profiles[profileIndex].birthday}
+        genres={profiles[profileIndex].genres}
+        images={imageArray[profileIndex]}
+        location={profiles[profileIndex].location}
+        name={profiles[profileIndex].name}
+        soundcloudLink={profiles[profileIndex].soundcloudLink}
+        spotifyLink={profiles[profileIndex].spotifyLink}
+        talents={profiles[profileIndex].talents}
+      />
+      <Container>
+        <PrevNextButtons
+          nextHidden={profileIndex === profiles.length - 1}
+          nextIcon={<ArrowRight className="ms-1" />}
+          onNextClick={() => setProfileIndex(profileIndex + 1)}
+          onPrevClick={() => setProfileIndex(profileIndex - 1)}
+          prevHidden={profiles[profileIndex] === profiles[0]}
+          prevIcon={<ArrowLeft className="me-1" />}
+        />
       </Container>
     </div>
   );

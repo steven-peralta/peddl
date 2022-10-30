@@ -62,8 +62,8 @@ export default function PrevNextButtons({
             size="sm"
           />
         )}
-        {nextIcon}
         {nextText || 'Next'}
+        {nextIcon}
       </Button>
     </div>
   );

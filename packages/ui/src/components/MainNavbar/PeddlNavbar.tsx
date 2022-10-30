@@ -10,8 +10,43 @@ import {
   OffcanvasTitle,
 } from 'react-bootstrap';
 import peddlLogo from '../../peddlLogo.svg';
+import { useAuth } from '../AuthProvider';
 
 export default function PeddlNavbar() {
+  const {
+    isAuthed: [isAuthed],
+  } = useAuth();
+
+  const unauthenticatedLinks = (
+    <Nav className="flex-grow-1 pe-3">
+      <Link className="nav-link" to="/login">
+        Login
+      </Link>
+      <Link className="nav-link" to="/register">
+        Register
+      </Link>
+    </Nav>
+  );
+
+  const authenticatedLinks = (
+    <Nav className="flex-grow-1 pe-3">
+      <Link className="nav-link" to="/profiles">
+        Home
+      </Link>
+      <Link className="nav-link" to="/matches">
+        Matches
+      </Link>
+      <Link className="nav-link" to="/userProfiles">
+        Profile
+      </Link>
+      <Link className="nav-link" to="/searchSettings">
+        Search Settings
+      </Link>
+      <Link className="nav-link" to="/logout">
+        Logout
+      </Link>
+    </Nav>
+  );
   return (
     <Navbar bg="dark" expand="lg" variant="dark">
       <Container fluid>
@@ -24,14 +59,8 @@ export default function PeddlNavbar() {
             <OffcanvasTitle>Navigation</OffcanvasTitle>
           </OffcanvasHeader>
           <OffcanvasBody>
-            <Nav className="flex-grow-1 pe-3">
-              <Link className="nav-link" to="/login">
-                Login
-              </Link>
-              <Link className="nav-link" to="/register">
-                Register
-              </Link>
-            </Nav>
+            {!isAuthed && unauthenticatedLinks}
+            {isAuthed && authenticatedLinks}
           </OffcanvasBody>
         </Navbar.Offcanvas>
       </Container>
