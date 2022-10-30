@@ -36,7 +36,8 @@
     "express-async-handler": "^1.2.0",
     "express-jwt": "^7.7.5",
     "jsonwebtoken": "^8.5.1",
-    "mongodb": "^4.10.0"
+    "mongodb": "^4.10.0",
+    "nanoid": "^3.0.0"
   },
   "scripts": {
     "build": "tsc -b",

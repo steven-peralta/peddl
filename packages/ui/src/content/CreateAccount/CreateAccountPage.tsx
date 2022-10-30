@@ -16,19 +16,22 @@ import {
   TalentTagOptions,
   GenderTagOptions,
   LocationTagOptions,
-  validateSoundcloudLink,
-  validateBandcampLink,
-  CreateUserResponse,
-  CreateUserFormData,
-  CreateSettingsFormData,
-  CreateSettingsResponse,
   Genre,
   Talent,
-  CreateProfileFormData,
+  validateBandcampUsername,
+  validateSoundcloudUsername,
 } from '@peddl/common';
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';
 import axios, { AxiosError } from 'axios';
+import {
+  PostProfileRequest,
+  PostProfileResponse,
+  PostSettingsRequest,
+  PostSettingsResponse,
+  PostUserRequest,
+  PostUserResponse,
+} from '@peddl/common/dist/api/types';
 import Content from '../../components/Content';
 
 import FormInput from '../../components/FormInput';
@@ -170,14 +173,14 @@ export default function CreateAccountPage() {
     setter: [setSoundcloudLink],
     validationText: [soundcloudLinkValidationText],
     isValid: [soundcloudLinkIsValid],
-  } = useValidation<string>(validateSoundcloudLink, '');
+  } = useValidation<string>(validateSoundcloudUsername, '');
 
   const {
     value: [bandcampLink],
     setter: [setBandcampLink],
     validationText: [bandcampLinkValidationText],
     isValid: [bandcampLinkIsValid],
-  } = useValidation<string>(validateBandcampLink, '');
+  } = useValidation<string>(validateBandcampUsername, '');
 
   // search settings state
   const [rangeSetting, setRangeSetting] = React.useState<[number, number]>([
@@ -572,19 +575,18 @@ export default function CreateAccountPage() {
           if (step === CreateAccountSteps.SearchSettings) {
             setLoading(true);
             axiosInstance
-              .post<CreateUserFormData, CreateUserResponse>('/users', {
+              .post<PostUserRequest, PostUserResponse>('/users', {
                 email,
                 password,
               })
-              .then((user) => {
+              .then(() => {
                 doLogin({ email, password }).then((token) => {
                   Promise.all([
                     axiosInstance.post<
-                      CreateSettingsFormData,
-                      CreateSettingsResponse
+                      PostSettingsRequest,
+                      PostSettingsResponse
                     >(
-                      // eslint-disable-next-line no-underscore-dangle
-                      `/users/${user._id}/settings`,
+                      `/settings`,
                       {
                         genders: gendersSetting.map(
                           (value) => value.label
@@ -602,10 +604,7 @@ export default function CreateAccountPage() {
                       },
                       { headers: { Authorization: `Bearer ${token}` } }
                     ),
-                    axiosInstance.post<
-                      CreateProfileFormData,
-                      CreateSettingsResponse
-                    >(
+                    axiosInstance.post<PostProfileRequest, PostProfileResponse>(
                       '/profiles',
                       {
                         name,

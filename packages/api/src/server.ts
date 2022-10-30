@@ -1,7 +1,7 @@
 import express, { Express, json } from 'express';
 import cors from 'cors';
 import { MongoClient, Db } from 'mongodb';
-import setupUserRoutes from './routes/userRoutes';
+import setupRoutes from './routes';
 
 class Server {
   port: string;
@@ -27,7 +27,7 @@ class Server {
   }
 
   setupRoutes(db: Db) {
-    setupUserRoutes(this.app, db);
+    setupRoutes(this.app, db);
   }
 
   async start() {

@@ -1,24 +1,18 @@
 import { Gender, Genre, Location, Talent } from './enums';
 
-export type User = {
-  _id: string;
+export type Model = {
+  id: string;
+  createdAt: Date;
+};
+
+export interface User extends Model {
   email: string;
   password: string;
   salt: string;
-};
+}
 
-export type CreateUserFormData = Omit<User, '_id' | 'salt'>;
-
-export type LoginResponse = { token: string };
-
-export type LoginFormData = CreateUserFormData;
-
-export type CreateUserResponse = Omit<User, 'password' | 'email' | 'salt'>;
-
-export type Profile = {
-  _id: string;
+export interface Profile extends Model {
   createdBy: string;
-  createdAt: Date;
   name: string;
   birthday: Date;
   location: Location;
@@ -27,27 +21,15 @@ export type Profile = {
   talents: Talent[];
   bio: string;
   spotifyLink: string;
-  soundcloudLink: string;
-  bandcampLink: string;
-};
+  soundcloudUsername: string;
+  bandcampUsername: string;
+}
 
-export type CreateProfileFormData = Omit<
-  Profile,
-  '_id' | 'createdBy' | 'createdAt'
->;
-
-export type Settings = {
-  _id: string;
+export interface Settings extends Model {
   createdBy: string;
   ageRange: [number, number];
   genders: Gender[];
   genres: Genre[];
   talents: Talent[];
   locations: Location[];
-};
-
-export type CreateSettingsFormData = Omit<Settings, '_id' | 'createdBy'>;
-
-export type CreateSettingsResponse = { _id: string };
-
-export type WithoutID<T> = Omit<T, '_id'>;
+}

@@ -1,12 +1,13 @@
-import { LoginFormData, ValidationResult } from '@peddl/common';
+import { ValidationResult } from '@peddl/common';
 import { useEffect, useState } from 'react';
+import { PostAuthRequest } from '@peddl/common/dist/api/types';
 import axiosInstance from './axiosInstance';
 
 export function useAuth() {
   const [isAuthed, setAuthed] = useState(false);
   const [token, setToken] = useState<string | undefined>(undefined);
 
-  const loginCallback = async (loginForm: LoginFormData) => {
+  const loginCallback = async (loginForm: PostAuthRequest) => {
     const res = await axiosInstance.post('/auth', loginForm);
     if (res.status === 200 && res.data) {
       setToken(res.data.token);

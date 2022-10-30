@@ -25,11 +25,11 @@ export type ValidationResult = {
   reason?: string;
 };
 
-export type ValidatorFunc<T = string> = (
-  value: T | undefined
-) => ValidationResult;
+export type ValidatorFunc<T> = (value: T) => ValidationResult;
 
-export const validateEmail: ValidatorFunc = (email): ValidationResult => {
+export const validateEmail: ValidatorFunc<string | undefined> = (
+  email
+): ValidationResult => {
   if (!email) {
     return { isValid: false, reason: 'Your email is required.' };
   }
@@ -50,7 +50,9 @@ export const validateEmail: ValidatorFunc = (email): ValidationResult => {
   };
 };
 
-export const validatePassword: ValidatorFunc = (password): ValidationResult => {
+export const validatePassword: ValidatorFunc<string | undefined> = (
+  password
+): ValidationResult => {
   if (!password || password === '') {
     return { isValid: false, reason: 'Your password is required.' };
   }
@@ -87,10 +89,16 @@ export const validateConfirmPassword = (
   };
 };
 
-export const validateBirthday: ValidatorFunc<Date | null> = (
-  date
+export const validateBirthday: ValidatorFunc<Date | string | null> = (
+  d
 ): ValidationResult => {
-  if (date) {
+  if (d) {
+    let date: Date;
+    if (typeof d === 'string') {
+      date = new Date(d);
+    } else {
+      date = d;
+    }
     const minDate = new Date();
     minDate.setFullYear(new Date().getFullYear() - 18);
     const maxDate = new Date();
@@ -111,7 +119,9 @@ export const validateBirthday: ValidatorFunc<Date | null> = (
   return { isValid: true };
 };
 
-export const validateName: ValidatorFunc = (name): ValidationResult => {
+export const validateName: ValidatorFunc<string | undefined> = (
+  name
+): ValidationResult => {
   if (!name) {
     return { isValid: false, reason: 'Your name is required.' };
   }
@@ -132,7 +142,9 @@ export const validateName: ValidatorFunc = (name): ValidationResult => {
   };
 };
 
-export const validateLocation: ValidatorFunc = (location): ValidationResult => {
+export const validateLocation: ValidatorFunc<string | undefined> = (
+  location
+): ValidationResult => {
   if (!location) {
     return { isValid: false, reason: 'Your location is required.' };
   }
@@ -149,7 +161,9 @@ export const validateLocation: ValidatorFunc = (location): ValidationResult => {
   };
 };
 
-export const validateGender: ValidatorFunc = (gender): ValidationResult => {
+export const validateGender: ValidatorFunc<string | undefined> = (
+  gender
+): ValidationResult => {
   if (gender) {
     if (!Genders.includes(gender as Gender)) {
       return { isValid: false, reason: `${gender} is not a valid gender.` };
@@ -189,7 +203,7 @@ export const validateTalents: ValidatorFunc<string[]> = (
   return { isValid: true };
 };
 
-export const validateBio: ValidatorFunc = (bio) => {
+export const validateBio: ValidatorFunc<string | undefined> = (bio) => {
   if (bio) {
     if (bio.length > bioMaxLength) {
       return { isValid: false, reason: 'Your bio is too long.' };
@@ -199,7 +213,9 @@ export const validateBio: ValidatorFunc = (bio) => {
   return { isValid: true };
 };
 
-export const validateSpotifyLink: ValidatorFunc = (link) => {
+export const validateSpotifyLink: ValidatorFunc<string | undefined> = (
+  link
+) => {
   if (link) {
     if (!link.match(spotifyLinkRegex)) {
       return { isValid: false, reason: 'Your Spotify artist link is invalid.' };
@@ -209,7 +225,9 @@ export const validateSpotifyLink: ValidatorFunc = (link) => {
   return { isValid: true };
 };
 
-export const validateSoundcloudLink: ValidatorFunc = (link) => {
+export const validateSoundcloudUsername: ValidatorFunc<string | undefined> = (
+  link
+) => {
   if (link) {
     if (!link.match(soundcloudLinkRegex)) {
       return {
@@ -221,7 +239,9 @@ export const validateSoundcloudLink: ValidatorFunc = (link) => {
   return { isValid: true };
 };
 
-export const validateBandcampLink: ValidatorFunc = (link) => {
+export const validateBandcampUsername: ValidatorFunc<string | undefined> = (
+  link
+) => {
   if (link) {
     if (!link.match(bandcampLinkRegex)) {
       return {
