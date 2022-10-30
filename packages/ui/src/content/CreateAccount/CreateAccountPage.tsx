@@ -29,16 +29,18 @@ import {
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';
 import axios, { AxiosError } from 'axios';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Content from '../../components/Content';
 
 import FormInput from '../../components/FormInput';
 import Slider from '../../components/Slider/Slider';
-import { useAuth, useValidation } from '../../utils/hooks';
 import handleFormChange from '../../utils/form';
 import UploadMediaBox from '../../components/UploadMediaBox/UploadMediaBox';
 import convertToImageElement from '../../utils/convertToImageElement';
 import axiosInstance from '../../utils/axiosInstance';
 import PrevNextButtons from '../../components/PrevNextButtons';
+import { useAuth } from '../../components/AuthProvider';
+import useValidation from '../../utils/hooks';
 
 const enum CreateAccountSteps {
   NewProfile,
@@ -68,6 +70,8 @@ export default function CreateAccountPage() {
   const {
     login: [doLogin],
   } = useAuth();
+  const navigate = useNavigate();
+  const { state } = useLocation();
 
   const [loading, setLoading] = useState(false);
 
@@ -624,7 +628,10 @@ export default function CreateAccountPage() {
                       { headers: { Authorization: `Bearer ${token}` } }
                     ),
                   ])
-                    .then(() => setLoading(false))
+                    .then(() => {
+                      navigate(state?.path || '/profiles');
+                      setLoading(false);
+                    })
                     .catch((err) => {
                       if (err === axios.isAxiosError(err)) {
                         setRequestError(err);

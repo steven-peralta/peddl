@@ -13,12 +13,12 @@ import { Genre, Talent } from '@peddl/common';
 type ProfileProps = {
   name: string;
   birthday: Date;
-  bio: string;
-  genres: Genre[];
-  talents: Talent[];
-  spotifyLink: string;
-  bandcampLink: string;
-  soundcloudLink: string;
+  bio?: string;
+  genres?: Genre[];
+  talents?: Talent[];
+  spotifyLink?: string;
+  bandcampLink?: string;
+  soundcloudLink?: string;
   location: string;
   images: HTMLImageElement[];
 };
@@ -65,7 +65,7 @@ export default function ProfilesPage({
       </Carousel>
       <Container className="userInfo d-grid gap-1">
         <div className="mt-3">
-          <div className="d-flex flex-row justify-content-between align-items-center">
+          <div className="d-flex flex-row justify-content-between align-items-center mb-3">
             <div className="d-flex flex-column">
               <div className="d-flex flex-row align-items-end mb-2">
                 <h2 className="m-0 p-0 me-1">{name}</h2>
@@ -91,56 +91,76 @@ export default function ProfilesPage({
             </Button>
           </div>
 
-          <div className="d-flex mt-2">
-            <p>{bio}</p>
-          </div>
+          {bio && (
+            <div className="d-flex">
+              <p>{bio}</p>
+            </div>
+          )}
 
-          <div className="d-flex flex-column mb-3">
-            <b>Genres</b>
-            <div className="d-flex flex-row mt-1 mb-3">
-              {genres.map((genre) => {
-                return (
-                  <div className="me-2">
-                    <Badge bg="secondary">{genre}</Badge>{' '}
+          <div className="d-flex flex-column mb-2">
+            {genres && (
+              <div className="mb-3">
+                <b>Genres</b>
+                <div className="d-flex flex-row mt-2">
+                  {genres.map((genre) => {
+                    return (
+                      <div key={genre} className="me-2">
+                        <Badge bg="secondary">{genre}</Badge>{' '}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {talents && (
+              <div className="mb-3">
+                <b>Talents</b>
+                <div className="d-flex flex-row mt-2">
+                  {talents.map((talent) => {
+                    return (
+                      <div className="me-2">
+                        <Badge key={talent} bg="secondary">
+                          {talent}
+                        </Badge>{' '}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            {(bandcampLink || soundcloudLink || spotifyLink) && (
+              <div className="d-flex flex-column mb-3">
+                <b className="mb-2">Links</b>
+                {bandcampLink && (
+                  <div className="d-flex flex-row align-items-center mb-2">
+                    <XDiamondFill
+                      className="me-2"
+                      style={{ color: '#007AFF' }}
+                    />
+                    <a className="m-0 p-0" href={bandcampLink}>
+                      {bandcampLink}
+                    </a>
                   </div>
-                );
-              })}
-            </div>
-
-            <div className="d-flex flex-column mb-3">
-              <b>Talents</b>
-              <div className="d-flex flex-row mt-1">
-                {talents.map((talent) => {
-                  return (
-                    <div className="me-2">
-                      <Badge bg="secondary">{talent}</Badge>{' '}
-                    </div>
-                  );
-                })}
+                )}
+                {soundcloudLink && (
+                  <div className="d-flex flex-row align-items-center mb-2">
+                    <CloudyFill className="me-2" style={{ color: '#007AFF' }} />
+                    <a className="m-0 p-0" href={soundcloudLink}>
+                      {soundcloudLink}
+                    </a>
+                  </div>
+                )}
+                {spotifyLink && (
+                  <div className="d-flex flex-row align-items-center mb-2">
+                    <Spotify className="me-2" style={{ color: '#007AFF' }} />
+                    <a className="m-0 p-0" href={spotifyLink}>
+                      {spotifyLink}
+                    </a>
+                  </div>
+                )}
               </div>
-            </div>
-
-            <div className="d-flex flex-column mb-3">
-              <b>Links</b>
-              <div className="d-flex flex-row align-items-center mt-1 mb-2">
-                <XDiamondFill className="me-1" style={{ color: '#007AFF' }} />
-                <a className="m-0 p-0" href={bandcampLink}>
-                  {bandcampLink}
-                </a>
-              </div>
-              <div className="d-flex flex-row align-items-center mb-2">
-                <CloudyFill className="me-1" style={{ color: '#007AFF' }} />
-                <a className="m-0 p-0" href={soundcloudLink}>
-                  {soundcloudLink}
-                </a>
-              </div>
-              <div className="d-flex flex-row align-items-center mb-2">
-                <Spotify className="me-1" style={{ color: '#007AFF' }} />
-                <a className="m-0 p-0" href={spotifyLink}>
-                  {spotifyLink}
-                </a>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </Container>

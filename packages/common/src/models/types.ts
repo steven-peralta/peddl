@@ -23,12 +23,12 @@ export type Profile = {
   birthday: Date;
   location: Location;
   gender: Gender;
-  genres: Genre[];
-  talents: Talent[];
-  bio: string;
-  spotifyLink: string;
-  soundcloudLink: string;
-  bandcampLink: string;
+  genres?: Genre[];
+  talents?: Talent[];
+  bio?: string;
+  spotifyLink?: string;
+  soundcloudLink?: string;
+  bandcampLink?: string;
 };
 
 export type CreateProfileFormData = Omit<
