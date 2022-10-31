@@ -6,7 +6,7 @@ import axiosInstance from '../utils/axiosInstance';
 type AuthContext = {
   isAuthed: boolean[];
   token: (string | undefined)[];
-  login: ((loginForm: PostAuthRequest) => Promise<string>)[];
+  login: ((loginForm: PostAuthRequest) => Promise<PostAuthResponse>)[];
   logout: (() => void)[];
 };
 
@@ -34,7 +34,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setToken(data.token);
       setAuthed(true);
     }
-    return data.token;
+    return data;
   };
 
   const logoutCallback = async () => {

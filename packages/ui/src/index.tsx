@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import axiosInstance from './utils/axiosInstance';
 import { AuthProvider } from './components/AuthProvider';
+import { SettingsProvider } from './components/SettingsProvider';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -19,9 +20,11 @@ configure({ axios: axiosInstance });
 root.render(
   <React.StrictMode>
     <AuthProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <SettingsProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </SettingsProvider>
     </AuthProvider>
   </React.StrictMode>
 );

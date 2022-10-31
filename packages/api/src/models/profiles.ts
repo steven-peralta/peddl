@@ -1,11 +1,12 @@
 import {
+  GetProfilesRequest,
   PagedResponse,
   PostProfileRequest,
   PostProfileResponse,
   Profile,
 } from '@peddl/common';
-import { Collection } from 'mongodb';
-import genid from '../utils';
+import { Collection, Filter } from 'mongodb';
+import { genid } from '../utils';
 
 export async function createProfile(
   userId: string,
@@ -31,9 +32,33 @@ export async function createProfile(
 }
 
 export async function getProfiles(
+  settings: GetProfilesRequest,
   collection: Collection<Profile>
 ): Promise<PagedResponse<Profile>> {
-  const items = await collection.find().toArray();
+  const { genders = [], genres = [], talents = [], locations = [] } = settings;
+  const genderFilter: Filter<Profile> | undefined =
+    genders.length > 0
+      ? {
+          gender: { $in: genders },
+        }
+      : undefined;
+
+  const genresFilter: Filter<Profile> | undefined =
+    genres.length > 0 ? { genres: { $in: genres } } : undefined;
+
+  const talentsFilter: Filter<Profile> | undefined =
+    talents.length > 0 ? { talents: { $in: talents } } : undefined;
+
+  const locationsFilter: Filter<Profile> | undefined =
+    locations.length > 0 ? { location: { $in: locations } } : undefined;
+
+  const filter: Filter<Profile> = {
+    ...genderFilter,
+    ...genresFilter,
+    ...talentsFilter,
+    ...locationsFilter,
+  };
+  const items = await collection.find(filter).toArray();
 
   return {
     items,

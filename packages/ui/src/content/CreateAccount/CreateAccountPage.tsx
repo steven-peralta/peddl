@@ -43,6 +43,7 @@ import PrevNextButtons from '../../components/PrevNextButtons';
 import { useAuth } from '../../components/AuthProvider';
 import useValidation from '../../utils/hooks';
 import extractTagOptions from '../../utils/extractTagOptions';
+import { useSettings } from '../../components/SettingsProvider';
 
 const enum CreateAccountSteps {
   NewProfile,
@@ -70,6 +71,8 @@ export default function CreateAccountPage() {
   maxDate.setFullYear(new Date().getFullYear() + 120);
 
   const navigate = useNavigate();
+
+  const { setSettings } = useSettings();
 
   const {
     login: [doLogin],
@@ -603,7 +606,7 @@ export default function CreateAccountPage() {
       );
 
       // authenticate
-      const token = await doLogin(userData);
+      const { token } = await doLogin(userData);
 
       // submit our profile and settings info in unison
       await Promise.all([
@@ -622,6 +625,9 @@ export default function CreateAccountPage() {
           },
         }),
       ]);
+
+      // set our selected settings
+      setSettings(settingsData);
 
       // if all goes well, then take us to the profiles page
       setLoading(false);

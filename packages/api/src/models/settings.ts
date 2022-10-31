@@ -4,9 +4,9 @@ import {
   Settings,
 } from '@peddl/common';
 import { Collection } from 'mongodb';
-import genid from '../utils';
+import { genid } from '../utils';
 
-export default async function createSettings(
+export async function createSettings(
   userId: string,
   settings: PostSettingsRequest,
   collection: Collection<Settings>
@@ -26,4 +26,11 @@ export default async function createSettings(
   });
 
   return { id };
+}
+
+export async function getSettings(
+  userId: string,
+  collection: Collection<Settings>
+): Promise<Settings | null> {
+  return collection.findOne({ createdBy: userId });
 }

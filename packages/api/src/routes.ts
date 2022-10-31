@@ -33,8 +33,9 @@ import multer from 'multer';
 import validateForm from './validation';
 import createUser from './models/users';
 import { createProfile, getProfiles } from './models/profiles';
-import createSettings from './models/settings';
+import { createSettings, getSettings } from './models/settings';
 import { createMassMedia, getMedia } from './models/media';
+import { parseSettingsParams, SettingsQueryParams } from './utils';
 
 type JWTToken = {
   userId: string;
@@ -81,6 +82,7 @@ const setupRoutes = (app: Express, db: Db) => {
 
         res.status(200);
         res.json({
+          userId,
           token: jwt.sign(token, jwtSecret, { algorithm: 'HS256' }),
         } as PostAuthResponse);
       } else {
@@ -183,6 +185,35 @@ const setupRoutes = (app: Express, db: Db) => {
     })
   );
 
+  app.get(
+    '/users/:userId/settings',
+    expressjwt({ secret: jwtSecret, algorithms: ['HS256'] }),
+    asyncHandler(async (req: JWTRequest<JWTToken>, res) => {
+      const { auth } = req;
+      if (!auth) {
+        res.sendStatus(401);
+        return;
+      }
+      const { userId } = auth;
+      const { userId: userIdParam } = req.params;
+
+      if (userId !== userIdParam) {
+        res.sendStatus(401);
+        return;
+      }
+
+      const settingsCollection = db.collection<Settings>('settings');
+      const settings = await getSettings(userId, settingsCollection);
+
+      if (!settings) {
+        res.sendStatus(404);
+        return;
+      }
+
+      res.json(settings);
+    })
+  );
+
   app.post(
     '/users/:userId/settings',
     expressjwt({ secret: jwtSecret, algorithms: ['HS256'] }),
@@ -220,9 +251,10 @@ const setupRoutes = (app: Express, db: Db) => {
   app.get(
     '/profiles',
     asyncHandler(async (req: JWTRequest<JWTToken>, res) => {
+      const params = req.query as SettingsQueryParams;
+      const settings = parseSettingsParams(params);
       const profiles = db.collection<Profile>('profiles');
-
-      res.json(await getProfiles(profiles));
+      res.json(await getProfiles(settings, profiles));
     })
   );
 

@@ -3,16 +3,20 @@ import { FloatingLabel, Button, Container, Form } from 'react-bootstrap';
 import './LoginStyles.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { GetSettingsRequest } from '@peddl/common';
 import handleFormChange from '../../utils/form';
 import { useAuth } from '../../components/AuthProvider';
+import axiosInstance from '../../utils/axiosInstance';
+import { useSettings } from '../../components/SettingsProvider';
 
 export default function LoginPage() {
+  const { setSettings } = useSettings();
   const [passwordShown, setPasswordShown] = useState(false);
   const togglePassword = () => {
     setPasswordShown(!passwordShown);
   };
 
-  const [showError, setError] = useState(true);
+  const [error, setError] = useState<Error | undefined>(undefined);
   const navigate = useNavigate();
   const { state } = useLocation();
 
@@ -27,8 +31,8 @@ export default function LoginPage() {
     <Container>
       <div className="mb-3 p-5">
         <h1 className="mb-3">Sign in</h1>
-        <p hidden={showError} style={{ color: 'red' }}>
-          Email or Password is incorrect
+        <p hidden={!!error} style={{ color: 'red' }}>
+          {error?.message}
         </p>
         <div>
           <FloatingLabel
@@ -73,12 +77,16 @@ export default function LoginPage() {
               className="signInBtn"
               onClick={async () => {
                 try {
-                  await doLogin({ email, password });
+                  const { userId, token } = await doLogin({ email, password });
+                  const { data } = await axiosInstance.get<GetSettingsRequest>(
+                    `/users/${userId}/settings`,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                  );
+                  setSettings(data);
                   navigate(state?.path || '/profiles');
                 } catch (err) {
-                  if (err === axios.isAxiosError(err)) {
-                    setError(false);
-                    console.log(err);
+                  if (axios.isAxiosError(err)) {
+                    setError(err);
                   }
                 }
               }}

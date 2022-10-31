@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb';
 import { Media, PagedResponse } from '@peddl/common';
-import genid from '../utils';
+import { genid } from '../utils';
 
 export async function createMedia(
   userId: string,

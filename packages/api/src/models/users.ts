@@ -1,7 +1,7 @@
 import { PostUserRequest, PostUserResponse, User } from '@peddl/common';
 import { Collection } from 'mongodb';
 import * as crypto from 'crypto';
-import genid from '../utils';
+import { genid } from '../utils';
 
 export default async function createUser(
   user: PostUserRequest,
