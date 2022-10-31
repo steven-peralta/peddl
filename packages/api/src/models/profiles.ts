@@ -1,4 +1,5 @@
 import {
+  PagedResponse,
   PostProfileRequest,
   PostProfileResponse,
   Profile,
@@ -6,7 +7,7 @@ import {
 import { Collection } from 'mongodb';
 import genid from '../utils';
 
-export default async function createProfile(
+export async function createProfile(
   userId: string,
   profile: PostProfileRequest,
   collection: Collection<Profile>
@@ -27,4 +28,15 @@ export default async function createProfile(
   });
 
   return { id };
+}
+
+export async function getProfiles(
+  collection: Collection<Profile>
+): Promise<PagedResponse<Profile>> {
+  const items = await collection.find().toArray();
+
+  return {
+    items,
+    count: items.length,
+  };
 }

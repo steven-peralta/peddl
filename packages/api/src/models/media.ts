@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb';
-import { Media } from '@peddl/common';
+import { Media, PagedResponse } from '@peddl/common';
 import genid from '../utils';
 
 export async function createMedia(
@@ -30,4 +30,15 @@ export async function createMassMedia(
   const results = await Promise.all(promises);
   const ids = results.map((result) => result.id);
   return { ids };
+}
+
+export async function getMedia(
+  userId: string,
+  collection: Collection<Media>
+): Promise<PagedResponse<Media>> {
+  const items = await collection.find({ createdBy: userId }).toArray();
+  return {
+    items,
+    count: items.length,
+  };
 }

@@ -32,9 +32,9 @@ import { expressjwt, Request as JWTRequest } from 'express-jwt';
 import multer from 'multer';
 import validateForm from './validation';
 import createUser from './models/users';
-import createProfile from './models/profiles';
+import { createProfile, getProfiles } from './models/profiles';
 import createSettings from './models/settings';
-import { createMassMedia } from './models/media';
+import { createMassMedia, getMedia } from './models/media';
 
 type JWTToken = {
   userId: string;
@@ -174,6 +174,15 @@ const setupRoutes = (app: Express, db: Db) => {
     })
   );
 
+  app.get(
+    '/users/:userId/media',
+    asyncHandler(async (req: JWTRequest<JWTToken>, res) => {
+      const { userId } = req.params;
+      const media = db.collection<Media>('media');
+      res.json(await getMedia(userId, media));
+    })
+  );
+
   app.post(
     '/users/:userId/settings',
     expressjwt({ secret: jwtSecret, algorithms: ['HS256'] }),
@@ -205,6 +214,15 @@ const setupRoutes = (app: Express, db: Db) => {
           res.end();
         }
       }
+    })
+  );
+
+  app.get(
+    '/profiles',
+    asyncHandler(async (req: JWTRequest<JWTToken>, res) => {
+      const profiles = db.collection<Profile>('profiles');
+
+      res.json(await getProfiles(profiles));
     })
   );
 

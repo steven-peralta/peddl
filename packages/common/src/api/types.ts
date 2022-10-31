@@ -22,3 +22,7 @@ export type PostAuthResponse = { token: string };
 
 export type ErrorResponse = { error: string };
 export type FailedValidationResponse = { errors: ValidationResult[] };
+export type PagedResponse<T> = {
+  items: T[];
+  count: number;
+};
