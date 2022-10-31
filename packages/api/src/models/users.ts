@@ -1,11 +1,7 @@
-import {
-  PostUserRequest,
-  PostUserResponse,
-} from '@peddl/common/dist/api/types';
+import { PostUserRequest, PostUserResponse, User } from '@peddl/common';
 import { Collection } from 'mongodb';
-import { User } from '@peddl/common';
 import * as crypto from 'crypto';
-import { nanoid } from 'nanoid';
+import genid from '../utils';
 
 export default async function createUser(
   user: PostUserRequest,
@@ -22,7 +18,7 @@ export default async function createUser(
   const hash = crypto.createHmac('sha512', salt);
   hash.update(password);
   const hashedPassword = hash.digest('base64');
-  const id = nanoid();
+  const id = genid();
 
   await collection.insertOne({
     id,

@@ -16,8 +16,6 @@ import {
   TalentTagOptions,
   GenderTagOptions,
   LocationTagOptions,
-  Genre,
-  Talent,
   validateBandcampUsername,
   validateSoundcloudUsername,
 } from '@peddl/common';
@@ -32,7 +30,7 @@ import {
   PostUserRequest,
   PostUserResponse,
 } from '@peddl/common/dist/api/types';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Content from '../../components/Content';
 
 import FormInput from '../../components/FormInput';
@@ -44,6 +42,7 @@ import axiosInstance from '../../utils/axiosInstance';
 import PrevNextButtons from '../../components/PrevNextButtons';
 import { useAuth } from '../../components/AuthProvider';
 import useValidation from '../../utils/hooks';
+import extractTagOptions from '../../utils/extractTagOptions';
 
 const enum CreateAccountSteps {
   NewProfile,
@@ -70,16 +69,14 @@ export default function CreateAccountPage() {
   const maxDate = new Date();
   maxDate.setFullYear(new Date().getFullYear() + 120);
 
+  const navigate = useNavigate();
+
   const {
     login: [doLogin],
   } = useAuth();
-  const navigate = useNavigate();
-  const { state } = useLocation();
 
   const [loading, setLoading] = useState(false);
-
   const [requestError, setRequestError] = useState<AxiosError | undefined>();
-
   const [step, setStep] = useState<CreateAccountSteps>(
     CreateAccountSteps.NewProfile
   );
@@ -145,14 +142,14 @@ export default function CreateAccountPage() {
     isValid: [birthdayIsValid],
   } = useValidation<Date | null>(validateBirthday, null, true);
 
-  const [location, setLocation] = useState('');
+  const [location, setLocation] = useState<string>(Location.AustinTX);
 
   const {
     value: [gender],
     setter: [setGender],
     validationText: [genderValidationText],
     isValid: [genderIsValid],
-  } = useValidation<string>(validateGender, '');
+  } = useValidation<string>(validateGender, Gender.Man);
 
   const [genres, setGenres] = useState<readonly TagOption[]>([]);
 
@@ -173,17 +170,17 @@ export default function CreateAccountPage() {
   } = useValidation<string>(validateSpotifyLink, '');
 
   const {
-    value: [soundcloudLink],
-    setter: [setSoundcloudLink],
-    validationText: [soundcloudLinkValidationText],
-    isValid: [soundcloudLinkIsValid],
+    value: [soundcloudUsername],
+    setter: [setSoundcloudUsername],
+    validationText: [soundcloudUsernameValidationText],
+    isValid: [soundcloudUsernameIsValid],
   } = useValidation<string>(validateSoundcloudUsername, '');
 
   const {
-    value: [bandcampLink],
-    setter: [setBandcampLink],
-    validationText: [bandcampLinkValidationText],
-    isValid: [bandcampLinkIsValid],
+    value: [bandcampUsername],
+    setter: [setBandcampUsername],
+    validationText: [bandcampUsernameValidationText],
+    isValid: [bandcampUsernameIsValid],
   } = useValidation<string>(validateBandcampUsername, '');
 
   // search settings state
@@ -198,6 +195,7 @@ export default function CreateAccountPage() {
   const [talentsSetting, setTalentSetting] = useState<readonly TagOption[]>([]);
 
   const [images, setImages] = useState<HTMLImageElement[]>([]);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [uploadBoxEnabled, setUploadBoxEnabled] = useState<boolean[]>([true]);
 
   const newProfileFormsValid =
@@ -209,8 +207,8 @@ export default function CreateAccountPage() {
     genderIsValid &&
     bioIsValid &&
     spotifyLinkIsValid &&
-    soundcloudLinkIsValid &&
-    bandcampLinkIsValid;
+    soundcloudUsernameIsValid &&
+    bandcampUsernameIsValid;
 
   const newProfileStep = (
     <Form noValidate>
@@ -379,16 +377,16 @@ export default function CreateAccountPage() {
         forceShowValidation
         htmlFor="soundcloud-link"
         label="Soundcloud"
-        validationText={soundcloudLinkValidationText}
+        validationText={soundcloudUsernameValidationText}
       >
         <InputGroup>
           <InputGroup.Text>https://soundcloud.com/</InputGroup.Text>
           <Form.Control
             name="soundcloud-link"
-            onChange={handleFormChange(setSoundcloudLink)}
+            onChange={handleFormChange(setSoundcloudUsername)}
             placeholder="Soundcloud username"
             type="text"
-            value={soundcloudLink}
+            value={soundcloudUsername}
           />
         </InputGroup>
       </FormInput>
@@ -396,16 +394,16 @@ export default function CreateAccountPage() {
         forceShowValidation
         htmlFor="bandcamp-link"
         label="Bandcamp"
-        validationText={bandcampLinkValidationText}
+        validationText={bandcampUsernameValidationText}
       >
         <InputGroup>
           <InputGroup.Text>https://</InputGroup.Text>
           <Form.Control
             name="bandcamp-link"
-            onChange={handleFormChange(setBandcampLink)}
+            onChange={handleFormChange(setBandcampUsername)}
             placeholder="Bandcamp username"
             type="text"
-            value={bandcampLink}
+            value={bandcampUsername}
           />
           <InputGroup.Text>.bandcamp.com/</InputGroup.Text>
         </InputGroup>
@@ -424,6 +422,8 @@ export default function CreateAccountPage() {
               setImages([...images]);
               uploadBoxEnabled[gridPos + 1] = true;
               setUploadBoxEnabled([...uploadBoxEnabled]);
+              imageFiles[gridPos] = file;
+              setImageFiles([...imageFiles]);
             }
           })
           .catch((err: Error) => {
@@ -439,6 +439,8 @@ export default function CreateAccountPage() {
       setImages([...images]);
       uploadBoxEnabled.splice(gridPos, 1);
       setUploadBoxEnabled([...uploadBoxEnabled]);
+      imageFiles.splice(gridPos, 1);
+      setImageFiles([...imageFiles]);
     };
   };
 
@@ -567,6 +569,71 @@ export default function CreateAccountPage() {
     }
   };
 
+  const submit = async () => {
+    setLoading(true);
+
+    try {
+      const userData: PostUserRequest = { email, password };
+      const profileData: PostProfileRequest = {
+        name,
+        birthday: birthday?.toJSON() ?? new Date().toJSON(),
+        location: location as Location,
+        gender: gender as Gender,
+        genres: extractTagOptions(genres),
+        talents: extractTagOptions(talents),
+        bio,
+        spotifyLink,
+        soundcloudUsername,
+        bandcampUsername,
+      };
+      const settingsData: PostSettingsRequest = {
+        genders: extractTagOptions(gendersSetting),
+        genres: extractTagOptions(genresSetting),
+        talents: extractTagOptions(talentsSetting),
+        locations: extractTagOptions(locationsSetting),
+        ageRange: rangeSetting,
+      };
+      const imageFormData = new FormData();
+      imageFiles.forEach((file, i) => imageFormData.append(`image${i}`, file));
+
+      // create our user
+      const { data } = await axiosInstance.post<PostUserResponse>(
+        '/users',
+        userData
+      );
+
+      // authenticate
+      const token = await doLogin(userData);
+
+      // submit our profile and settings info in unison
+      await Promise.all([
+        axiosInstance.post<PostSettingsResponse>(
+          `/users/${data.id}/settings`,
+          settingsData,
+          { headers: { Authorization: `Bearer ${token}` } }
+        ),
+        axiosInstance.post<PostProfileResponse>('/profiles', profileData, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        axiosInstance.post(`/users/${data.id}/media`, imageFormData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }),
+      ]);
+
+      // if all goes well, then take us to the profiles page
+      setLoading(false);
+      navigate('/profiles');
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setRequestError(error);
+      }
+      setLoading(false);
+    }
+  };
+
   return (
     <Content title={getPageTitle(step)}>
       {renderStep()}
@@ -577,74 +644,7 @@ export default function CreateAccountPage() {
         nextVariant={requestError ? 'danger' : 'primary'}
         onNextClick={() => {
           if (step === CreateAccountSteps.SearchSettings) {
-            setLoading(true);
-            axiosInstance
-              .post<PostUserRequest, PostUserResponse>('/users', {
-                email,
-                password,
-              })
-              .then(() => {
-                doLogin({ email, password }).then((token) => {
-                  Promise.all([
-                    axiosInstance.post<
-                      PostSettingsRequest,
-                      PostSettingsResponse
-                    >(
-                      `/settings`,
-                      {
-                        genders: gendersSetting.map(
-                          (value) => value.label
-                        ) as Gender[],
-                        genres: genresSetting.map(
-                          (value) => value.label
-                        ) as Genre[],
-                        talents: talentsSetting.map(
-                          (value) => value.label
-                        ) as Talent[],
-                        locations: locationsSetting.map(
-                          (value) => value.label
-                        ) as Location[],
-                        ageRange: rangeSetting,
-                      },
-                      { headers: { Authorization: `Bearer ${token}` } }
-                    ),
-                    axiosInstance.post<PostProfileRequest, PostProfileResponse>(
-                      '/profiles',
-                      {
-                        name,
-                        birthday: birthday ?? new Date(),
-                        location: location as Location,
-                        gender: gender as Gender,
-                        genres: genres.map((value) => value.label) as Genre[],
-                        talents: talents.map(
-                          (value) => value.label
-                        ) as Talent[],
-                        bio,
-                        spotifyLink,
-                        soundcloudLink,
-                        bandcampLink,
-                      },
-                      { headers: { Authorization: `Bearer ${token}` } }
-                    ),
-                  ])
-                    .then(() => {
-                      navigate(state?.path || '/profiles');
-                      setLoading(false);
-                    })
-                    .catch((err) => {
-                      if (err === axios.isAxiosError(err)) {
-                        setRequestError(err);
-                        setLoading(false);
-                      }
-                    });
-                });
-              })
-              .catch((err) => {
-                if (err === axios.isAxiosError(err)) {
-                  setRequestError(err);
-                  setLoading(false);
-                }
-              });
+            submit().catch(console.error);
           } else {
             setStep(step + 1);
           }

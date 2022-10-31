@@ -33,3 +33,8 @@ export interface Settings extends Model {
   talents?: Talent[];
   locations?: Location[];
 }
+
+export interface Media extends Model {
+  createdBy: string;
+  filePath: string;
+}

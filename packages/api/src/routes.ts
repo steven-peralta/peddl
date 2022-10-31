@@ -17,11 +17,6 @@ import {
   validateSoundcloudUsername,
   validateBandcampUsername,
   validateName,
-} from '@peddl/common';
-import asyncHandler from 'express-async-handler';
-import jwt from 'jsonwebtoken';
-import { expressjwt, Request as JWTRequest } from 'express-jwt';
-import {
   ErrorResponse,
   FailedValidationResponse,
   PostAuthRequest,
@@ -29,11 +24,17 @@ import {
   PostProfileRequest,
   PostSettingsRequest,
   PostUserRequest,
-} from '@peddl/common/dist/api/types';
+  Media,
+} from '@peddl/common';
+import asyncHandler from 'express-async-handler';
+import jwt from 'jsonwebtoken';
+import { expressjwt, Request as JWTRequest } from 'express-jwt';
+import multer from 'multer';
 import validateForm from './validation';
 import createUser from './models/users';
 import createProfile from './models/profiles';
 import createSettings from './models/settings';
+import { createMassMedia } from './models/media';
 
 type JWTToken = {
   userId: string;
@@ -41,6 +42,17 @@ type JWTToken = {
 };
 
 const jwtSecret = process.env['JWT_TOKEN_SECRET'] ?? 'foobar';
+
+const storage = multer.diskStorage({
+  destination: 'static/media/images/',
+  filename(req, file, callback) {
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    const extension = file.originalname.split('.').pop();
+    callback(null, `${file.fieldname}-${uniqueSuffix}.${extension}`);
+  },
+});
+
+const upload = multer({ storage });
 
 const setupRoutes = (app: Express, db: Db) => {
   app.post(
@@ -77,6 +89,7 @@ const setupRoutes = (app: Express, db: Db) => {
       }
     })
   );
+
   app.post(
     '/users',
     asyncHandler(async (req, res) => {
@@ -102,13 +115,67 @@ const setupRoutes = (app: Express, db: Db) => {
         res.json(newUser);
       } catch (error) {
         res.status(500);
-        res.json({ error } as ErrorResponse);
+        if (error instanceof Error) {
+          res.json({ error: error.message } as ErrorResponse);
+        } else {
+          res.end();
+        }
       }
     })
   );
 
   app.post(
-    '/settings',
+    '/users/:userId/media',
+    [
+      upload.fields([
+        { name: 'image0' },
+        { name: 'image1' },
+        { name: 'image2' },
+        { name: 'image3' },
+        { name: 'image4' },
+        { name: 'image5' },
+      ]),
+      expressjwt({ secret: jwtSecret, algorithms: ['HS256'] }),
+    ],
+    asyncHandler(async (req: JWTRequest<JWTToken>, res) => {
+      const { auth } = req;
+      if (!auth) {
+        res.sendStatus(401);
+        res.end();
+        return;
+      }
+      const { userId } = auth;
+      const { userId: userIdParam } = req.params;
+
+      if (userId !== userIdParam) {
+        res.sendStatus(401);
+        return;
+      }
+
+      const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+      const filePaths = Object.values(files).map((f) => {
+        const [file] = f;
+        const [_, ...rest] = file.path.split('/');
+        return rest.join('/');
+      });
+
+      const media = db.collection<Media>('media');
+      try {
+        res.status(201);
+        res.json(await createMassMedia(userId, filePaths, media));
+      } catch (error) {
+        res.status(500);
+        if (error instanceof Error) {
+          res.json({ error: error.message } as ErrorResponse);
+        } else {
+          res.end();
+        }
+      }
+    })
+  );
+
+  app.post(
+    '/users/:userId/settings',
     expressjwt({ secret: jwtSecret, algorithms: ['HS256'] }),
     asyncHandler(async (req: JWTRequest<JWTToken>, res) => {
       const { auth } = req;
@@ -117,6 +184,13 @@ const setupRoutes = (app: Express, db: Db) => {
         return;
       }
       const { userId } = auth;
+      const { userId: userIdParam } = req.params;
+
+      if (userId !== userIdParam) {
+        res.sendStatus(401);
+        return;
+      }
+
       const data = req.body as PostSettingsRequest;
 
       const settings = db.collection<Settings>('settings');
@@ -125,7 +199,11 @@ const setupRoutes = (app: Express, db: Db) => {
         res.json(await createSettings(userId, data, settings));
       } catch (error) {
         res.status(500);
-        res.json({ error } as ErrorResponse);
+        if (error instanceof Error) {
+          res.json({ error: error.message } as ErrorResponse);
+        } else {
+          res.end();
+        }
       }
     })
   );
@@ -171,7 +249,11 @@ const setupRoutes = (app: Express, db: Db) => {
         res.json(await createProfile(userId, data, profiles));
       } catch (error) {
         res.status(500);
-        res.json({ error } as ErrorResponse);
+        if (error instanceof Error) {
+          res.json({ error: error.message } as ErrorResponse);
+        } else {
+          res.end();
+        }
       }
     })
   );

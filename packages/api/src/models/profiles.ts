@@ -1,10 +1,10 @@
 import {
   PostProfileRequest,
   PostProfileResponse,
-} from '@peddl/common/dist/api/types';
-import { Profile } from '@peddl/common';
+  Profile,
+} from '@peddl/common';
 import { Collection } from 'mongodb';
-import { nanoid } from 'nanoid';
+import genid from '../utils';
 
 export default async function createProfile(
   userId: string,
@@ -17,7 +17,7 @@ export default async function createProfile(
     throw new Error('Profile already exists for that user.');
   }
 
-  const id = nanoid();
+  const id = genid();
   await collection.insertOne({
     id,
     createdBy: userId,

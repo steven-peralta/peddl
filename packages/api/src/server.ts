@@ -17,7 +17,7 @@ class Server {
   constructor(
     port: string = process.env['PORT'] ?? '8080',
     mongoConnectionURL = process.env['MONGO_URI'] ??
-      'mongodb://admin:mongo@localhost:27018',
+      'mongodb://admin:mongo@localhost:27017',
     dbName = process.env['MONGO_DB'] ?? 'peddl'
   ) {
     this.app = express();
@@ -37,6 +37,7 @@ class Server {
     if (this.db) {
       this.app.use(cors());
       this.app.use(json());
+      this.app.use(express.static('static/'));
 
       this.setupRoutes(this.db);
 

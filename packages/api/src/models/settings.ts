@@ -1,10 +1,10 @@
 import {
   PostSettingsRequest,
   PostSettingsResponse,
-} from '@peddl/common/dist/api/types';
-import { Settings } from '@peddl/common';
+  Settings,
+} from '@peddl/common';
 import { Collection } from 'mongodb';
-import { nanoid } from 'nanoid';
+import genid from '../utils';
 
 export default async function createSettings(
   userId: string,
@@ -17,7 +17,7 @@ export default async function createSettings(
     throw new Error('Settings already exist for that user.');
   }
 
-  const id = nanoid();
+  const id = genid();
   await collection.insertOne({
     id,
     createdBy: userId,

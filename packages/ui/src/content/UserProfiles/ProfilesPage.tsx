@@ -25,7 +25,7 @@ const imageArray = [imgGroup1, imgGroup2, imgGroup3];
 
 const profiles: Profile[] = [
   {
-    _id: '78272',
+    id: '78272',
     name: 'Julia Ross',
     genres: [
       Genre.Alternative,
@@ -43,7 +43,7 @@ const profiles: Profile[] = [
     createdAt: new Date(),
   },
   {
-    _id: '78272',
+    id: '78272',
     name: 'George Harrison',
     genres: [Genre.LoFi, Genre.Bass, Genre.Bedroom],
     talents: [Talent.Guitar, Talent.Vocals],
@@ -55,10 +55,10 @@ const profiles: Profile[] = [
     createdAt: new Date(),
     spotifyLink:
       'https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2?si=2N06lAyqQPmIIY-Ze8GLXA',
-    soundcloudLink: 'https://soundcloud.com/thebeatles',
+    soundcloudUsername: 'thebeatles',
   },
   {
-    _id: '78272',
+    id: '78272',
     name: 'Jimi Hendrix',
     genres: [Genre.Alternative, Genre.RnB, Genre.LoFi, Genre.Blues, Genre.Funk],
     talents: [Talent.Guitar, Talent.Drums, Talent.ElectricGuitar],
@@ -70,7 +70,7 @@ const profiles: Profile[] = [
     createdAt: new Date(),
     spotifyLink:
       'https://open.spotify.com/artist/776Uo845nYHJpNaStv1Ds4?si=PFeXcIw-T2muVj6bDvzAAg',
-    soundcloudLink: 'https://soundcloud.com/jimihendrix',
+    soundcloudUsername: 'jimihendrix',
   },
 ];
 
@@ -80,14 +80,14 @@ export default function ProfilesPage() {
   return (
     <div>
       <Profiles
-        bandcampLink={profiles[profileIndex].bandcampLink}
+        bandcampLink={profiles[profileIndex].bandcampUsername}
         bio={profiles[profileIndex].bio}
         birthday={profiles[profileIndex].birthday}
         genres={profiles[profileIndex].genres}
         images={imageArray[profileIndex]}
         location={profiles[profileIndex].location}
         name={profiles[profileIndex].name}
-        soundcloudLink={profiles[profileIndex].soundcloudLink}
+        soundcloudLink={profiles[profileIndex].soundcloudUsername}
         spotifyLink={profiles[profileIndex].spotifyLink}
         talents={profiles[profileIndex].talents}
       />
