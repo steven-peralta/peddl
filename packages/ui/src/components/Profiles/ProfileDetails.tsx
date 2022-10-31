@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Badge, Button, Carousel, Container } from 'react-bootstrap';
 import './UserProfilesStyles.css';
 import {
@@ -8,34 +8,58 @@ import {
   Spotify,
   XDiamondFill,
 } from 'react-bootstrap-icons';
-import { Genre, Talent } from '@peddl/common';
+import { Media, PagedResponse, Profile } from '@peddl/common';
+import useAxios from 'axios-hooks';
+import { baseURL } from '../../utils/axiosInstance';
 
 type ProfileProps = {
-  name: string;
-  birthday: Date;
-  bio?: string;
-  genres?: Genre[];
-  talents?: Talent[];
-  spotifyLink?: string;
-  bandcampLink?: string;
-  soundcloudLink?: string;
-  location: string;
-  images: HTMLImageElement[];
+  profile: Profile;
 };
 
-export default function ProfilesPage({
-  name,
-  location,
-  birthday,
-  bio,
-  talents,
-  genres,
-  spotifyLink,
-  bandcampLink,
-  soundcloudLink,
-  images,
-}: ProfileProps) {
+export default function ProfileDetails({ profile }: ProfileProps) {
+  const {
+    createdBy,
+    name,
+    location,
+    birthday,
+    bio,
+    talents,
+    genres,
+    spotifyLink,
+    bandcampUsername,
+    soundcloudUsername,
+  } = profile;
+
+  const bandcampLink = `https://${bandcampUsername}.bandcamp.com/`;
+  const soundcloudLink = `https://soundcloud.com/${soundcloudUsername}`;
+
+  const [{ data: mediaData, loading: mediaLoading }] = useAxios<
+    PagedResponse<Media>
+  >(`/users/${createdBy}/media`);
+
+  const { items: media } = mediaData ?? {};
+
+  const [index, setIndex] = useState(0);
+
+  const handleSelect = (selectedIndex: number) => {
+    setIndex(selectedIndex);
+  };
+
   const [isLiked, setIsLiked] = useState(false);
+  const [images, setImages] = useState<HTMLImageElement[]>([]);
+
+  useEffect(() => {
+    if (media) {
+      setIndex(0);
+      setImages(
+        media.map((m) => {
+          const image = new Image();
+          image.src = `${baseURL}${m.filePath}`;
+          return image;
+        })
+      );
+    }
+  }, [media]);
 
   const handleLike = () => {
     setIsLiked((current) => !current);
@@ -54,15 +78,17 @@ export default function ProfilesPage({
 
   return (
     <div>
-      <Carousel>
-        {images.map((img) => {
-          return (
-            <Carousel.Item>
-              <img alt="First slide" className="userImg" src={img.src} />
-            </Carousel.Item>
-          );
-        })}
-      </Carousel>
+      {!mediaLoading && (
+        <Carousel activeIndex={index} onSelect={handleSelect} slide={false}>
+          {images.map((img) => {
+            return (
+              <Carousel.Item>
+                <img alt="First slide" className="userImg" src={img.src} />
+              </Carousel.Item>
+            );
+          })}
+        </Carousel>
+      )}
       <Container className="userInfo d-grid gap-1">
         <div className="mt-3">
           <div className="d-flex flex-row justify-content-between align-items-center mb-3">
@@ -98,7 +124,7 @@ export default function ProfilesPage({
           )}
 
           <div className="d-flex flex-column mb-2">
-            {genres && (
+            {genres && genres.length > 0 && (
               <div className="mb-3">
                 <b>Genres</b>
                 <div className="d-flex flex-row mt-2">
@@ -113,7 +139,7 @@ export default function ProfilesPage({
               </div>
             )}
 
-            {talents && (
+            {talents && talents.length > 0 && (
               <div className="mb-3">
                 <b>Talents</b>
                 <div className="d-flex flex-row mt-2">
@@ -129,10 +155,10 @@ export default function ProfilesPage({
                 </div>
               </div>
             )}
-            {(bandcampLink || soundcloudLink || spotifyLink) && (
+            {(bandcampUsername || soundcloudUsername || spotifyLink) && (
               <div className="d-flex flex-column mb-3">
                 <b className="mb-2">Links</b>
-                {bandcampLink && (
+                {bandcampUsername && (
                   <div className="d-flex flex-row align-items-center mb-2">
                     <XDiamondFill
                       className="me-2"
@@ -143,7 +169,7 @@ export default function ProfilesPage({
                     </a>
                   </div>
                 )}
-                {soundcloudLink && (
+                {soundcloudUsername && (
                   <div className="d-flex flex-row align-items-center mb-2">
                     <CloudyFill className="me-2" style={{ color: '#007AFF' }} />
                     <a className="m-0 p-0" href={soundcloudLink}>
