@@ -33,3 +33,7 @@ jobs:
           ssh_user: ${{ secrets.SSH_USER }}
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           ip_address: ${{ secrets.IP_ADDRESS }}
+          mongo_root_username: ${{ secrets.MONGO_ROOT_USERNAME }}
+          mongo_root_password: ${{ secrets.MONGO_ROOT_PASSWORD }}
+          mongo_db: ${{ secrets.MONGO_DB }}
+          mongo_uri: ${{ secrets.MONGO_URI }}
