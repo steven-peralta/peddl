@@ -40,6 +40,7 @@ runs:
 
     - shell: bash
       run: |
+        ssh-keyscan -H ${{ inputs.ip_address }} >> ~/.ssh/known_hosts
         export DOCKER_HOST="ssh://${{ inputs.ssh_user }}@${{ inputs.ip_address }}"
         docker pull 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-api-${{ inputs.environment }}
         docker-compose up api
