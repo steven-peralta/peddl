@@ -2,6 +2,7 @@ import express, { Express, json } from 'express';
 import cors from 'cors';
 import { MongoClient, Db } from 'mongodb';
 import setupRoutes from './routes';
+import morgan from 'morgan';
 
 class Server {
   port: string;
@@ -37,6 +38,8 @@ class Server {
     if (this.db) {
       this.app.use(cors());
       this.app.use(json());
+      this.app.use(morgan('combined'));
+
       this.app.use(express.static('static/'));
 
       this.setupRoutes(this.db);
