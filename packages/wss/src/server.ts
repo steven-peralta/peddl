@@ -7,6 +7,7 @@ const port = 8000;
 const app = express();
 const httpServer = createServer(app);
 const wss = new Server(httpServer, {
+  path: '/wss',
   cors: {
     origin: '*',
     methods: ['GET', 'POST'],
