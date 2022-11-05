@@ -62,5 +62,5 @@ runs:
         ssh-keyscan -H ${{ inputs.ip_address }} >> ~/.ssh/known_hosts
         rsync -v ./nginx.conf ${{ inputs.ssh_user }}@${{ inputs.ip_address }}:/home/${{ inputs.ssh_user }}
         export DOCKER_HOST="ssh://${{ inputs.ssh_user }}@${{ inputs.ip_address }}"
-        docker pull 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-api-${{ inputs.environment }}
+        docker pull 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-${{ inputs.project }}-${{ inputs.environment }}
         docker-compose up -d
