@@ -1,4 +1,4 @@
-import { Form, InputGroup } from 'react-bootstrap';
+import { Button, Container, Form, InputGroup } from 'react-bootstrap';
 import Select from 'react-select';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import {
@@ -17,11 +17,13 @@ import {
   validateSoundcloudUsername,
   validateSpotifyLink,
 } from '@peddl/common';
+import { ArrowLeft } from 'react-bootstrap-icons';
 import FormInput from '../../components/FormInput';
 import handleFormChange from '../../utils/form';
 import useValidation from '../../utils/hooks';
 import UploadMediaBox from '../../components/UploadMediaBox/UploadMediaBox';
 import convertToImageElement from '../../utils/convertToImageElement';
+import PrevNextButtons from '../../components/PrevNextButtons';
 
 export default function UpdateUserProfile() {
   const {
@@ -166,9 +168,13 @@ export default function UpdateUserProfile() {
     };
   };
   return (
-    <>
+    <Container>
+      <Button className="mt-3" variant="outline-primary">
+        <ArrowLeft className="me-2" />
+        Profile
+      </Button>
       <Form noValidate>
-        <h1 className="mb-3">Edit Profile</h1>
+        <h1 className="mb-3 mt-3">Edit Profile</h1>
         <h2 className="mb-3">Media</h2>
         <div className="d-flex flex-column justify-content-center">
           <div className="d-flex flex-row justify-content-center mt-0">
@@ -399,6 +405,22 @@ export default function UpdateUserProfile() {
           value={confirmPassword}
         />
       </FormInput>
-    </>
+      {/* <PrevNextButtons */}
+      {/*  nextDisabled={!newProfileFormsValid || loading} */}
+      {/*  nextLoading={loading} */}
+      {/*  nextText={step === CreateAccountSteps.SearchSettings ? 'Done' : 'Next'} */}
+      {/*  nextVariant={requestError ? 'danger' : 'primary'} */}
+      {/*  onNextClick={() => { */}
+      {/*    if (step === CreateAccountSteps.SearchSettings) { */}
+      {/*      submit().catch(console.error); */}
+      {/*    } else { */}
+      {/*      setStep(step + 1); */}
+      {/*    } */}
+      {/*  }} */}
+      {/*  onPrevClick={() => setStep(step > 0 ? step - 1 : step)} */}
+      {/*  prevDisabled={loading} */}
+      {/*  prevHidden={step === 0} */}
+      {/* /> */}
+    </Container>
   );
 }
