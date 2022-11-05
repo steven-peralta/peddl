@@ -1,15 +1,16 @@
 import React from 'react';
-import { Button, Container } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import './TitlePage.css';
 import { Link } from 'react-router-dom';
 import logo from './logoBlk.svg';
+import Content from '../../components/Content';
 
 export default function TitlePage() {
   return (
-    <Container>
+    <Content>
       <div className="Tpage mb-3">
         <div className="imageContainer d-grid gap-3 col-md-6 mb-5 mx-auto">
-          <img alt="Peddle Logo" className="splashLogo" src={logo} />
+          <img alt="Peddl Logo" className="splashLogo" src={logo} />
         </div>
         <div className="btn d-grid gap-3 mx-auto">
           <Link to="/register">
@@ -29,6 +30,6 @@ export default function TitlePage() {
           </Link>
         </div>
       </div>
-    </Container>
+    </Content>
   );
 }

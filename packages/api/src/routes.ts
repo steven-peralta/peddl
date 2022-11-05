@@ -258,11 +258,6 @@ const setupRoutes = (app: Express, db: Db) => {
     })
   );
 
-  app.get('/test', (_, res) => {
-    res.write('hello world');
-    res.end();
-  });
-
   app.post(
     '/profiles',
     expressjwt({ secret: jwtSecret, algorithms: ['HS256'] }),

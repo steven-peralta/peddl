@@ -10,7 +10,7 @@ import {
   OffcanvasTitle,
 } from 'react-bootstrap';
 import peddlLogo from '../../peddlLogo.svg';
-import { useAuth } from '../AuthProvider';
+import { useAuth } from '../../providers/AuthProvider';
 
 export default function PeddlNavbar() {
   const {
@@ -48,10 +48,12 @@ export default function PeddlNavbar() {
     </Nav>
   );
   return (
-    <Navbar bg="dark" expand="lg" variant="dark">
+    <Navbar bg="dark" expand="lg" fixed="top" variant="dark">
       <Container fluid>
-        <Navbar.Brand href="/">
-          <img alt="peddlLogo" className="logo" src={peddlLogo} />
+        <Navbar.Brand>
+          <Link to="/">
+            <img alt="peddlLogo" className="logo" src={peddlLogo} />
+          </Link>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Offcanvas placement="end">
@@ -59,8 +61,7 @@ export default function PeddlNavbar() {
             <OffcanvasTitle>Navigation</OffcanvasTitle>
           </OffcanvasHeader>
           <OffcanvasBody>
-            {!isAuthed && unauthenticatedLinks}
-            {isAuthed && authenticatedLinks}
+            {isAuthed ? authenticatedLinks : unauthenticatedLinks}
           </OffcanvasBody>
         </Navbar.Offcanvas>
       </Container>

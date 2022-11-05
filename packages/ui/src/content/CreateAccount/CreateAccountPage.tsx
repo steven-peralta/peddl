@@ -38,10 +38,10 @@ import UploadMediaBox from '../../components/UploadMediaBox/UploadMediaBox';
 import convertToImageElement from '../../utils/convertToImageElement';
 import axiosInstance from '../../utils/axiosInstance';
 import PrevNextButtons from '../../components/PrevNextButtons';
-import { useAuth } from '../../components/AuthProvider';
+import { useAuth } from '../../providers/AuthProvider';
 import useValidation from '../../utils/hooks';
 import extractTagOptions from '../../utils/extractTagOptions';
-import { useSettings } from '../../components/SettingsProvider';
+import { useSettings } from '../../providers/SettingsProvider';
 
 const enum CreateAccountSteps {
   NewProfile,

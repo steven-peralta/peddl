@@ -6,7 +6,7 @@ import { PagedResponse, Profile } from '@peddl/common';
 import useAxios from 'axios-hooks';
 import ProfileDetails from '../../components/Profiles/ProfileDetails';
 import PrevNextButtons from '../../components/PrevNextButtons';
-import { useSettings } from '../../components/SettingsProvider';
+import { useSettings } from '../../providers/SettingsProvider';
 
 export default function ProfilesPage() {
   const { settings } = useSettings();
@@ -22,7 +22,7 @@ export default function ProfilesPage() {
   const [profileIndex, setProfileIndex] = useState(0);
 
   return (
-    <div>
+    <div style={{ marginTop: '60px' }}>
       {!profilesLoading && profiles && (
         <>
           <ProfileDetails profile={profiles[profileIndex]} />
