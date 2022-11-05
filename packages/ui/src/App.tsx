@@ -10,6 +10,8 @@ import LoginPage from './content/LoginPage/LoginPage';
 import ProfilesPage from './content/UserProfiles/ProfilesPage';
 import { RequireAuth } from './components/AuthProvider';
 import LogoutPage from './content/LogoutPage';
+import UpdateSearchSettings from './content/UpdateSearchSettings/UpdateSearchSettings';
+import UpdateUserProfile from './content/UpdateUserProfile/UpdateUserProfile';
 
 function App() {
   return (
@@ -27,6 +29,9 @@ function App() {
           }
           path="profiles"
         />
+
+        <Route element={<UpdateSearchSettings />} path="searchSettings" />
+        <Route element={<UpdateUserProfile />} path="userProfiles" />
         <Route
           element={
             <RequireAuth>

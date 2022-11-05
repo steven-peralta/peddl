@@ -18,18 +18,16 @@ import {
   LocationTagOptions,
   validateBandcampUsername,
   validateSoundcloudUsername,
-} from '@peddl/common';
-import DatePicker from 'react-datepicker';
-import Select from 'react-select';
-import axios, { AxiosError } from 'axios';
-import {
   PostProfileRequest,
   PostProfileResponse,
   PostSettingsRequest,
   PostSettingsResponse,
   PostUserRequest,
   PostUserResponse,
-} from '@peddl/common/dist/api/types';
+} from '@peddl/common';
+import DatePicker from 'react-datepicker';
+import Select from 'react-select';
+import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Content from '../../components/Content';
 
