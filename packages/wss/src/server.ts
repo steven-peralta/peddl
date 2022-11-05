@@ -24,5 +24,6 @@ wss.on('connection', (socket) => {
   });
 });
 
-httpServer.listen(port);
-console.log(`wss server started on port ${port}`);
+httpServer.listen(port, () => {
+  console.log(`wss server started on port ${port}`);
+});
