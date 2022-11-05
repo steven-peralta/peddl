@@ -9,7 +9,7 @@ const app = express();
 app.use(morgan('combined'));
 const httpServer = createServer(app);
 const wss = new Server(httpServer, {
-  path: '/wss',
+  path: '/',
   cors: {
     origin: '*',
     methods: ['GET', 'POST'],
