@@ -1,8 +1,8 @@
 import express, { Express, json } from 'express';
 import cors from 'cors';
 import { MongoClient, Db } from 'mongodb';
-import setupRoutes from './routes';
 import morgan from 'morgan';
+import setupRoutes from './routes';
 
 class Server {
   port: string;
