@@ -22,8 +22,9 @@ import handleFormChange from '../../utils/form';
 import useValidation from '../../utils/hooks';
 import UploadMediaBox from '../../components/UploadMediaBox/UploadMediaBox';
 import convertToImageElement from '../../utils/convertToImageElement';
+import Content from '../../components/Content';
 
-export default function UpdateUserProfile() {
+export default function EditUserProfile() {
   const {
     value: [email],
     setter: [setEmail],
@@ -122,7 +123,7 @@ export default function UpdateUserProfile() {
     isValid: [bandcampUsernameIsValid],
   } = useValidation<string>(validateBandcampUsername, '');
 
-  const newProfileFormsValid =
+  const _newProfileFormsValid =
     emailIsValid &&
     passwordIsValid &&
     confirmPasswordIsValid &&
@@ -166,10 +167,9 @@ export default function UpdateUserProfile() {
     };
   };
   return (
-    <>
+    <Content title="Edit Profile">
+      <h2 className="mb-3">Media</h2>
       <Form noValidate>
-        <h1 className="mb-3">Edit Profile</h1>
-        <h2 className="mb-3">Media</h2>
         <div className="d-flex flex-column justify-content-center">
           <div className="d-flex flex-row justify-content-center mt-0">
             <UploadMediaBox
@@ -399,6 +399,6 @@ export default function UpdateUserProfile() {
           value={confirmPassword}
         />
       </FormInput>
-    </>
+    </Content>
   );
 }

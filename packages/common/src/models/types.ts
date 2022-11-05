@@ -38,3 +38,8 @@ export interface Media extends Model {
   createdBy: string;
   filePath: string;
 }
+
+export interface Like extends Model {
+  userId: string;
+  likedBy: string;
+}
