@@ -258,7 +258,7 @@ const setupRoutes = (app: Express, db: Db) => {
     })
   );
 
-  app.post('/test', (_, res) => {
+  app.get('/test', (_, res) => {
     res.write('hello world');
     res.end();
   });
