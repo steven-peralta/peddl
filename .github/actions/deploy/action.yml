@@ -58,7 +58,9 @@ runs:
         echo MONGO_DB="${{ inputs.mongo_db }}" >> .env
         echo ENVIRONMENT="${{ inputs.environment }}" >> .env
         echo MONGO_URI="${{ inputs.mongo_uri }}" >> .env
+        echo BASE_PATH="/home/${{ inputs.ssh_user }}" >> .env
         ssh-keyscan -H ${{ inputs.ip_address }} >> ~/.ssh/known_hosts
+        rsync nginx.conf ${{ inputs.ssh_user }}@${{ inputs.ip_address }}
         export DOCKER_HOST="ssh://${{ inputs.ssh_user }}@${{ inputs.ip_address }}"
         docker pull 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-api-${{ inputs.environment }}
         docker-compose up -d
