@@ -12,7 +12,7 @@ import { RequireAuth } from './components/AuthProvider';
 import LogoutPage from './content/LogoutPage';
 import UpdateSearchSettings from './content/UpdateSearchSettings/UpdateSearchSettings';
 import UpdateUserProfile from './content/UpdateUserProfile/UpdateUserProfile';
-import UserAccount from './content/UserAccount/UserAccount';
+import ViewProfilePage from './content/ViewProfilePage';
 
 function App() {
   return (
@@ -30,8 +30,8 @@ function App() {
           }
           path="profiles"
         />
+        <Route element={<ViewProfilePage />} path="viewProfile" />
         <Route element={<UpdateSearchSettings />} path="searchSettings" />
-        <Route element={<UserAccount />} path="userAccount" />
         <Route element={<UpdateUserProfile />} path="userProfiles" />
         <Route
           element={

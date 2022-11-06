@@ -405,22 +405,20 @@ export default function UpdateUserProfile() {
           value={confirmPassword}
         />
       </FormInput>
-      {/* <PrevNextButtons */}
-      {/*  nextDisabled={!newProfileFormsValid || loading} */}
-      {/*  nextLoading={loading} */}
-      {/*  nextText={step === CreateAccountSteps.SearchSettings ? 'Done' : 'Next'} */}
-      {/*  nextVariant={requestError ? 'danger' : 'primary'} */}
-      {/*  onNextClick={() => { */}
-      {/*    if (step === CreateAccountSteps.SearchSettings) { */}
-      {/*      submit().catch(console.error); */}
-      {/*    } else { */}
-      {/*      setStep(step + 1); */}
-      {/*    } */}
-      {/*  }} */}
-      {/*  onPrevClick={() => setStep(step > 0 ? step - 1 : step)} */}
-      {/*  prevDisabled={loading} */}
-      {/*  prevHidden={step === 0} */}
-      {/* /> */}
+      <PrevNextButtons
+        // nextLoading={loading}
+        nextText="Done"
+        nextDisabled={newProfileFormsValid}
+        nextVariant="primary"
+        onNextClick={() => {
+          console.log('done clicked');
+        }}
+        onPrevClick={() => {
+          console.log('prev clicked clicked');
+        }}
+        prevDisabled
+        prevHidden
+      />
     </Container>
   );
 }
