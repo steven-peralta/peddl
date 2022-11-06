@@ -3,7 +3,7 @@ services:
   nginx:
     image: nginx
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ${BASE_PATH:-.}/nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
       - default-network
     depends_on:
@@ -30,6 +30,8 @@ services:
       MONGO_DB: ${MONGO_DB}
       MONGO_URI: ${MONGO_URI}
       PORT: 8080
+    volumes:
+      - "mediadata:/srv/static"
     depends_on:
       - mongo
     networks:
@@ -51,3 +53,4 @@ networks:
   default-network: {}
 volumes:
   mongodbdata:
+  mediadata:

@@ -8,8 +8,10 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import axiosInstance from './utils/axiosInstance';
-import { AuthProvider } from './components/AuthProvider';
-import { SettingsProvider } from './components/SettingsProvider';
+import { AuthProvider } from './providers/AuthProvider';
+import { SettingsProvider } from './providers/SettingsProvider';
+import { WebsocketProvider } from './providers/WebsocketProvider';
+import { ToastProvider } from './providers/ToastProvider';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -19,13 +21,17 @@ configure({ axios: axiosInstance });
 
 root.render(
   <React.StrictMode>
-    <AuthProvider>
-      <SettingsProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </SettingsProvider>
-    </AuthProvider>
+    <ToastProvider>
+      <AuthProvider>
+        <WebsocketProvider>
+          <SettingsProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </SettingsProvider>
+        </WebsocketProvider>
+      </AuthProvider>
+    </ToastProvider>
   </React.StrictMode>
 );
 

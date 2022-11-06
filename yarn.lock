@@ -2355,6 +2355,7 @@ __metadata:
     "@types/jsonschema": ^1.1.1
     "@types/jsonwebtoken": ^8.5.9
     "@types/mongodb": ^4.0.7
+    "@types/morgan": ^1.9.3
     "@types/multer": ^1.4.7
     "@types/node": ^18.7.18
     "@typescript-eslint/eslint-plugin": ^5.37.0
@@ -2372,6 +2373,7 @@ __metadata:
     express-jwt: ^7.7.5
     jsonwebtoken: ^8.5.1
     mongodb: ^4.10.0
+    morgan: ^1.10.0
     multer: ^1.4.5-lts.1
     nanoid: ^3.0.0
     prettier: ^2.7.1
@@ -2443,7 +2445,7 @@ __metadata:
     react-select: ^5.4.0
     react-tag-input-component: ^2.0.0
     sass: ^1.55.0
-    socket.io-client: ^4.5.2
+    socket.io-client: ^4.5.3
     sort-by: ^1.2.0
     typescript: ^4.8.3
     web-vitals: ^2.1.4
@@ -2461,6 +2463,7 @@ __metadata:
     "@rollup/plugin-node-resolve": ^14.1.0
     "@rollup/plugin-typescript": ^8.5.0
     "@types/express": ^4.17.14
+    "@types/morgan": ^1.9.3
     "@types/node": ^18.7.18
     "@typescript-eslint/eslint-plugin": ^5.37.0
     "@typescript-eslint/parser": ^5.37.0
@@ -2471,6 +2474,7 @@ __metadata:
     eslint-plugin-import: ^2.26.0
     eslint-plugin-prettier: ^4.2.1
     express: ^4.18.1
+    morgan: ^1.10.0
     prettier: ^2.7.1
     rollup: ^2.79.1
     rollup-plugin-terser: ^7.0.2
@@ -3304,6 +3308,15 @@ __metadata:
   dependencies:
     mongodb: "*"
   checksum: 10ebdfed5beaeb9354adcaded3ff31a0597eec96d665155bf029fdf81384534cc054ffd4f3a431911e55055cea8dcea6233b2265d6d90f45fe233fd59a31bd56
+  languageName: node
+  linkType: hard
+
+"@types/morgan@npm:^1.9.3":
+  version: 1.9.3
+  resolution: "@types/morgan@npm:1.9.3"
+  dependencies:
+    "@types/node": "*"
+  checksum: 0b9bc8641ce03f7176f617523b8da300e5d47225b1667396749950ac7fdfa1f990447d490648fbaff050c2b0ef5fa60c3f2f00c6b76efec06fe5148de5020813
   languageName: node
   linkType: hard
 
@@ -4583,6 +4596,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"basic-auth@npm:~2.0.1":
+  version: 2.0.1
+  resolution: "basic-auth@npm:2.0.1"
+  dependencies:
+    safe-buffer: 5.1.2
+  checksum: 3419b805d5dfc518f3a05dcf42aa53aa9ce820e50b6df5097f9e186322e1bc733c36722b624802cd37e791035aa73b828ed814d8362333d42d7f5cd04d7a5e48
+  languageName: node
+  linkType: hard
+
 "batch@npm:0.6.1":
   version: 0.6.1
   resolution: "batch@npm:0.6.1"
@@ -5786,7 +5808,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"depd@npm:2.0.0":
+"depd@npm:2.0.0, depd@npm:~2.0.0":
   version: 2.0.0
   resolution: "depd@npm:2.0.0"
   checksum: abbe19c768c97ee2eed6282d8ce3031126662252c58d711f646921c9623f9052e3e1906443066beec1095832f534e57c523b7333f8e7e0d93051ab6baef5ab3a
@@ -6164,16 +6186,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"engine.io-client@npm:~6.2.1":
-  version: 6.2.2
-  resolution: "engine.io-client@npm:6.2.2"
+"engine.io-client@npm:~6.2.3":
+  version: 6.2.3
+  resolution: "engine.io-client@npm:6.2.3"
   dependencies:
     "@socket.io/component-emitter": ~3.1.0
     debug: ~4.3.1
     engine.io-parser: ~5.0.3
     ws: ~8.2.3
     xmlhttprequest-ssl: ~2.0.0
-  checksum: bda989d88d663cda5f1fbe6b235dba35b80ba9e947685b94b40d3daf4545ccdcb54232d2ad210bbe9b5e0b73b0e019b54716d1285ed300e1f1c7ad97fd6cafaf
+  checksum: c09fb6429503a4a8a599ec1c4f67f100202e6e06588b67b81d386a4ebf8e81160cf7501ad6770ffe0a04575f41868f0a4cbf330b85de3f7cd24ebcf2bf9fc660
   languageName: node
   linkType: hard
 
@@ -9912,6 +9934,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"morgan@npm:^1.10.0":
+  version: 1.10.0
+  resolution: "morgan@npm:1.10.0"
+  dependencies:
+    basic-auth: ~2.0.1
+    debug: 2.6.9
+    depd: ~2.0.0
+    on-finished: ~2.3.0
+    on-headers: ~1.0.2
+  checksum: fb41e226ab5a1abf7e8909e486b387076534716d60207e361acfb5df78b84d703a7b7ea58f3046a9fd0b83d3c94bfabde32323341a1f1b26ce50680abd2ea5dd
+  languageName: node
+  linkType: hard
+
 "ms@npm:2.0.0":
   version: 2.0.0
   resolution: "ms@npm:2.0.0"
@@ -10241,6 +10276,15 @@ __metadata:
   dependencies:
     ee-first: 1.1.1
   checksum: d20929a25e7f0bb62f937a425b5edeb4e4cde0540d77ba146ec9357f00b0d497cdb3b9b05b9c8e46222407d1548d08166bff69cc56dfa55ba0e4469228920ff0
+  languageName: node
+  linkType: hard
+
+"on-finished@npm:~2.3.0":
+  version: 2.3.0
+  resolution: "on-finished@npm:2.3.0"
+  dependencies:
+    ee-first: 1.1.1
+  checksum: 1db595bd963b0124d6fa261d18320422407b8f01dc65863840f3ddaaf7bcad5b28ff6847286703ca53f4ec19595bd67a2f1253db79fc4094911ec6aa8df1671b
   languageName: node
   linkType: hard
 
@@ -12763,15 +12807,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"socket.io-client@npm:^4.5.2":
-  version: 4.5.2
-  resolution: "socket.io-client@npm:4.5.2"
+"socket.io-client@npm:^4.5.3":
+  version: 4.5.3
+  resolution: "socket.io-client@npm:4.5.3"
   dependencies:
     "@socket.io/component-emitter": ~3.1.0
     debug: ~4.3.2
-    engine.io-client: ~6.2.1
+    engine.io-client: ~6.2.3
     socket.io-parser: ~4.2.0
-  checksum: f3196a731d7f502bcce8b54a3430485d2015d0e7d74050c1be8fa0622da0b62977719f903ec0dfb113d4be1564f6509d73f2fc257cf3972f3be877722aeabeb9
+  checksum: ebd2dbddece9e8b5926e8f20ed3d0620bdb07de70ece8fb6fa786690f543f420e2ea784a37e46ac470af3cc11f0199d9ecabd8f30eaf63c80974c3eaa7e8a9b0
   languageName: node
   linkType: hard
 

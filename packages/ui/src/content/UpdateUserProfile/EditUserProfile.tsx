@@ -1,4 +1,4 @@
-import { Button, Container, Form, InputGroup } from 'react-bootstrap';
+import { Button, Form, InputGroup } from 'react-bootstrap';
 import Select from 'react-select';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import {
@@ -24,8 +24,9 @@ import useValidation from '../../utils/hooks';
 import UploadMediaBox from '../../components/UploadMediaBox/UploadMediaBox';
 import convertToImageElement from '../../utils/convertToImageElement';
 import PrevNextButtons from '../../components/PrevNextButtons';
+import Content from '../../components/Content';
 
-export default function UpdateUserProfile() {
+export default function EditUserProfile() {
   const {
     value: [email],
     setter: [setEmail],
@@ -124,7 +125,7 @@ export default function UpdateUserProfile() {
     isValid: [bandcampUsernameIsValid],
   } = useValidation<string>(validateBandcampUsername, '');
 
-  const newProfileFormsValid =
+  const _newProfileFormsValid =
     emailIsValid &&
     passwordIsValid &&
     confirmPasswordIsValid &&
@@ -168,14 +169,9 @@ export default function UpdateUserProfile() {
     };
   };
   return (
-    <Container>
-      <Button className="mt-3" variant="outline-primary">
-        <ArrowLeft className="me-2" />
-        Profile
-      </Button>
+    <Content title="Edit Profile">
+      <h2 className="mb-3">Media</h2>
       <Form noValidate>
-        <h1 className="mb-3 mt-3">Edit Profile</h1>
-        <h2 className="mb-3">Media</h2>
         <div className="d-flex flex-column justify-content-center">
           <div className="d-flex flex-row justify-content-center mt-0">
             <UploadMediaBox
@@ -419,6 +415,6 @@ export default function UpdateUserProfile() {
         prevDisabled
         prevHidden
       />
-    </Container>
+    </Content>
   );
 }

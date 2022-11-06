@@ -1,5 +1,5 @@
 import Select from 'react-select';
-import { Container, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import React, { useState } from 'react';
 import {
   GenderTagOptions,
@@ -12,10 +12,11 @@ import {
 import { AxiosError } from 'axios';
 import Slider from '../../components/Slider/Slider';
 import FormInput from '../../components/FormInput';
+import Content from '../../components/Content';
 import { useSettings } from '../../components/SettingsProvider';
 import extractTagOptions from '../../utils/extractTagOptions';
 
-export default function UpdateSearchSettings() {
+export default function EditSearchSettings() {
   const [rangeSetting, setRangeSetting] = React.useState<[number, number]>([
     20, 40,
   ]);
@@ -26,7 +27,7 @@ export default function UpdateSearchSettings() {
   const [genresSetting, setGenreSetting] = useState<readonly TagOption[]>([]);
   const [talentsSetting, setTalentSetting] = useState<readonly TagOption[]>([]);
 
-  const [requestError, setRequestError] = useState<AxiosError | undefined>();
+  const [requestError] = useState<AxiosError | undefined>();
 
   const { setSettings } = useSettings();
   const settingsData: PostSettingsRequest = {
@@ -39,8 +40,7 @@ export default function UpdateSearchSettings() {
   setSettings(settingsData);
 
   return (
-    <Container>
-      <h1 className="mb-3 mt-3">Search Settings</h1>
+    <Content title="Search Settings">
       <Form noValidate>
         <FormInput htmlFor="ageSetting" label="Age">
           <div className="mt-4 pt-2 mb-2">
@@ -95,6 +95,6 @@ export default function UpdateSearchSettings() {
           </p>
         )}
       </Form>
-    </Container>
+    </Content>
   );
 }

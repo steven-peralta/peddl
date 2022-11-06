@@ -1,0 +1,66 @@
+name: Deploy to EC2 instance
+description: 'Deploys the newly built image to an EC2 instance'
+inputs:
+  project:
+    required: true
+    description: project
+  environment:
+    required: true
+    description: environment
+  ssh_private_key:
+    required: true
+    description: ssh key
+  ssh_user:
+    required: true
+    description: ssh user
+  ip_address:
+    required: true
+    description: ip address
+  aws_access_key_id:
+    required: true
+    description: AWS access key ID
+  aws_secret_access_key:
+    required: true
+    description: AWS secret access key
+  mongo_root_username:
+    required: true
+    description: mongo root username
+  mongo_root_password:
+    required: true
+    description: mongo root password
+  mongo_db:
+    required: true
+    description: mongo db name
+  mongo_uri:
+    required: true
+    description: mongo uri
+
+runs:
+  using: composite
+  steps:
+    - uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ inputs.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - uses: aws-actions/amazon-ecr-login@v1
+
+    - uses: webfactory/ssh-agent@v0.6.0
+      with:
+        ssh-private-key: ${{ inputs.ssh_private_key }}
+
+    - shell: bash
+      run: |
+        touch .env
+        echo MONGO_ROOT_USERNAME="${{ inputs.mongo_root_username }}" >> .env
+        echo MONGO_ROOT_PASSWORD="${{ inputs.mongo_root_password }}" >> .env
+        echo MONGO_DB="${{ inputs.mongo_db }}" >> .env
+        echo ENVIRONMENT="${{ inputs.environment }}" >> .env
+        echo MONGO_URI="${{ inputs.mongo_uri }}" >> .env
+        echo BASE_PATH="/home/${{ inputs.ssh_user }}" >> .env
+        ssh-keyscan -H ${{ inputs.ip_address }} >> ~/.ssh/known_hosts
+        rsync -v ./nginx.conf ${{ inputs.ssh_user }}@${{ inputs.ip_address }}:/home/${{ inputs.ssh_user }}
+        export DOCKER_HOST="ssh://${{ inputs.ssh_user }}@${{ inputs.ip_address }}"
+        docker pull 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-${{ inputs.project }}-${{ inputs.environment }}
+        docker-compose up -d
