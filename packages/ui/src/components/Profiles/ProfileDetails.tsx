@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Badge, Button, Carousel, Container } from 'react-bootstrap';
+import { Badge, Carousel, Container } from 'react-bootstrap';
 import './UserProfilesStyles.css';
 import {
   CloudyFill,
   GeoAlt,
-  HeartFill,
   Spotify,
   XDiamondFill,
 } from 'react-bootstrap-icons';
@@ -14,9 +13,10 @@ import { baseURL } from '../../utils/axiosInstance';
 
 type ProfileProps = {
   profile: Profile;
+  actionBtn: JSX.Element;
 };
 
-export default function ProfileDetails({ profile }: ProfileProps) {
+export default function ProfileDetails({ profile, actionBtn }: ProfileProps) {
   const {
     createdBy,
     name,
@@ -45,7 +45,6 @@ export default function ProfileDetails({ profile }: ProfileProps) {
     setIndex(selectedIndex);
   };
 
-  const [isLiked, setIsLiked] = useState(false);
   const [images, setImages] = useState<HTMLImageElement[]>([]);
 
   useEffect(() => {
@@ -60,10 +59,6 @@ export default function ProfileDetails({ profile }: ProfileProps) {
       );
     }
   }, [media]);
-
-  const handleLike = () => {
-    setIsLiked((current) => !current);
-  };
 
   function getAge() {
     const today = new Date();
@@ -104,17 +99,7 @@ export default function ProfileDetails({ profile }: ProfileProps) {
                 </p>
               </div>
             </div>
-            <Button
-              className="btn-outline-danger"
-              onClick={handleLike}
-              style={{
-                width: '48px',
-                height: '48px',
-                backgroundColor: isLiked ? 'red' : 'white',
-              }}
-            >
-              <HeartFill style={{ color: isLiked ? 'white' : 'red' }} />
-            </Button>
+            {actionBtn}
           </div>
 
           {bio && (

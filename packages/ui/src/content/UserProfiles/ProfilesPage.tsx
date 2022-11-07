@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Container } from 'react-bootstrap';
+import { Button, Container } from 'react-bootstrap';
 import '../../components/Profiles/UserProfilesStyles.css';
-import { ArrowLeft, ArrowRight } from 'react-bootstrap-icons';
+import { ArrowLeft, ArrowRight, HeartFill } from 'react-bootstrap-icons';
 import { PagedResponse, Profile } from '@peddl/common';
 import useAxios from 'axios-hooks';
 import ProfileDetails from '../../components/Profiles/ProfileDetails';
@@ -17,15 +17,34 @@ export default function ProfilesPage() {
   params.set('talents', settings?.talents?.join(',') ?? '');
   const [{ data: profileData, loading: profilesLoading }] = useAxios<
     PagedResponse<Profile>
-  >({ url: '/profiles', params });
+  >({
+    url: '/profiles',
+    params,
+  });
   const { items: profiles } = profileData ?? {};
   const [profileIndex, setProfileIndex] = useState(0);
+  const handleLike = () => console.log('logging');
+  const likeBtn = (
+    <Button
+      className="btn-outline-danger"
+      onClick={handleLike}
+      style={{
+        width: '48px',
+        height: '48px',
+      }}
+    >
+      <HeartFill />
+    </Button>
+  );
 
   return (
     <div style={{ marginTop: '60px' }}>
       {!profilesLoading && profiles && (
         <>
-          <ProfileDetails profile={profiles[profileIndex]} />
+          <ProfileDetails
+            profile={profiles[profileIndex]}
+            actionBtn={likeBtn}
+          />
           <Container>
             <PrevNextButtons
               nextHidden={profileIndex === profiles.length - 1}

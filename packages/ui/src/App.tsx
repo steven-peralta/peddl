@@ -10,10 +10,11 @@ import LoginPage from './content/LoginPage/LoginPage';
 import ProfilesPage from './content/UserProfiles/ProfilesPage';
 import { RequireAuth } from './providers/AuthProvider';
 import LogoutPage from './content/LogoutPage';
-import EditSearchSettings from './content/UpdateSearchSettings/EditSearchSettings';
-import EditUserProfile from './content/UpdateUserProfile/EditUserProfile';
+import EditSearchSettings from './content/EditSearchSettings/EditSearchSettings';
+import EditUserProfile from './content/EditUserProfile/EditUserProfile';
 import { useToast } from './providers/ToastProvider';
 import { useSocket } from './providers/WebsocketProvider';
+import ViewProfilePage from './content/ViewProfilePage';
 
 function App() {
   const { addToast, toastContainer } = useToast();
@@ -65,6 +66,7 @@ function App() {
           }
           path="userProfiles"
         />
+        <Route element={<ViewProfilePage />} path="viewProfile" />
         <Route
           element={
             <RequireAuth>

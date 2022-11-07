@@ -23,6 +23,7 @@ import useValidation from '../../utils/hooks';
 import UploadMediaBox from '../../components/UploadMediaBox/UploadMediaBox';
 import convertToImageElement from '../../utils/convertToImageElement';
 import Content from '../../components/Content';
+import PrevNextButtons from '../../components/PrevNextButtons';
 
 export default function EditUserProfile() {
   const {
@@ -123,7 +124,7 @@ export default function EditUserProfile() {
     isValid: [bandcampUsernameIsValid],
   } = useValidation<string>(validateBandcampUsername, '');
 
-  const _newProfileFormsValid =
+  const newProfileFormsValid =
     emailIsValid &&
     passwordIsValid &&
     confirmPasswordIsValid &&
@@ -399,6 +400,20 @@ export default function EditUserProfile() {
           value={confirmPassword}
         />
       </FormInput>
+      <PrevNextButtons
+        // nextLoading={loading}
+        nextText="Done"
+        nextDisabled={newProfileFormsValid}
+        nextVariant="primary"
+        onNextClick={() => {
+          console.log('done clicked');
+        }}
+        onPrevClick={() => {
+          console.log('prev clicked clicked');
+        }}
+        prevDisabled
+        prevHidden
+      />
     </Content>
   );
 }
