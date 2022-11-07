@@ -1,10 +1,6 @@
 import * as crypto from 'crypto';
 import { Express } from 'express';
-import { Db } from 'mongodb';
 import {
-  Profile,
-  User,
-  Settings,
   validateEmail,
   validatePassword,
   validateBirthday,
@@ -24,18 +20,20 @@ import {
   PostProfileRequest,
   PostSettingsRequest,
   PostUserRequest,
-  Media,
 } from '@peddl/common';
 import asyncHandler from 'express-async-handler';
 import jwt from 'jsonwebtoken';
 import { expressjwt, Request as JWTRequest } from 'express-jwt';
 import multer from 'multer';
-import validateForm from './validation';
-import createUser from './models/users';
+import createUser, { usersCollection } from './models/users';
 import { createProfile, getProfiles } from './models/profiles';
 import { createSettings, getSettings } from './models/settings';
 import { createMassMedia, getMedia } from './models/media';
-import { parseSettingsParams, SettingsQueryParams } from './utils';
+import validateForm, {
+  parseSettingsParams,
+  SettingsQueryParams,
+} from './utils';
+import { createLike, getLikes, removeLike } from './models/likes';
 
 type JWTToken = {
   userId: string;
@@ -55,14 +53,13 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-const setupRoutes = (app: Express, db: Db) => {
+const setupRoutes = (app: Express) => {
   app.post(
     '/auth',
     asyncHandler(async (req, res) => {
       const { body } = req;
       const { email, password } = body as PostAuthRequest;
-      const users = db.collection<User>('users');
-      const user = await users.findOne({ email });
+      const user = await usersCollection.findOne({ email });
 
       if (!user) {
         res.status(404);
@@ -110,10 +107,9 @@ const setupRoutes = (app: Express, db: Db) => {
         return;
       }
 
-      const users = db.collection<User>('users');
       try {
         res.status(201);
-        const newUser = await createUser(data, users);
+        const newUser = await createUser(data);
         res.json(newUser);
       } catch (error) {
         res.status(500);
@@ -161,10 +157,9 @@ const setupRoutes = (app: Express, db: Db) => {
         return rest.join('/');
       });
 
-      const media = db.collection<Media>('media');
       try {
         res.status(201);
-        res.json(await createMassMedia(userId, filePaths, media));
+        res.json(await createMassMedia(userId, filePaths));
       } catch (error) {
         res.status(500);
         if (error instanceof Error) {
@@ -180,8 +175,7 @@ const setupRoutes = (app: Express, db: Db) => {
     '/users/:userId/media',
     asyncHandler(async (req: JWTRequest<JWTToken>, res) => {
       const { userId } = req.params;
-      const media = db.collection<Media>('media');
-      res.json(await getMedia(userId, media));
+      res.json(await getMedia(userId));
     })
   );
 
@@ -202,8 +196,7 @@ const setupRoutes = (app: Express, db: Db) => {
         return;
       }
 
-      const settingsCollection = db.collection<Settings>('settings');
-      const settings = await getSettings(userId, settingsCollection);
+      const settings = await getSettings(userId);
 
       if (!settings) {
         res.sendStatus(404);
@@ -233,10 +226,133 @@ const setupRoutes = (app: Express, db: Db) => {
 
       const data = req.body as PostSettingsRequest;
 
-      const settings = db.collection<Settings>('settings');
       try {
         res.status(201);
-        res.json(await createSettings(userId, data, settings));
+        res.json(await createSettings(userId, data));
+      } catch (error) {
+        res.status(500);
+        if (error instanceof Error) {
+          res.json({ error: error.message } as ErrorResponse);
+        } else {
+          res.end();
+        }
+      }
+    })
+  );
+
+  app.post(
+    '/users/:userId/likes/:likedUserId',
+    expressjwt({ secret: jwtSecret, algorithms: ['HS256'] }),
+    asyncHandler(async (req: JWTRequest<JWTToken>, res) => {
+      const { auth } = req;
+      if (!auth) {
+        res.sendStatus(401);
+        return;
+      }
+      const { userId } = auth;
+      const { userId: userIdParam, likedUserId: likedUserIdParam } = req.params;
+
+      if (userId !== userIdParam) {
+        res.sendStatus(401);
+        return;
+      }
+
+      try {
+        res.status(201);
+        res.json(await createLike(likedUserIdParam, userIdParam));
+      } catch (error) {
+        res.status(500);
+        if (error instanceof Error) {
+          res.json({ error: error.message } as ErrorResponse);
+        } else {
+          res.end();
+        }
+      }
+    })
+  );
+
+  app.delete(
+    '/users/:userId/likes/:likedUserId',
+    expressjwt({ secret: jwtSecret, algorithms: ['HS256'] }),
+    asyncHandler(async (req: JWTRequest<JWTToken>, res) => {
+      const { auth } = req;
+      if (!auth) {
+        res.sendStatus(401);
+        return;
+      }
+      const { userId } = auth;
+      const { userId: userIdParam, likedUserId: likedUserIdParam } = req.params;
+
+      if (userId !== userIdParam) {
+        res.sendStatus(401);
+        return;
+      }
+
+      try {
+        res.status(204);
+        res.json(await removeLike(likedUserIdParam, userIdParam));
+      } catch (error) {
+        res.status(500);
+        if (error instanceof Error) {
+          res.json({ error: error.message } as ErrorResponse);
+        } else {
+          res.end();
+        }
+      }
+    })
+  );
+
+  app.get(
+    '/users/:userId/likes',
+    expressjwt({ secret: jwtSecret, algorithms: ['HS256'] }),
+    asyncHandler(async (req: JWTRequest<JWTToken>, res) => {
+      const { auth } = req;
+      if (!auth) {
+        res.sendStatus(401);
+        return;
+      }
+      const { userId } = auth;
+      const { userId: userIdParam } = req.params;
+
+      if (userId !== userIdParam) {
+        res.sendStatus(401);
+        return;
+      }
+
+      try {
+        res.status(200);
+        res.json(await getLikes(userIdParam));
+      } catch (error) {
+        res.status(500);
+        if (error instanceof Error) {
+          res.json({ error: error.message } as ErrorResponse);
+        } else {
+          res.end();
+        }
+      }
+    })
+  );
+
+  app.get(
+    '/users/:userId/matches',
+    expressjwt({ secret: jwtSecret, algorithms: ['HS256'] }),
+    asyncHandler(async (req: JWTRequest<JWTToken>, res) => {
+      const { auth } = req;
+      if (!auth) {
+        res.sendStatus(401);
+        return;
+      }
+      const { userId } = auth;
+      const { userId: userIdParam } = req.params;
+
+      if (userId !== userIdParam) {
+        res.sendStatus(401);
+        return;
+      }
+
+      try {
+        res.status(200);
+        res.json(await getLikes(userIdParam, true));
       } catch (error) {
         res.status(500);
         if (error instanceof Error) {
@@ -253,8 +369,7 @@ const setupRoutes = (app: Express, db: Db) => {
     asyncHandler(async (req: JWTRequest<JWTToken>, res) => {
       const params = req.query as SettingsQueryParams;
       const settings = parseSettingsParams(params);
-      const profiles = db.collection<Profile>('profiles');
-      res.json(await getProfiles(settings, profiles));
+      res.json(await getProfiles(settings));
     })
   );
 
@@ -293,10 +408,9 @@ const setupRoutes = (app: Express, db: Db) => {
         return;
       }
 
-      const profiles = db.collection<Profile>('profiles');
       try {
         res.status(201);
-        res.json(await createProfile(userId, data, profiles));
+        res.json(await createProfile(userId, data));
       } catch (error) {
         res.status(500);
         if (error instanceof Error) {

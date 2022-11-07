@@ -1,56 +1,50 @@
-import express, { Express, json } from 'express';
+import express, { json } from 'express';
 import cors from 'cors';
-import { MongoClient, Db } from 'mongodb';
 import morgan from 'morgan';
+import { mongoClient } from './db';
 import setupRoutes from './routes';
+import { likesCollection } from './models/likes';
+import { mediaCollection } from './models/media';
+import { profilesCollection } from './models/profiles';
+import { settingsCollection } from './models/settings';
+import { usersCollection } from './models/users';
 
-class Server {
-  port: string;
+const port = process.env['PORT'] ?? '8080';
 
-  app: Express;
+const app = express();
 
-  mongoClient: MongoClient;
+mongoClient.connect().then(() => {
+  const createDBIndicies = [
+    likesCollection.createIndex({ userId: 1, createdBy: 1 }, { unique: true }),
+    likesCollection.createIndex({ userId: 1, matches: 1 }),
+    mediaCollection.createIndex({ id: 1 }, { unique: true }),
+    mediaCollection.createIndex({ createdBy: 1 }),
+    profilesCollection.createIndex({ id: 1 }, { unique: true }),
+    profilesCollection.createIndexes([
+      { key: { createdBy: 1 } },
+      { key: { gender: 1 } },
+      { key: { genres: 1 } },
+      { key: { talents: 1 } },
+      { key: { location: 1 } },
+      { key: { birthday: 1 } },
+    ]),
+    settingsCollection.createIndex({ id: 1 }, { unique: true }),
+    settingsCollection.createIndex({ createdBy: 1 }),
+    usersCollection.createIndexes([{ key: { id: 1 } }, { key: { email: 1 } }], {
+      unique: true,
+    }),
+  ];
 
-  dbName: string;
+  Promise.all(createDBIndicies).catch(console.error);
 
-  db?: Db;
+  app.use(cors());
+  app.use(json());
+  app.use(morgan('combined'));
+  app.use(express.static('static/'));
 
-  constructor(
-    port: string = process.env['PORT'] ?? '8080',
-    mongoConnectionURL = process.env['MONGO_URI'] ??
-      'mongodb://admin:mongo@localhost:27017',
-    dbName = process.env['MONGO_DB'] ?? 'peddl'
-  ) {
-    this.app = express();
-    this.mongoClient = new MongoClient(mongoConnectionURL);
-    this.dbName = dbName;
-    this.port = port;
-  }
+  setupRoutes(app);
 
-  setupRoutes(db: Db) {
-    setupRoutes(this.app, db);
-  }
-
-  async start() {
-    await this.mongoClient.connect();
-    this.db = this.mongoClient.db(this.dbName);
-
-    if (this.db) {
-      this.app.use(cors());
-      this.app.use(json());
-      this.app.use(morgan('combined'));
-
-      this.app.use(express.static('static/'));
-
-      this.setupRoutes(this.db);
-
-      this.app.listen(this.port, () => {
-        console.log(`App listening on port ${this.port}`);
-      });
-    } else {
-      throw new Error('DB is undefined');
-    }
-  }
-}
-
-new Server().start().catch(console.error);
+  app.listen(port, () => {
+    console.log(`App listening on port ${port}`);
+  });
+});

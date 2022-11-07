@@ -5,22 +5,26 @@ import {
   PostProfileResponse,
   Profile,
 } from '@peddl/common';
-import { Collection, Filter } from 'mongodb';
+import { Filter } from 'mongodb';
 import { genid } from '../utils';
+import { db } from '../db';
+
+export const profilesCollection = db.collection<Profile>('profiles');
 
 export async function createProfile(
   userId: string,
-  profile: PostProfileRequest,
-  collection: Collection<Profile>
+  profile: PostProfileRequest
 ): Promise<PostProfileResponse> {
-  const existingProfile = await collection.findOne({ createdBy: userId });
+  const existingProfile = await profilesCollection.findOne({
+    createdBy: userId,
+  });
 
   if (existingProfile) {
     throw new Error('Profile already exists for that user.');
   }
 
   const id = genid();
-  await collection.insertOne({
+  await profilesCollection.insertOne({
     id,
     createdBy: userId,
     createdAt: new Date(),
@@ -32,8 +36,7 @@ export async function createProfile(
 }
 
 export async function getProfiles(
-  settings: GetProfilesRequest,
-  collection: Collection<Profile>
+  settings: GetProfilesRequest
 ): Promise<PagedResponse<Profile>> {
   const { genders = [], genres = [], talents = [], locations = [] } = settings;
   const genderFilter: Filter<Profile> | undefined =
@@ -58,7 +61,7 @@ export async function getProfiles(
     ...talentsFilter,
     ...locationsFilter,
   };
-  const items = await collection.find(filter).toArray();
+  const items = await profilesCollection.find(filter).toArray();
 
   return {
     items,

@@ -41,5 +41,6 @@ export interface Media extends Model {
 
 export interface Like extends Model {
   userId: string;
-  likedBy: string;
+  createdBy: string;
+  mutual: boolean;
 }

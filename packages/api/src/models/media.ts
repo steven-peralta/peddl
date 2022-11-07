@@ -1,15 +1,13 @@
-import { Collection } from 'mongodb';
 import { Media, PagedResponse } from '@peddl/common';
 import { genid } from '../utils';
+import { db } from '../db';
 
-export async function createMedia(
-  userId: string,
-  filePath: string,
-  collection: Collection<Media>
-) {
+export const mediaCollection = db.collection<Media>('media');
+
+export async function createMedia(userId: string, filePath: string) {
   const id = genid();
 
-  await collection.insertOne({
+  await mediaCollection.insertOne({
     createdBy: userId,
     createdAt: new Date(),
     id,
@@ -19,24 +17,15 @@ export async function createMedia(
   return { id };
 }
 
-export async function createMassMedia(
-  userId: string,
-  filePaths: string[],
-  collection: Collection<Media>
-) {
-  const promises = filePaths.map((filePath) =>
-    createMedia(userId, filePath, collection)
-  );
+export async function createMassMedia(userId: string, filePaths: string[]) {
+  const promises = filePaths.map((filePath) => createMedia(userId, filePath));
   const results = await Promise.all(promises);
   const ids = results.map((result) => result.id);
   return { ids };
 }
 
-export async function getMedia(
-  userId: string,
-  collection: Collection<Media>
-): Promise<PagedResponse<Media>> {
-  const items = await collection.find({ createdBy: userId }).toArray();
+export async function getMedia(userId: string): Promise<PagedResponse<Media>> {
+  const items = await mediaCollection.find({ createdBy: userId }).toArray();
   return {
     items,
     count: items.length,
