@@ -1,4 +1,4 @@
-import { Button, Form, InputGroup } from 'react-bootstrap';
+import { Button, Container, Form, InputGroup } from 'react-bootstrap';
 import Select from 'react-select';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import {
@@ -24,7 +24,6 @@ import useValidation from '../../utils/hooks';
 import UploadMediaBox from '../../components/UploadMediaBox/UploadMediaBox';
 import convertToImageElement from '../../utils/convertToImageElement';
 import PrevNextButtons from '../../components/PrevNextButtons';
-import Content from '../../components/Content';
 
 export default function EditUserProfile() {
   const {
@@ -125,7 +124,7 @@ export default function EditUserProfile() {
     isValid: [bandcampUsernameIsValid],
   } = useValidation<string>(validateBandcampUsername, '');
 
-  const _newProfileFormsValid =
+  const newProfileFormsValid =
     emailIsValid &&
     passwordIsValid &&
     confirmPasswordIsValid &&
@@ -169,7 +168,12 @@ export default function EditUserProfile() {
     };
   };
   return (
-    <Content title="Edit Profile">
+    <Container>
+      <Button variant="outline-primary" className="m-3">
+        <ArrowLeft className="me-3" />
+        Profile
+      </Button>
+      <h1 className="mb-3">Edit Profile</h1>
       <h2 className="mb-3">Media</h2>
       <Form noValidate>
         <div className="d-flex flex-column justify-content-center">
@@ -415,6 +419,6 @@ export default function EditUserProfile() {
         prevDisabled
         prevHidden
       />
-    </Content>
+    </Container>
   );
 }

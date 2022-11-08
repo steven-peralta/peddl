@@ -49,8 +49,14 @@ function App() {
           }
           path="profiles"
         />
-        <Route element={<ViewProfilePage />} path="viewProfile" />
-
+        <Route
+          element={
+            <RequireAuth>
+              <ViewProfilePage />
+            </RequireAuth>
+          }
+          path="viewProfile"
+        />
 
         <Route
           element={
