@@ -26,9 +26,10 @@ export default function ViewProfilePage() {
       style={{
         width: '48px',
         height: '48px',
+        background: '#6c757d',
       }}
     >
-      <GearFill />
+      <GearFill style={{ color: 'white' }} />
     </Button>
   );
 
