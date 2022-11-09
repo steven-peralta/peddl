@@ -36,7 +36,7 @@ export default function PeddlNavbar() {
       <Link className="nav-link" to="/matches">
         Matches
       </Link>
-      <Link className="nav-link" to="/userProfiles">
+      <Link className="nav-link" to="/viewProfile">
         Profile
       </Link>
       <Link className="nav-link" to="/searchSettings">

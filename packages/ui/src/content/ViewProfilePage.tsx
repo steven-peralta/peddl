@@ -1,5 +1,5 @@
 import React from 'react';
-import { HeartFill } from 'react-bootstrap-icons';
+import { GearFill } from 'react-bootstrap-icons';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Gender, Location, Profile } from '@peddl/common';
@@ -26,9 +26,10 @@ export default function ViewProfilePage() {
       style={{
         width: '48px',
         height: '48px',
+        background: '#6c757d',
       }}
     >
-      <HeartFill />
+      <GearFill style={{ color: 'white' }} />
     </Button>
   );
 
