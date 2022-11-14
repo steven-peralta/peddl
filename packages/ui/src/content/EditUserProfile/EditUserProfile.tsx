@@ -169,256 +169,262 @@ export default function EditUserProfile() {
   };
   return (
     <Container>
-      <Button variant="outline-primary" className="m-3">
-        <ArrowLeft className="me-3" />
-        Profile
-      </Button>
-      <h1 className="mb-3">Edit Profile</h1>
-      <h2 className="mb-3">Media</h2>
-      <Form noValidate>
-        <div className="d-flex flex-column justify-content-center">
-          <div className="d-flex flex-row justify-content-center mt-0">
-            <UploadMediaBox
-              enabled={uploadBoxEnabled[0]}
-              image={images[0]}
-              onClickTrash={handleTrashButton(0)}
-              onUpload={handleUpload(0)}
-              showTrashButton={!!images[0]}
-            />
+      <div style={{ marginTop: '60px;' }}>
+        <Button variant="outline-primary" className="mt-3">
+          <ArrowLeft className="me-3" />
+          Profile
+        </Button>
+        <h1 className="mb-3">Edit Profile</h1>
+        <h2 className="mb-3">Media</h2>
+        <Form noValidate>
+          <div className="d-flex flex-column justify-content-center">
+            <div className="d-flex flex-row justify-content-center mt-0">
+              <UploadMediaBox
+                enabled={uploadBoxEnabled[0]}
+                image={images[0]}
+                onClickTrash={handleTrashButton(0)}
+                onUpload={handleUpload(0)}
+                showTrashButton={!!images[0]}
+              />
 
-            <UploadMediaBox
-              enabled={uploadBoxEnabled[1]}
-              image={images[1]}
-              onClickTrash={handleTrashButton(1)}
-              onUpload={handleUpload(1)}
-              showTrashButton={!!images[1]}
-            />
+              <UploadMediaBox
+                enabled={uploadBoxEnabled[1]}
+                image={images[1]}
+                onClickTrash={handleTrashButton(1)}
+                onUpload={handleUpload(1)}
+                showTrashButton={!!images[1]}
+              />
 
-            <UploadMediaBox
-              enabled={uploadBoxEnabled[2]}
-              image={images[2]}
-              onClickTrash={handleTrashButton(2)}
-              onUpload={handleUpload(2)}
-              showTrashButton={!!images[2]}
-            />
+              <UploadMediaBox
+                enabled={uploadBoxEnabled[2]}
+                image={images[2]}
+                onClickTrash={handleTrashButton(2)}
+                onUpload={handleUpload(2)}
+                showTrashButton={!!images[2]}
+              />
+            </div>
+            <div className="d-flex flex-row justify-content-center mt-3 mb-3">
+              <UploadMediaBox
+                enabled={uploadBoxEnabled[3]}
+                image={images[3]}
+                onClickTrash={handleTrashButton(3)}
+                onUpload={handleUpload(3)}
+                showTrashButton={!!images[3]}
+              />
+
+              <UploadMediaBox
+                enabled={uploadBoxEnabled[4]}
+                image={images[4]}
+                onClickTrash={handleTrashButton(4)}
+                onUpload={handleUpload(4)}
+                showTrashButton={!!images[4]}
+              />
+
+              <UploadMediaBox
+                enabled={uploadBoxEnabled[5]}
+                image={images[5]}
+                onClickTrash={handleTrashButton(5)}
+                onUpload={handleUpload(5)}
+                showTrashButton={!!images[5]}
+              />
+            </div>
           </div>
-          <div className="d-flex flex-row justify-content-center mt-3 mb-3">
-            <UploadMediaBox
-              enabled={uploadBoxEnabled[3]}
-              image={images[3]}
-              onClickTrash={handleTrashButton(3)}
-              onUpload={handleUpload(3)}
-              showTrashButton={!!images[3]}
-            />
 
-            <UploadMediaBox
-              enabled={uploadBoxEnabled[4]}
-              image={images[4]}
-              onClickTrash={handleTrashButton(4)}
-              onUpload={handleUpload(4)}
-              showTrashButton={!!images[4]}
-            />
-
-            <UploadMediaBox
-              enabled={uploadBoxEnabled[5]}
-              image={images[5]}
-              onClickTrash={handleTrashButton(5)}
-              onUpload={handleUpload(5)}
-              showTrashButton={!!images[5]}
-            />
-          </div>
-        </div>
-
-        <h2 className="mb-3">Personal Info</h2>
-        <FormInput
-          htmlFor="name"
-          label="Name"
-          required
-          validationText={nameValidationText}
-        >
-          <Form.Control
-            isInvalid={!!nameValidationText}
-            name="name"
-            onChange={handleFormChange(setName)}
-            placeholder="Name"
-            type="text"
-            value={name}
-          />
-        </FormInput>
-        <FormInput htmlFor="location" label="Location" required>
-          <Form.Select
-            aria-label="Default select example"
-            name="location"
-            onChange={handleFormChange(setLocation)}
-            value={location}
+          <h2 className="mb-3">Personal Info</h2>
+          <FormInput
+            htmlFor="name"
+            label="Name"
+            required
+            validationText={nameValidationText}
           >
-            <option value={Location.AustinTX}>{Location.AustinTX}</option>
-            <option value={Location.DenverCO}>{Location.DenverCO}</option>
-            <option value={Location.ChicagoIL}>{Location.ChicagoIL}</option>
-          </Form.Select>
-        </FormInput>
-        <FormInput
-          htmlFor="gender"
-          label="Gender"
-          validationText={genderValidationText}
-        >
-          <Form.Select
-            aria-label="Default select example"
-            name="gender"
-            onChange={handleFormChange(setGender)}
-            value={gender}
+            <Form.Control
+              isInvalid={!!nameValidationText}
+              name="name"
+              onChange={handleFormChange(setName)}
+              placeholder="Name"
+              type="text"
+              value={name}
+            />
+          </FormInput>
+          <FormInput htmlFor="location" label="Location" required>
+            <Form.Select
+              aria-label="Default select example"
+              name="location"
+              onChange={handleFormChange(setLocation)}
+              value={location}
+            >
+              <option value={Location.AustinTX}>{Location.AustinTX}</option>
+              <option value={Location.DenverCO}>{Location.DenverCO}</option>
+              <option value={Location.ChicagoIL}>{Location.ChicagoIL}</option>
+            </Form.Select>
+          </FormInput>
+          <FormInput
+            htmlFor="gender"
+            label="Gender"
+            validationText={genderValidationText}
           >
-            <option value={Gender.Man}>{Gender.Man}</option>
-            <option value={Gender.Woman}>{Gender.Woman}</option>
-            <option value={Gender.TransMan}>{Gender.TransMan}</option>
-            <option value={Gender.TransWoman}>{Gender.TransWoman}</option>
-            <option value={Gender.NonBinary}>{Gender.NonBinary}</option>
-          </Form.Select>
-        </FormInput>
-        <FormInput htmlFor="genres" label="Genres">
-          <Select
-            isMulti
-            onChange={setGenres}
-            options={GenreTagOptions}
-            value={genres}
-          />
-        </FormInput>
-        <FormInput htmlFor="talents" label="Talents">
-          <Select
-            isMulti
-            onChange={setTalents}
-            options={TalentTagOptions}
-            value={talents}
-          />
-        </FormInput>
-        <FormInput htmlFor="bio" label="Bio" validationText={bioValidationText}>
-          <Form.Control
-            as="textarea"
-            isInvalid={!!bioValidationText}
-            name="bio"
-            onChange={handleFormChange(setBio)}
-            placeholder="Enter bio"
-            rows={3}
-            value={bio}
-          />
-        </FormInput>
+            <Form.Select
+              aria-label="Default select example"
+              name="gender"
+              onChange={handleFormChange(setGender)}
+              value={gender}
+            >
+              <option value={Gender.Man}>{Gender.Man}</option>
+              <option value={Gender.Woman}>{Gender.Woman}</option>
+              <option value={Gender.TransMan}>{Gender.TransMan}</option>
+              <option value={Gender.TransWoman}>{Gender.TransWoman}</option>
+              <option value={Gender.NonBinary}>{Gender.NonBinary}</option>
+            </Form.Select>
+          </FormInput>
+          <FormInput htmlFor="genres" label="Genres">
+            <Select
+              isMulti
+              onChange={setGenres}
+              options={GenreTagOptions}
+              value={genres}
+            />
+          </FormInput>
+          <FormInput htmlFor="talents" label="Talents">
+            <Select
+              isMulti
+              onChange={setTalents}
+              options={TalentTagOptions}
+              value={talents}
+            />
+          </FormInput>
+          <FormInput
+            htmlFor="bio"
+            label="Bio"
+            validationText={bioValidationText}
+          >
+            <Form.Control
+              as="textarea"
+              isInvalid={!!bioValidationText}
+              name="bio"
+              onChange={handleFormChange(setBio)}
+              placeholder="Enter bio"
+              rows={3}
+              value={bio}
+            />
+          </FormInput>
 
-        <h2 className="mb-3">Links</h2>
+          <h2 className="mb-3">Links</h2>
+          <FormInput
+            forceShowValidation
+            htmlFor="spotify-link"
+            label="Spotify"
+            validationText={spotifyLinkValidationText}
+          >
+            <Form.Control
+              name="spotify-link"
+              onChange={handleFormChange(setSpotifyLink)}
+              placeholder="https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2?si=a464340973414399"
+              type="text"
+              value={spotifyLink}
+            />
+          </FormInput>
+          <FormInput
+            forceShowValidation
+            htmlFor="soundcloud-link"
+            label="Soundcloud"
+            validationText={soundcloudUsernameValidationText}
+          >
+            <InputGroup>
+              <InputGroup.Text>https://soundcloud.com/</InputGroup.Text>
+              <Form.Control
+                name="soundcloud-link"
+                onChange={handleFormChange(setSoundcloudUsername)}
+                placeholder="Soundcloud username"
+                type="text"
+                value={soundcloudUsername}
+              />
+            </InputGroup>
+          </FormInput>
+          <FormInput
+            forceShowValidation
+            htmlFor="bandcamp-link"
+            label="Bandcamp"
+            validationText={bandcampUsernameValidationText}
+          >
+            <InputGroup>
+              <InputGroup.Text>https://</InputGroup.Text>
+              <Form.Control
+                name="bandcamp-link"
+                onChange={handleFormChange(setBandcampUsername)}
+                placeholder="Bandcamp username"
+                type="text"
+                value={bandcampUsername}
+              />
+              <InputGroup.Text>.bandcamp.com/</InputGroup.Text>
+            </InputGroup>
+          </FormInput>
+        </Form>
+        <h2 className="mb-3">Login</h2>
         <FormInput
-          forceShowValidation
-          htmlFor="spotify-link"
-          label="Spotify"
-          validationText={spotifyLinkValidationText}
+          htmlFor="email"
+          label="E-mail"
+          required
+          validationText={emailValidationText}
         >
           <Form.Control
-            name="spotify-link"
-            onChange={handleFormChange(setSpotifyLink)}
-            placeholder="https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2?si=a464340973414399"
-            type="text"
-            value={spotifyLink}
+            id="email"
+            isInvalid={!!emailValidationText}
+            name="email"
+            onChange={handleFormChange(setEmail)}
+            placeholder="name@example.com"
+            required
+            type="email"
+            value={email}
           />
         </FormInput>
         <FormInput
-          forceShowValidation
-          htmlFor="soundcloud-link"
-          label="Soundcloud"
-          validationText={soundcloudUsernameValidationText}
+          htmlFor="password"
+          label="Password"
+          required
+          validationText={passwordValidationText}
         >
-          <InputGroup>
-            <InputGroup.Text>https://soundcloud.com/</InputGroup.Text>
-            <Form.Control
-              name="soundcloud-link"
-              onChange={handleFormChange(setSoundcloudUsername)}
-              placeholder="Soundcloud username"
-              type="text"
-              value={soundcloudUsername}
-            />
-          </InputGroup>
+          <Form.Control
+            id="password"
+            isInvalid={!!passwordValidationText}
+            name="password"
+            onChange={handleFormChange(setPassword)}
+            placeholder="Password"
+            type="password"
+            value={password}
+          />
         </FormInput>
         <FormInput
-          forceShowValidation
-          htmlFor="bandcamp-link"
-          label="Bandcamp"
-          validationText={bandcampUsernameValidationText}
-        >
-          <InputGroup>
-            <InputGroup.Text>https://</InputGroup.Text>
-            <Form.Control
-              name="bandcamp-link"
-              onChange={handleFormChange(setBandcampUsername)}
-              placeholder="Bandcamp username"
-              type="text"
-              value={bandcampUsername}
-            />
-            <InputGroup.Text>.bandcamp.com/</InputGroup.Text>
-          </InputGroup>
-        </FormInput>
-      </Form>
-      <h2 className="mb-3">Login</h2>
-      <FormInput
-        htmlFor="email"
-        label="E-mail"
-        required
-        validationText={emailValidationText}
-      >
-        <Form.Control
-          id="email"
-          isInvalid={!!emailValidationText}
-          name="email"
-          onChange={handleFormChange(setEmail)}
-          placeholder="name@example.com"
+          htmlFor="confirmPassword"
+          label="Confirm password"
           required
-          type="email"
-          value={email}
+          validationText={confirmPasswordValidationText}
+        >
+          <Form.Control
+            id="confirmPassword"
+            isInvalid={!!confirmPasswordValidationText}
+            name="confirmPassword"
+            onBlur={confirmPasswordInputBlur}
+            onChange={handleFormChange(setConfirmPassword)}
+            placeholder="Confirm Password"
+            type="password"
+            value={confirmPassword}
+          />
+        </FormInput>
+        <PrevNextButtons
+          // nextLoading={loading}
+          nextText="Done"
+          nextDisabled={newProfileFormsValid}
+          nextVariant="primary"
+          onNextClick={() => {
+            console.log('done clicked');
+          }}
+          onPrevClick={() => {
+            console.log('prev clicked clicked');
+          }}
+          prevDisabled
+          prevHidden
         />
-      </FormInput>
-      <FormInput
-        htmlFor="password"
-        label="Password"
-        required
-        validationText={passwordValidationText}
-      >
-        <Form.Control
-          id="password"
-          isInvalid={!!passwordValidationText}
-          name="password"
-          onChange={handleFormChange(setPassword)}
-          placeholder="Password"
-          type="password"
-          value={password}
-        />
-      </FormInput>
-      <FormInput
-        htmlFor="confirmPassword"
-        label="Confirm password"
-        required
-        validationText={confirmPasswordValidationText}
-      >
-        <Form.Control
-          id="confirmPassword"
-          isInvalid={!!confirmPasswordValidationText}
-          name="confirmPassword"
-          onBlur={confirmPasswordInputBlur}
-          onChange={handleFormChange(setConfirmPassword)}
-          placeholder="Confirm Password"
-          type="password"
-          value={confirmPassword}
-        />
-      </FormInput>
-      <PrevNextButtons
-        // nextLoading={loading}
-        nextText="Done"
-        nextDisabled={newProfileFormsValid}
-        nextVariant="primary"
-        onNextClick={() => {
-          console.log('done clicked');
-        }}
-        onPrevClick={() => {
-          console.log('prev clicked clicked');
-        }}
-        prevDisabled
-        prevHidden
-      />
+      </div>
     </Container>
   );
 }

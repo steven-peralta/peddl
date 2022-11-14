@@ -15,6 +15,7 @@ import EditUserProfile from './content/EditUserProfile/EditUserProfile';
 import { useToast } from './providers/ToastProvider';
 import { useSocket } from './providers/WebsocketProvider';
 import ViewProfilePage from './content/ViewProfilePage';
+import Matches from './content/Matches';
 
 function App() {
   const { addToast, toastContainer } = useToast();
@@ -41,6 +42,7 @@ function App() {
         <Route element={<TitlePage />} path="/" />
         <Route element={<CreateAccountPage />} path="register" />
         <Route element={<LoginPage />} path="login" />
+        <Route element={<Matches />} path="matches" />
         <Route
           element={
             <RequireAuth>
@@ -57,7 +59,6 @@ function App() {
           }
           path="viewProfile"
         />
-
         <Route
           element={
             <RequireAuth>
