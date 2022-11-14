@@ -1,4 +1,4 @@
-import { Form, InputGroup } from 'react-bootstrap';
+import { Button, Container, Form, InputGroup } from 'react-bootstrap';
 import Select from 'react-select';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import {
@@ -17,6 +17,7 @@ import {
   validateSoundcloudUsername,
   validateSpotifyLink,
 } from '@peddl/common';
+import { ArrowLeft } from 'react-bootstrap-icons';
 import FormInput from '../../components/FormInput';
 import handleFormChange from '../../utils/form';
 import useValidation from '../../utils/hooks';
