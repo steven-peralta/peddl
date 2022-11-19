@@ -15,7 +15,7 @@ import EditSearchSettings from './content/UpdateSearchSettings/EditSearchSetting
 import EditUserProfile from './content/UpdateUserProfile/EditUserProfile';
 import { useToast } from './providers/ToastProvider';
 import { useSocket } from './providers/WebsocketProvider';
-import Matches from './content/Matches';
+import Matches from './content/Matches/Matches';
 
 function App() {
   const { addToast, toastContainer } = useToast();
