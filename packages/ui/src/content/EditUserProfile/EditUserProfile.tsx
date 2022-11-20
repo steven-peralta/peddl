@@ -172,7 +172,7 @@ export default function EditUserProfile() {
     <Container>
       <div style={{ marginTop: '60px' }}>
         <Link to="/viewProfile">
-          <Button variant="outline-primary" className="mt-3">
+          <Button className="mt-3" variant="outline-primary">
             <ArrowLeft className="me-3" />
             Profile
           </Button>
@@ -416,8 +416,8 @@ export default function EditUserProfile() {
         </FormInput>
         <PrevNextButtons
           // nextLoading={loading}
-          nextText="Done"
           nextDisabled={newProfileFormsValid}
+          nextText="Done"
           nextVariant="primary"
           onNextClick={() => {
             console.log('done clicked');

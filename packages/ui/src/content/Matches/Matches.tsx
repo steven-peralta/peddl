@@ -15,22 +15,22 @@ export default function Matches() {
             <thead>
               <tr>
                 <th>
-                  <img className="avatar" src={avatarImg} alt="profilePic" />
+                  <img alt="profilePic" className="avatar" src={avatarImg} />
                 </th>
                 <th>
-                  <img className="avatar" src={avatarImg} alt="profilePic" />
+                  <img alt="profilePic" className="avatar" src={avatarImg} />
                 </th>
                 <th>
-                  <img className="avatar" src={avatarImg} alt="profilePic" />
+                  <img alt="profilePic" className="avatar" src={avatarImg} />
                 </th>
                 <th>
-                  <img className="avatar" src={avatarImg} alt="profilePic" />
+                  <img alt="profilePic" className="avatar" src={avatarImg} />
                 </th>
                 <th>
-                  <img className="avatar" src={avatarImg} alt="profilePic" />
+                  <img alt="profilePic" className="avatar" src={avatarImg} />
                 </th>
                 <th>
-                  <img className="avatar" src={avatarImg} alt="profilePic" />
+                  <img alt="profilePic" className="avatar" src={avatarImg} />
                 </th>
               </tr>
             </thead>
@@ -48,13 +48,13 @@ export default function Matches() {
         </div>
         <h1 className="mt-3">Messages</h1>
         <ListGroup>
-          <Link to="/messages" style={{ textDecoration: 'none' }}>
+          <Link style={{ textDecoration: 'none' }} to="/messages">
             <ListGroup.Item
               as="li"
               className="d-flex justify-content-between align-items-start"
             >
               <div className="pt-1">
-                <img src={avatarImg} className="avatarMsg" alt="avatar" />
+                <img alt="avatar" className="avatarMsg" src={avatarImg} />
               </div>
 
               <div className="ms-3 me-auto">
@@ -63,7 +63,7 @@ export default function Matches() {
               </div>
 
               <div className="msgBtn">
-                <Badge bg="primary" pill className="me-1">
+                <Badge bg="primary" className="me-1" pill>
                   1
                 </Badge>
                 <ChevronRight />
@@ -76,7 +76,7 @@ export default function Matches() {
             className="d-flex justify-content-between align-items-start"
           >
             <div className="pt-1">
-              <img src={avatarImg} className="avatarMsg" alt="avatar" />
+              <img alt="avatar" className="avatarMsg" src={avatarImg} />
             </div>
             <div className="ms-3 me-auto">
               <div className="fw-bold">Thomas</div>
