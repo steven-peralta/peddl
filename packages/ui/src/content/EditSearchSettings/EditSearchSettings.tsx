@@ -5,6 +5,7 @@ import {
   GenderTagOptions,
   GenreTagOptions,
   LocationTagOptions,
+  PostSettingsRequest,
   TagOption,
   TalentTagOptions,
 } from '@peddl/common';
@@ -12,6 +13,9 @@ import { AxiosError } from 'axios';
 import Slider from '../../components/Slider/Slider';
 import FormInput from '../../components/FormInput';
 import Content from '../../components/Content';
+import { useSettings } from '../../providers/SettingsProvider';
+import extractTagOptions from '../../utils/extractTagOptions';
+import PrevNextButtons from '../../components/PrevNextButtons';
 
 export default function EditSearchSettings() {
   const [rangeSetting, setRangeSetting] = React.useState<[number, number]>([
@@ -25,6 +29,15 @@ export default function EditSearchSettings() {
   const [talentsSetting, setTalentSetting] = useState<readonly TagOption[]>([]);
 
   const [requestError] = useState<AxiosError | undefined>();
+
+  const { setSettings } = useSettings();
+  const settingsData: PostSettingsRequest = {
+    genders: extractTagOptions(gendersSetting),
+    genres: extractTagOptions(genresSetting),
+    talents: extractTagOptions(talentsSetting),
+    locations: extractTagOptions(locationsSetting),
+    ageRange: rangeSetting,
+  };
 
   return (
     <Content title="Search Settings">
@@ -82,6 +95,17 @@ export default function EditSearchSettings() {
           </p>
         )}
       </Form>
+      <PrevNextButtons
+        nextText="Done"
+        nextVariant="primary"
+        onNextClick={() => {
+          console.log('done clicked');
+        }}
+        onPrevClick={() => {
+          console.log('done clicked');
+        }}
+        prevHidden
+      />
     </Content>
   );
 }

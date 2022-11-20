@@ -444,6 +444,14 @@ export default function CreateAccountPage() {
       setImageFiles([...imageFiles]);
     };
   };
+  const [mediaEmpty, setMediaEmpty] = useState(false);
+  useEffect(() => {
+    if (step === 1 && images.length === 0) {
+      setMediaEmpty(true);
+    } else {
+      setMediaEmpty(false);
+    }
+  }, [images.length, step]);
 
   const uploadMediaStep = (
     <div className="d-flex flex-column justify-content-center">
@@ -642,7 +650,7 @@ export default function CreateAccountPage() {
     <Content title={getPageTitle(step)}>
       {renderStep()}
       <PrevNextButtons
-        nextDisabled={!newProfileFormsValid || loading}
+        nextDisabled={!newProfileFormsValid || loading || mediaEmpty}
         nextLoading={loading}
         nextText={step === CreateAccountSteps.SearchSettings ? 'Done' : 'Next'}
         nextVariant={requestError ? 'danger' : 'primary'}

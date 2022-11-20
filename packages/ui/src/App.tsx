@@ -10,10 +10,13 @@ import LoginPage from './content/LoginPage/LoginPage';
 import ProfilesPage from './content/UserProfiles/ProfilesPage';
 import { RequireAuth } from './providers/AuthProvider';
 import LogoutPage from './content/LogoutPage';
-import EditSearchSettings from './content/UpdateSearchSettings/EditSearchSettings';
-import EditUserProfile from './content/UpdateUserProfile/EditUserProfile';
+import ViewProfilePage from './content/ViewProfilePage';
+import EditSearchSettings from './content/EditSearchSettings/EditSearchSettings';
+import EditUserProfile from './content/EditUserProfile/EditUserProfile';
 import { useToast } from './providers/ToastProvider';
 import { useSocket } from './providers/WebsocketProvider';
+import Matches from './content/Matches/Matches';
+import Messages from './content/Messages/Messages';
 
 function App() {
   const { addToast, toastContainer } = useToast();
@@ -43,12 +46,35 @@ function App() {
         <Route
           element={
             <RequireAuth>
+              <Messages />
+            </RequireAuth>
+          }
+          path="messages"
+        />
+        <Route
+          element={
+            <RequireAuth>
+              <Matches />
+            </RequireAuth>
+          }
+          path="matches"
+        />
+        <Route
+          element={
+            <RequireAuth>
               <ProfilesPage />
             </RequireAuth>
           }
           path="profiles"
         />
-
+        <Route
+          element={
+            <RequireAuth>
+              <ViewProfilePage />
+            </RequireAuth>
+          }
+          path="viewProfile"
+        />
         <Route
           element={
             <RequireAuth>
