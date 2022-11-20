@@ -71,8 +71,8 @@ export default function Messages() {
           </div>
           {/* user message */}
           <div
-            style={{ width: '100%' }}
             className="d-inline-flex justify-content-end mb-3"
+            style={{ width: '100%' }}
           >
             <div>
               <p
@@ -151,10 +151,10 @@ export default function Messages() {
             <div className="mt-4">
               <InputGroup className="mb-3">
                 <Form.Control
-                  aria-label="Example text with button addon"
                   aria-describedby="basic-addon1"
+                  aria-label="Example text with button addon"
                 />
-                <Button variant="primary" id="button-addon1">
+                <Button id="button-addon1" variant="primary">
                   <Send />
                 </Button>
               </InputGroup>

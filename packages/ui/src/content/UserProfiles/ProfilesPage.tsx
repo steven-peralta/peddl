@@ -42,8 +42,8 @@ export default function ProfilesPage() {
       {!profilesLoading && profiles && (
         <>
           <ProfileDetails
-            profile={profiles[profileIndex]}
             actionBtn={likeBtn}
+            profile={profiles[profileIndex]}
           />
           <Container>
             <PrevNextButtons
