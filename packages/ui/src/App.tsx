@@ -43,7 +43,14 @@ function App() {
         <Route element={<TitlePage />} path="/" />
         <Route element={<CreateAccountPage />} path="register" />
         <Route element={<LoginPage />} path="login" />
-        <Route element={<Messages />} path="messages" />
+        <Route
+          element={
+            <RequireAuth>
+              <Messages />
+            </RequireAuth>
+          }
+          path="messages"
+        />
         <Route
           element={
             <RequireAuth>

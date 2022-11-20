@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Badge, ListGroup } from 'react-bootstrap';
 import { ChevronRight } from 'react-bootstrap-icons';
 import Content from '../../components/Content';
@@ -47,26 +48,29 @@ export default function Matches() {
         </div>
         <h1 className="mt-3">Messages</h1>
         <ListGroup>
-          <ListGroup.Item
-            as="li"
-            className="d-flex justify-content-between align-items-start"
-          >
-            <div className="pt-1">
-              <img src={avatarImg} className="avatarMsg" alt="avatar" />
-            </div>
+          <Link to="/messages" style={{ textDecoration: 'none' }}>
+            <ListGroup.Item
+              as="li"
+              className="d-flex justify-content-between align-items-start"
+            >
+              <div className="pt-1">
+                <img src={avatarImg} className="avatarMsg" alt="avatar" />
+              </div>
 
-            <div className="ms-3 me-auto">
-              <div className="fw-bold">George</div>
-              Hello! love your sound, lets collab!
-            </div>
+              <div className="ms-3 me-auto">
+                <div className="fw-bold">George</div>
+                Hello! love your sound, lets collab!
+              </div>
 
-            <div className="msgBtn">
-              <Badge bg="primary" pill className="me-1">
-                1
-              </Badge>
-              <ChevronRight />
-            </div>
-          </ListGroup.Item>
+              <div className="msgBtn">
+                <Badge bg="primary" pill className="me-1">
+                  1
+                </Badge>
+                <ChevronRight />
+              </div>
+            </ListGroup.Item>
+          </Link>
+
           <ListGroup.Item
             as="li"
             className="d-flex justify-content-between align-items-start"

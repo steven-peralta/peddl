@@ -9,6 +9,7 @@ import {
   Form,
   InputGroup,
 } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import avatarImg from '../Matches/avatar.png';
 
 export default function Messages() {
@@ -29,10 +30,13 @@ export default function Messages() {
             className="mt-8 d-flex flex-row justify-content-between"
             style={{ marginTop: '60px' }}
           >
-            <Button className="mt-4" variant="outline-primary">
-              <ArrowLeft className="me-3" />
-              Matches
-            </Button>
+            <Link to="/matches">
+              <Button className="mt-4" variant="outline-primary">
+                <ArrowLeft className="me-3" />
+                Matches
+              </Button>
+            </Link>
+
             <DropdownButton
               className="float-end mt-4"
               id="dropdown-basic-button"
@@ -43,7 +47,7 @@ export default function Messages() {
             </DropdownButton>
           </div>
 
-          <div className="mt-3 mb-3 d-inline-flex align-items-center">
+          <div className="mt-4 mb-4 d-inline-flex align-items-center">
             <img alt="profilePic" className="avatar" src={avatarImg} />
             <h1 className="ms-3 mb-0">George</h1>
           </div>
