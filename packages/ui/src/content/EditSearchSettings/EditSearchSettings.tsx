@@ -30,8 +30,8 @@ export default function EditSearchSettings() {
 
   const [requestError] = useState<AxiosError | undefined>();
 
-  const { setSettings } = useSettings();
-  const settingsData: PostSettingsRequest = {
+  const { setSettings: _ } = useSettings();
+  const _settingsData: PostSettingsRequest = {
     genders: extractTagOptions(gendersSetting),
     genres: extractTagOptions(genresSetting),
     talents: extractTagOptions(talentsSetting),
