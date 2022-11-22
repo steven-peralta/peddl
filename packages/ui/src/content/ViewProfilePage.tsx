@@ -6,7 +6,7 @@ import { Gender, Location, Profile } from '@peddl/common';
 import ProfileDetails from '../components/Profiles/ProfileDetails';
 
 const testProfile: Profile = {
-  id: 'test',
+  lastUpdated: new Date(),
   createdAt: new Date(),
   createdBy: 'sdg',
   name: 'test',

@@ -18,12 +18,10 @@ import {
   LocationTagOptions,
   validateBandcampUsername,
   validateSoundcloudUsername,
-  PostProfileRequest,
-  PostProfileResponse,
-  PostSettingsRequest,
-  PostSettingsResponse,
-  PostUserRequest,
-  PostUserResponse,
+  SearchPreferences,
+  CreateUserFormData,
+  CreateProfileFormData,
+  IDResponse,
 } from '@peddl/common';
 import DatePicker from 'react-datepicker';
 import Select from 'react-select';
@@ -574,8 +572,21 @@ export default function CreateAccountPage() {
     setLoading(true);
 
     try {
-      const userData: PostUserRequest = { email, password };
-      const profileData: PostProfileRequest = {
+      const searchPreferences: SearchPreferences = {
+        genders: extractTagOptions(gendersSetting),
+        genres: extractTagOptions(genresSetting),
+        talents: extractTagOptions(talentsSetting),
+        locations: extractTagOptions(locationsSetting),
+        ageRange: rangeSetting,
+      };
+
+      const userData: CreateUserFormData = {
+        email,
+        password,
+        searchPreferences,
+      };
+
+      const profileData: CreateProfileFormData = {
         name,
         birthday: birthday?.toJSON() ?? new Date().toJSON(),
         location: location as Location,
@@ -587,36 +598,23 @@ export default function CreateAccountPage() {
         soundcloudUsername,
         bandcampUsername,
       };
-      const settingsData: PostSettingsRequest = {
-        genders: extractTagOptions(gendersSetting),
-        genres: extractTagOptions(genresSetting),
-        talents: extractTagOptions(talentsSetting),
-        locations: extractTagOptions(locationsSetting),
-        ageRange: rangeSetting,
-      };
+
       const imageFormData = new FormData();
       imageFiles.forEach((file, i) => imageFormData.append(`image${i}`, file));
 
       // create our user
-      const { data } = await axiosInstance.post<PostUserResponse>(
-        '/users',
-        userData
-      );
+      const { data } = await axiosInstance.post<IDResponse>('/users', userData);
+      const { id: userId } = data;
 
       // authenticate
       const { token } = await doLogin(userData);
 
-      // submit our profile and settings info in unison
+      // submit our profile and media
       await Promise.all([
-        axiosInstance.post<PostSettingsResponse>(
-          `/users/${data.id}/settings`,
-          settingsData,
-          { headers: { Authorization: `Bearer ${token}` } }
-        ),
-        axiosInstance.post<PostProfileResponse>('/profiles', profileData, {
+        axiosInstance.post(`/users/${userId}/profile`, profileData, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        axiosInstance.post(`/users/${data.id}/media`, imageFormData, {
+        axiosInstance.post(`/users/${userId}/media`, imageFormData, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
@@ -625,7 +623,7 @@ export default function CreateAccountPage() {
       ]);
 
       // set our selected settings
-      setSettings(settingsData);
+      setSettings(searchPreferences);
 
       // if all goes well, then take us to the profiles page
       setLoading(false);

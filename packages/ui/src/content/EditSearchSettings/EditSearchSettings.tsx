@@ -5,7 +5,7 @@ import {
   GenderTagOptions,
   GenreTagOptions,
   LocationTagOptions,
-  PostSettingsRequest,
+  SearchPreferences,
   TagOption,
   TalentTagOptions,
 } from '@peddl/common';
@@ -30,8 +30,8 @@ export default function EditSearchSettings() {
 
   const [requestError] = useState<AxiosError | undefined>();
 
-  const { setSettings } = useSettings();
-  const settingsData: PostSettingsRequest = {
+  const { setSettings: _ } = useSettings();
+  const _settingsData: SearchPreferences = {
     genders: extractTagOptions(gendersSetting),
     genres: extractTagOptions(genresSetting),
     talents: extractTagOptions(talentsSetting),

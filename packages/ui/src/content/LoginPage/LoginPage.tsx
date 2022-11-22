@@ -3,7 +3,7 @@ import { FloatingLabel, Button, Form } from 'react-bootstrap';
 import './LoginStyles.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { GetSettingsRequest } from '@peddl/common';
+import { User } from '@peddl/common';
 import handleFormChange from '../../utils/form';
 import { useAuth } from '../../providers/AuthProvider';
 import axiosInstance from '../../utils/axiosInstance';
@@ -77,11 +77,11 @@ export default function LoginPage() {
             onClick={async () => {
               try {
                 const { userId, token } = await doLogin({ email, password });
-                const { data } = await axiosInstance.get<GetSettingsRequest>(
-                  `/users/${userId}/settings`,
+                const { data } = await axiosInstance.get<User>(
+                  `/users/${userId}`,
                   { headers: { Authorization: `Bearer ${token}` } }
                 );
-                setSettings(data);
+                setSettings(data.searchPreferences);
                 navigate(state?.path || '/profiles');
               } catch (err) {
                 if (axios.isAxiosError(err)) {

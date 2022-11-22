@@ -1,50 +1,129 @@
 import {
-  GetProfilesRequest,
+  HTTPStatus,
   PagedResponse,
-  PostProfileRequest,
-  PostProfileResponse,
+  Pagination,
   Profile,
+  SearchPreferences,
+  Location,
+  Gender,
+  Genre,
+  Talent,
+  CreateProfileBody,
+  EditProfileBody,
 } from '@peddl/common';
 import { Filter } from 'mongodb';
-import { genid } from '../utils';
 import { db } from '../db';
+import APIError from '../error/APIError';
+import getDateMetadata from './utils';
+import { removeEmpty } from '../utils';
 
 export const profilesCollection = db.collection<Profile>('profiles');
 
+export async function throw404IfProfileNotFound(userId: string) {
+  const profileExists = await profilesCollection.countDocuments({
+    createdBy: userId,
+  });
+
+  if (!profileExists) {
+    throw new APIError(
+      HTTPStatus.NOT_FOUND,
+      "Profile doesn't exist for that user."
+    );
+  }
+}
+
+export async function getProfile(userId: string): Promise<Profile | null> {
+  return profilesCollection.findOne({ createdBy: userId });
+}
+
 export async function createProfile(
   userId: string,
-  profile: PostProfileRequest
-): Promise<PostProfileResponse> {
-  const existingProfile = await profilesCollection.findOne({
-    createdBy: userId,
-  });
+  profileFormData: CreateProfileBody
+) {
+  const {
+    name,
+    birthday,
+    location,
+    gender,
+    genres,
+    talents,
+    bio,
+    spotifyLink,
+    soundcloudUsername,
+    bandcampUsername,
+  } = profileFormData;
 
-  if (existingProfile) {
-    throw new Error('Profile already exists for that user.');
-  }
-
-  const id = genid();
   await profilesCollection.insertOne({
-    id,
+    name,
+    birthday: new Date(birthday),
+    location: location as Location,
+    gender: gender as Gender,
+    genres: genres as Genre[],
+    talents: talents as Talent[],
+    bio,
+    spotifyLink,
+    soundcloudUsername,
+    bandcampUsername,
     createdBy: userId,
-    createdAt: new Date(),
-    ...profile,
-    birthday: new Date(profile.birthday),
+    ...getDateMetadata(),
+  });
+}
+
+export async function updateProfile(
+  userId: string,
+  profileFormData: EditProfileBody
+) {
+  const {
+    name,
+    birthday,
+    location,
+    gender,
+    genres,
+    talents,
+    bio,
+    spotifyLink,
+    soundcloudUsername,
+    bandcampUsername,
+  } = profileFormData;
+
+  const $set = removeEmpty({
+    name,
+    birthday: birthday ? new Date(birthday) : undefined,
+    location: location as Location,
+    gender: gender as Gender,
+    genres: genres as Genre[],
+    talents: talents as Talent[],
+    bio,
+    spotifyLink,
+    soundcloudUsername,
+    bandcampUsername,
+    lastUpdated: new Date(),
   });
 
-  return { id };
+  await profilesCollection.updateOne(
+    { createdBy: userId },
+    {
+      $set,
+    }
+  );
+}
+
+export async function deleteProfile(userId: string) {
+  await profilesCollection.findOneAndDelete({ createdBy: userId });
 }
 
 export async function getProfiles(
-  settings: GetProfilesRequest
+  searchPreferences: SearchPreferences,
+  { skip = 0, limit = 0 }: Pagination
 ): Promise<PagedResponse<Profile>> {
-  const { genders = [], genres = [], talents = [], locations = [] } = settings;
+  const {
+    genders = [],
+    genres = [],
+    talents = [],
+    locations = [],
+  } = searchPreferences;
   const genderFilter: Filter<Profile> | undefined =
-    genders.length > 0
-      ? {
-          gender: { $in: genders },
-        }
-      : undefined;
+    genders.length > 0 ? { gender: { $in: genders } } : undefined;
 
   const genresFilter: Filter<Profile> | undefined =
     genres.length > 0 ? { genres: { $in: genres } } : undefined;
@@ -61,10 +140,15 @@ export async function getProfiles(
     ...talentsFilter,
     ...locationsFilter,
   };
-  const items = await profilesCollection.find(filter).toArray();
+  const totalCount = await profilesCollection.countDocuments(filter);
+  const items = await profilesCollection
+    .find(filter)
+    .skip(skip)
+    .limit(limit)
+    .toArray();
 
   return {
     items,
-    count: items.length,
+    totalCount,
   };
 }

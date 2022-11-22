@@ -1,12 +1,12 @@
 import React, { useState, useContext, useMemo } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { PostAuthRequest, PostAuthResponse } from '@peddl/common';
+import { LoginFormData, Token } from '@peddl/common';
 import axiosInstance from '../utils/axiosInstance';
 
 type AuthContext = {
   isAuthed: boolean[];
   token: (string | undefined)[];
-  login: ((loginForm: PostAuthRequest) => Promise<PostAuthResponse>)[];
+  login: ((loginForm: LoginFormData) => Promise<Token>)[];
   logout: (() => void)[];
 };
 
@@ -25,11 +25,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isAuthed, setAuthed] = useState(false);
   const [token, setToken] = useState<string | undefined>(undefined);
 
-  const loginCallback = async (loginForm: PostAuthRequest) => {
-    const { data } = await axiosInstance.post<PostAuthResponse>(
-      '/auth',
-      loginForm
-    );
+  const loginCallback = async (loginForm: LoginFormData) => {
+    const { data } = await axiosInstance.post<Token>('/auth', loginForm);
     if (data.token) {
       setToken(data.token);
       setAuthed(true);

@@ -1,14 +1,14 @@
 import React, { useContext, useMemo, useState } from 'react';
-import { PostSettingsRequest } from '@peddl/common';
+import { SearchPreferences } from '@peddl/common';
 
 type SettingsContext = {
-  settings: PostSettingsRequest;
-  setSettings: (settings: PostSettingsRequest) => void;
+  settings: SearchPreferences;
+  setSettings: (settings: SearchPreferences) => void;
 };
 
 export const SettingsContext = React.createContext<SettingsContext>({
   settings: {},
-  setSettings(settings: PostSettingsRequest): void {
+  setSettings(settings: SearchPreferences): void {
     console.log(settings);
   },
 });
@@ -18,7 +18,7 @@ type SettingsProviderProps = {
 };
 
 export function SettingsProvider({ children }: SettingsProviderProps) {
-  const [settings, setSettings] = useState<PostSettingsRequest>({});
+  const [settings, setSettings] = useState<SearchPreferences>({});
 
   const value = useMemo(() => {
     return { settings, setSettings };
