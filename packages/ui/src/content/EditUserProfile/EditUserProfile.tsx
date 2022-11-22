@@ -18,6 +18,7 @@ import {
   validateSpotifyLink,
 } from '@peddl/common';
 import { ArrowLeft } from 'react-bootstrap-icons';
+import { Link } from 'react-router-dom';
 import FormInput from '../../components/FormInput';
 import handleFormChange from '../../utils/form';
 import useValidation from '../../utils/hooks';
@@ -169,12 +170,15 @@ export default function EditUserProfile() {
   };
   return (
     <Container>
-      <div style={{ marginTop: '60px;' }}>
-        <Button variant="outline-primary" className="mt-3">
-          <ArrowLeft className="me-3" />
-          Profile
-        </Button>
-        <h1 className="mb-3">Edit Profile</h1>
+      <div style={{ marginTop: '60px' }}>
+        <Link to="/viewProfile">
+          <Button className="mt-3" variant="outline-primary">
+            <ArrowLeft className="me-3" />
+            Profile
+          </Button>
+        </Link>
+
+        <h1 className="mb-3 mt-3">Edit Profile</h1>
         <h2 className="mb-3">Media</h2>
         <Form noValidate>
           <div className="d-flex flex-column justify-content-center">
@@ -412,8 +416,8 @@ export default function EditUserProfile() {
         </FormInput>
         <PrevNextButtons
           // nextLoading={loading}
-          nextText="Done"
           nextDisabled={newProfileFormsValid}
+          nextText="Done"
           nextVariant="primary"
           onNextClick={() => {
             console.log('done clicked');

@@ -1,0 +1,27 @@
+.matchesContainer {
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+th, td {
+    padding: 1px .5em;
+    text-align: center;
+}
+
+.avatar {
+    height: 64px;
+    width: 64px;
+    border-radius: 50%;
+}
+
+.avatarMsg {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+}
+
+.msgBtn {
+    padding-top: 10px;
+}
+
+

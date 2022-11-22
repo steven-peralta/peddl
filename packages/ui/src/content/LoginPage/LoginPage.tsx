@@ -30,10 +30,8 @@ export default function LoginPage() {
 
   return (
     <Content title="Sign in">
-      <p hidden={!!error} style={{ color: 'red' }}>
-        {error?.message}
-      </p>
       <div>
+        <p style={{ color: 'red' }}>{error?.message}</p>
         <FloatingLabel
           className="mb-3"
           controlId="floatingInput"
