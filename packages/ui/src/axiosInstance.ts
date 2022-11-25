@@ -13,4 +13,8 @@ const axiosInstance = axios.create({
   timeout: 30000,
 });
 
+export const getAuthHeader = (token?: string) => {
+  return { Authorization: `Bearer ${token}` };
+};
+
 export default axiosInstance;

@@ -6,6 +6,7 @@ import {
   LoginBody,
   SearchPreferences,
   Token,
+  TokenData,
   User,
 } from '@peddl/common';
 import * as crypto from 'crypto';
@@ -13,7 +14,7 @@ import { db } from '../db';
 import APIError from '../error/APIError';
 import { genid, removeEmpty } from '../utils';
 import getDateMetadata from './utils';
-import { TokenData, signToken } from '../auth';
+import { signToken } from '../auth';
 
 export const usersCollection = db.collection<User>('users');
 

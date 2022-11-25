@@ -1,23 +1,21 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
+import { isValidationFailure, ValidationResult } from '@peddl/common';
 
 export type FormInputProps = {
   label: string;
   htmlFor?: string;
   required?: boolean;
-  validationText?: string;
-  forceShowValidation?: boolean;
-  children: JSX.Element | JSX.Element[];
+  validationResult?: ValidationResult;
 };
 
 export default function FormInput({
   label,
   htmlFor,
   required,
-  validationText,
-  forceShowValidation,
+  validationResult,
   children,
-}: FormInputProps) {
+}: React.PropsWithChildren<FormInputProps>) {
   return (
     <Form.Group className="mb-3">
       <Form.Label
@@ -27,15 +25,9 @@ export default function FormInput({
         {label}
       </Form.Label>
       {children}
-      {forceShowValidation ? (
-        validationText && (
-          <Form.Control.Feedback style={{ display: 'block' }} type="invalid">
-            {validationText}
-          </Form.Control.Feedback>
-        )
-      ) : (
-        <Form.Control.Feedback type="invalid">
-          {validationText}
+      {validationResult && isValidationFailure(validationResult) && (
+        <Form.Control.Feedback style={{ display: 'block' }} type="invalid">
+          {validationResult.reason}
         </Form.Control.Feedback>
       )}
     </Form.Group>

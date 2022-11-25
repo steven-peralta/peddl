@@ -1,24 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { Badge, Carousel, Container } from 'react-bootstrap';
-import './UserProfilesStyles.css';
+import React, { ReactElement, useState } from 'react';
+import { Badge, ButtonProps, Carousel, Container } from 'react-bootstrap';
+import './ProfileDetails.css';
 import {
   CloudyFill,
   GeoAlt,
   Spotify,
   XDiamondFill,
 } from 'react-bootstrap-icons';
-import { Media, PagedResponse, Profile } from '@peddl/common';
-import useAxios from 'axios-hooks';
-import { baseURL } from '../../utils/axiosInstance';
+import { Genre, Profile, Talent, Location } from '@peddl/common';
 
-type ProfileProps = {
+type ProfileDetailsProps = {
   profile: Profile;
-  actionBtn: JSX.Element;
+  media: HTMLImageElement[];
+  actionButton: ReactElement<ButtonProps>;
 };
 
-export default function ProfileDetails({ profile, actionBtn }: ProfileProps) {
+export default function ProfileDetails({
+  profile,
+  media,
+  actionButton,
+}: ProfileDetailsProps) {
   const {
-    createdBy,
     name,
     location,
     birthday,
@@ -33,32 +35,11 @@ export default function ProfileDetails({ profile, actionBtn }: ProfileProps) {
   const bandcampLink = `https://${bandcampUsername}.bandcamp.com/`;
   const soundcloudLink = `https://soundcloud.com/${soundcloudUsername}`;
 
-  const [{ data: mediaData, loading: mediaLoading }] = useAxios<
-    PagedResponse<Media>
-  >(`/users/${createdBy}/media`);
-
-  const { items: media } = mediaData ?? {};
-
-  const [index, setIndex] = useState(0);
+  const [carouselIndex, setCarouselIndex] = useState(0);
 
   const handleSelect = (selectedIndex: number) => {
-    setIndex(selectedIndex);
+    setCarouselIndex(selectedIndex);
   };
-
-  const [images, setImages] = useState<HTMLImageElement[]>([]);
-
-  useEffect(() => {
-    if (media) {
-      setIndex(0);
-      setImages(
-        media.map((m) => {
-          const image = new Image();
-          image.src = `${baseURL}${m.filePath}`;
-          return image;
-        })
-      );
-    }
-  }, [media]);
 
   function getAge() {
     const today = new Date();
@@ -73,17 +54,19 @@ export default function ProfileDetails({ profile, actionBtn }: ProfileProps) {
 
   return (
     <div>
-      {!mediaLoading && (
-        <Carousel activeIndex={index} onSelect={handleSelect} slide={false}>
-          {images.map((img) => {
-            return (
-              <Carousel.Item>
-                <img alt="First slide" className="userImg" src={img.src} />
-              </Carousel.Item>
-            );
-          })}
-        </Carousel>
-      )}
+      <Carousel
+        activeIndex={carouselIndex}
+        onSelect={handleSelect}
+        slide={false}
+      >
+        {media.map((image) => {
+          return (
+            <Carousel.Item>
+              <img alt="First slide" className="userImg" src={image.src} />
+            </Carousel.Item>
+          );
+        })}
+      </Carousel>
       <Container className="userInfo d-grid gap-1">
         <div className="mt-3">
           <div className="d-flex flex-row justify-content-between align-items-center mb-3">
@@ -95,11 +78,11 @@ export default function ProfileDetails({ profile, actionBtn }: ProfileProps) {
               <div className="d-flex flex-row align-items-center">
                 <GeoAlt className="me-1" style={{ color: 'grey' }} />
                 <p className="m-0 p-0" style={{ color: 'grey' }}>
-                  {location}
+                  {Location[location]}
                 </p>
               </div>
             </div>
-            {actionBtn}
+            {actionButton}
           </div>
 
           {bio && (
@@ -116,7 +99,7 @@ export default function ProfileDetails({ profile, actionBtn }: ProfileProps) {
                   {genres.map((genre) => {
                     return (
                       <div key={genre} className="me-2">
-                        <Badge bg="secondary">{genre}</Badge>{' '}
+                        <Badge bg="secondary">{Genre[genre]}</Badge>{' '}
                       </div>
                     );
                   })}
@@ -132,8 +115,8 @@ export default function ProfileDetails({ profile, actionBtn }: ProfileProps) {
                     return (
                       <div className="me-2">
                         <Badge key={talent} bg="secondary">
-                          {talent}
-                        </Badge>{' '}
+                          {Talent[talent]}
+                        </Badge>
                       </div>
                     );
                   })}

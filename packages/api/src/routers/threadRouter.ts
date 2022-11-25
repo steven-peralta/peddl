@@ -7,8 +7,9 @@ import {
   EditThreadBody,
   HTTPStatus,
   IDResponse,
+  TokenData,
 } from '@peddl/common';
-import { getAuth, jwtSettings, TokenData } from '../auth';
+import { getAuth, jwtSettings } from '../auth';
 import APIError from '../error/APIError';
 import {
   createThread,

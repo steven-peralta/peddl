@@ -4,11 +4,11 @@ import { Badge, ListGroup } from 'react-bootstrap';
 import { ChevronRight } from 'react-bootstrap-icons';
 import Content from '../../components/Content';
 import avatarImg from './avatar.png';
-import './MatchesStyles.css';
+import './MatchesPage.css';
 
-export default function Matches() {
+export default function MatchesPage() {
   return (
-    <Content title="Matches">
+    <Content title="MatchesPage">
       <div>
         <div className="matchesContainer">
           <table>

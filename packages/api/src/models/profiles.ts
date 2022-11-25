@@ -11,7 +11,7 @@ import {
   CreateProfileBody,
   EditProfileBody,
 } from '@peddl/common';
-import { Filter } from 'mongodb';
+import { Filter, Document } from 'mongodb';
 import { db } from '../db';
 import APIError from '../error/APIError';
 import getDateMetadata from './utils';
@@ -56,10 +56,10 @@ export async function createProfile(
   await profilesCollection.insertOne({
     name,
     birthday: new Date(birthday),
-    location: location as Location,
-    gender: gender as Gender,
-    genres: genres as Genre[],
-    talents: talents as Talent[],
+    location: location as keyof typeof Location,
+    gender: gender as keyof typeof Gender,
+    genres: genres as (keyof typeof Genre)[],
+    talents: talents as (keyof typeof Talent)[],
     bio,
     spotifyLink,
     soundcloudUsername,
@@ -115,7 +115,7 @@ export async function deleteProfile(userId: string) {
 export async function getProfiles(
   searchPreferences: SearchPreferences,
   { skip = 0, limit = 0 }: Pagination
-): Promise<PagedResponse<Profile>> {
+): Promise<PagedResponse<Document>> {
   const {
     genders = [],
     genres = [],
@@ -145,6 +145,7 @@ export async function getProfiles(
     .find(filter)
     .skip(skip)
     .limit(limit)
+    .project({ createdBy: 1 })
     .toArray();
 
   return {

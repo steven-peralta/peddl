@@ -27,10 +27,10 @@ export type OmitMetadata<T> = OmitID<OmitUserAssociated<OmitDated<T>>>;
 
 export interface SearchPreferences {
   ageRange?: [number, number];
-  genders?: Gender[];
-  genres?: Genre[];
-  talents?: Talent[];
-  locations?: Location[];
+  genders?: (keyof typeof Gender)[];
+  genres?: (keyof typeof Genre)[];
+  talents?: (keyof typeof Talent)[];
+  locations?: (keyof typeof Location)[];
 }
 
 export interface User extends Identifiable, Dated {
@@ -43,10 +43,10 @@ export interface User extends Identifiable, Dated {
 export interface Profile extends UserAssociated, Dated {
   name: string;
   birthday: Date;
-  location: Location;
-  gender: Gender;
-  genres?: Genre[];
-  talents?: Talent[];
+  location: keyof typeof Location;
+  gender: keyof typeof Gender;
+  genres?: (keyof typeof Genre)[];
+  talents?: (keyof typeof Talent)[];
   bio?: string;
   spotifyLink?: string;
   soundcloudUsername?: string;

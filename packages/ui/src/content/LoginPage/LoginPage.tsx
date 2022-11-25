@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { FloatingLabel, Button, Form } from 'react-bootstrap';
-import './LoginStyles.css';
+import './LoginPage.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { User } from '@peddl/common';
-import handleFormChange from '../../utils/form';
 import { useAuth } from '../../providers/AuthProvider';
-import axiosInstance from '../../utils/axiosInstance';
+import axiosInstance from '../../axiosInstance';
 import { useSettings } from '../../providers/SettingsProvider';
 import Content from '../../components/Content';
+import { handleFormChange } from '../../components/forms/utils';
 
 export default function LoginPage() {
   const { setSettings } = useSettings();
@@ -77,7 +77,9 @@ export default function LoginPage() {
                 const { userId, token } = await doLogin({ email, password });
                 const { data } = await axiosInstance.get<User>(
                   `/users/${userId}`,
-                  { headers: { Authorization: `Bearer ${token}` } }
+                  {
+                    headers: { Authorization: `Bearer ${token}` },
+                  }
                 );
                 setSettings(data.searchPreferences);
                 navigate(state?.path || '/profiles');

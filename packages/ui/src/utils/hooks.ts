@@ -1,4 +1,4 @@
-import { ValidationResult } from '@peddl/common';
+import { isValidationFailure, ValidationResult } from '@peddl/common';
 import { useEffect, useState } from 'react';
 
 export default function useValidation<T>(
@@ -13,13 +13,13 @@ export default function useValidation<T>(
 
   useEffect(() => {
     if (initialChange) {
-      const { reason, isValid: isValueValid } = validator(value);
-      if (reason) {
-        setValidationText(reason);
+      const result = validator(value);
+      if (isValidationFailure(result)) {
+        setValidationText(result.reason);
       } else {
         setValidationText(undefined);
       }
-      setIsValid(isValueValid);
+      setIsValid(result.isValid);
     }
   }, [initialChange, validator, value]);
 

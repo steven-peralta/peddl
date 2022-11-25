@@ -24,15 +24,12 @@ import {
   validateSoundcloudUsername,
   validateSpotifyLink,
   validateTalents,
+  validateForm,
+  TokenData,
 } from '@peddl/common';
 import multer from 'multer';
 import { APIRequest } from './utils';
-import {
-  parsePaginationParams,
-  throw400OnBadValidation,
-  validatePostForm,
-  validatePutForm,
-} from '../utils';
+import { parsePaginationParams, throw400OnBadValidation } from '../utils';
 import {
   createUser,
   deleteUser,
@@ -42,7 +39,7 @@ import {
   throw409IfUserFound,
   updateUser,
 } from '../models/users';
-import { jwtSettings, TokenData } from '../auth';
+import { jwtSettings } from '../auth';
 import {
   createProfile,
   deleteProfile,
@@ -54,7 +51,9 @@ import APIError from '../error/APIError';
 import {
   createLike,
   deleteLike,
+  getLike,
   getLikes,
+  throw404IfLikeNotFound,
   throw409IfLikeFound,
 } from '../models/likes';
 import {
@@ -119,7 +118,7 @@ router.route('/').post(
   asyncHandler(
     async (req: APIRequest<CreateUserBody>, res: Response<IDResponse>) => {
       const { searchPreferences, profile, ...user } = req.body;
-      const validateUser = validatePostForm<
+      const validateUser = validateForm<
         Omit<CreateUserBody, 'searchPreferences' | 'profile'>
       >(user, {
         email: validateEmail,
@@ -133,7 +132,7 @@ router.route('/').post(
         );
       }
 
-      const validateSearchPreferences = validatePostForm<
+      const validateSearchPreferences = validateForm<
         CreateUserBody['searchPreferences']
       >(searchPreferences, {
         ageRange: validateAgeRange,
@@ -147,7 +146,7 @@ router.route('/').post(
         throw new APIError(HTTPStatus.BAD_REQUEST, 'Profile data is required');
       }
 
-      const validateProfile = validatePostForm(profile, {
+      const validateProfile = validateForm(profile, {
         name: validateName,
         birthday: validateBirthday,
         location: validateLocation,
@@ -160,11 +159,11 @@ router.route('/').post(
         bandcampUsername: validateBandcampUsername,
       });
 
-      throw400OnBadValidation([
+      throw400OnBadValidation({
         ...validateUser,
         ...validateSearchPreferences,
         ...validateProfile,
-      ]);
+      });
 
       await throw409IfUserFound(user.email);
       const { id } = await createUser({ ...user, searchPreferences });
@@ -192,18 +191,26 @@ router
     asyncHandler(async (req: APIRequest<EditUserBody>, res) => {
       const { userId } = req.params;
       const { searchPreferences = {}, ...user } = req.body;
-      const validateUser = validatePutForm(user, {
-        email: validateEmail,
-        password: validatePassword,
-      });
+      const validateUser = validateForm(
+        user,
+        {
+          email: validateEmail,
+          password: validatePassword,
+        },
+        true
+      );
 
-      const validateSearchPreferences = validatePutForm(searchPreferences, {
-        ageRange: validateAgeRange,
-        genders: validateGenders,
-        genres: validateGenres,
-        talents: validateTalents,
-        locations: validateLocations,
-      });
+      const validateSearchPreferences = validateForm(
+        searchPreferences,
+        {
+          ageRange: validateAgeRange,
+          genders: validateGenders,
+          genres: validateGenres,
+          talents: validateTalents,
+          locations: validateLocations,
+        },
+        true
+      );
 
       throw400OnBadValidation(validateUser);
       throw400OnBadValidation(validateSearchPreferences);
@@ -241,18 +248,22 @@ router
     asyncHandler(async (req: APIRequest<EditProfileBody>, res) => {
       const { userId } = req.params;
       const data = req.body;
-      const validate = validatePutForm(data, {
-        name: validateName,
-        birthday: validateBirthday,
-        location: validateLocation,
-        gender: validateGender,
-        genres: validateGenres,
-        talents: validateTalents,
-        bio: validateBio,
-        spotifyLink: validateSpotifyLink,
-        soundcloudUsername: validateSoundcloudUsername,
-        bandcampUsername: validateBandcampUsername,
-      });
+      const validate = validateForm(
+        data,
+        {
+          name: validateName,
+          birthday: validateBirthday,
+          location: validateLocation,
+          gender: validateGender,
+          genres: validateGenres,
+          talents: validateTalents,
+          bio: validateBio,
+          spotifyLink: validateSpotifyLink,
+          soundcloudUsername: validateSoundcloudUsername,
+          bandcampUsername: validateBandcampUsername,
+        },
+        true
+      );
 
       throw400OnBadValidation(validate);
 
@@ -274,6 +285,14 @@ router.get(
 
 router
   .route('/:userId/likes/:likedUserId')
+  .get(
+    authenticatedUserIdRoute,
+    asyncHandler(async (req: Request, res: Response) => {
+      const { userId, likedUserId } = req.params;
+      await throw404IfLikeNotFound(likedUserId, userId);
+      res.json(await getLike(likedUserId, userId));
+    })
+  )
   .post(
     authenticatedUserIdRoute,
     asyncHandler(async (req: Request, res: Response) => {

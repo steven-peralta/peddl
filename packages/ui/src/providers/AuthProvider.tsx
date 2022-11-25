@@ -1,12 +1,14 @@
 import React, { useState, useContext, useMemo } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { LoginFormData, Token } from '@peddl/common';
-import axiosInstance from '../utils/axiosInstance';
+import { LoginBody, ServerboundEvents, Token } from '@peddl/common';
+import axiosInstance from '../axiosInstance';
+import { useSocket } from './WebsocketProvider';
 
 type AuthContext = {
   isAuthed: boolean[];
+  userId: (string | undefined)[];
   token: (string | undefined)[];
-  login: ((loginForm: LoginFormData) => Promise<Token>)[];
+  login: ((loginForm: LoginBody) => Promise<Token>)[];
   logout: (() => void)[];
 };
 
@@ -24,29 +26,36 @@ type RequireAuthProps = {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [isAuthed, setAuthed] = useState(false);
   const [token, setToken] = useState<string | undefined>(undefined);
-
-  const loginCallback = async (loginForm: LoginFormData) => {
-    const { data } = await axiosInstance.post<Token>('/auth', loginForm);
-    if (data.token) {
-      setToken(data.token);
-      setAuthed(true);
-    }
-    return data;
-  };
-
-  const logoutCallback = async () => {
-    setToken(undefined);
-    setAuthed(false);
-  };
+  const [userId, setUserId] = useState<string | undefined>(undefined);
+  const socket = useSocket();
 
   const value = useMemo(() => {
+    const loginCallback = async (loginForm: LoginBody) => {
+      const { data } = await axiosInstance.post<Token>('/auth', loginForm);
+      if (data.token) {
+        setUserId(data.userId);
+        setToken(data.token);
+        setAuthed(true);
+
+        socket.emit(ServerboundEvents.Login, data);
+      }
+      return data;
+    };
+
+    const logoutCallback = async () => {
+      setUserId(undefined);
+      setToken(undefined);
+      setAuthed(false);
+    };
+
     return {
+      userId: [userId],
       isAuthed: [isAuthed],
       token: [token],
       login: [loginCallback],
       logout: [logoutCallback],
     };
-  }, [isAuthed, token]);
+  }, [isAuthed, socket, token, userId]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

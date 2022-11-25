@@ -10,9 +10,9 @@ import {
   InputGroup,
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import avatarImg from '../Matches/avatar.png';
+import avatarImg from './MatchesPage/avatar.png';
 
-export default function Messages() {
+export default function MessagesPage() {
   return (
     <div>
       <div

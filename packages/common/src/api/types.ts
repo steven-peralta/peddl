@@ -64,3 +64,8 @@ export type CreateThreadBody = { users: ID[] };
 export type EditThreadBody = Partial<CreateThreadBody>;
 export type CreateMessageBody = { content: string };
 export type EditMessageBody = Partial<CreateMessageBody>;
+
+export type TokenData = {
+  userId: string;
+  time: Date;
+};

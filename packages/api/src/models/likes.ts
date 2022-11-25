@@ -20,6 +20,24 @@ export async function throw409IfLikeFound(userId: string, createdBy: string) {
   }
 }
 
+export async function throw404IfLikeNotFound(
+  userId: string,
+  createdBy: string
+) {
+  const likeExists = await likesCollection.countDocuments({
+    userId,
+    createdBy,
+  });
+
+  if (!likeExists) {
+    throw new APIError(HTTPStatus.CONFLICT, 'Like not found.');
+  }
+}
+
+export async function getLike(userId: string, createdBy: string) {
+  return likesCollection.findOne({ userId, createdBy });
+}
+
 export async function createLike(userId: string, createdBy: string) {
   const mutualLike = await likesCollection.findOne({
     userId: createdBy,

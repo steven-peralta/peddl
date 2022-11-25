@@ -35,7 +35,7 @@ export default function UploadMediaBox({
           type="button"
           variant="link"
         >
-          <Trash3 style={{ color: 'gray' }} />
+          <Trash3 style={{ color: 'red' }} />
         </Button>
       )}
       <button className="upload-box" onClick={onClick} type="button">
