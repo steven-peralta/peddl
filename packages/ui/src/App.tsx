@@ -24,7 +24,10 @@ function App() {
 
   useEffect(() => {
     socket.on('connect', () => {
-      addToast({ variant: 'success', content: 'Connected to server' });
+      addToast({
+        variant: 'success',
+        content: 'Connected to server',
+      });
     });
     socket.on('disconnect', () => {
       addToast({
@@ -42,14 +45,7 @@ function App() {
         <Route element={<TitlePage />} path="/" />
         <Route element={<RegisterPage />} path="register" />
         <Route element={<LoginPage />} path="login" />
-        <Route
-          element={
-            <RequireAuth>
-              <MessagesPage />
-            </RequireAuth>
-          }
-          path="messages"
-        />
+
         <Route
           element={
             <RequireAuth>
@@ -57,6 +53,14 @@ function App() {
             </RequireAuth>
           }
           path="matches"
+        />
+        <Route
+          element={
+            <RequireAuth>
+              <MessagesPage />
+            </RequireAuth>
+          }
+          path="matches/:threadId"
         />
         <Route
           element={
@@ -72,7 +76,7 @@ function App() {
               <UserProfilePage />
             </RequireAuth>
           }
-          path="viewProfile"
+          path="user"
         />
         <Route
           element={
@@ -80,7 +84,7 @@ function App() {
               <EditSettingsPage />
             </RequireAuth>
           }
-          path="searchSettings"
+          path="settings"
         />
         <Route
           element={
@@ -88,7 +92,7 @@ function App() {
               <EditUserProfilePage />
             </RequireAuth>
           }
-          path="userProfiles"
+          path="user/edit"
         />
         <Route
           element={

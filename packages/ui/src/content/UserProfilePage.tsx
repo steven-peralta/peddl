@@ -45,7 +45,7 @@ export default function UserProfilePage() {
   const gearButton = (
     <Button
       onClick={() => {
-        navigate('/userProfiles');
+        navigate('/user/edit');
       }}
       style={{
         width: '48px',

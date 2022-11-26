@@ -36,10 +36,10 @@ export default function PeddlNavbar() {
       <Link className="nav-link" to="/matches">
         Matches
       </Link>
-      <Link className="nav-link" to="/viewProfile">
+      <Link className="nav-link" to="/user">
         Profile
       </Link>
-      <Link className="nav-link" to="/searchSettings">
+      <Link className="nav-link" to="/settings">
         Search Settings
       </Link>
       <Link className="nav-link" to="/logout">
@@ -51,7 +51,7 @@ export default function PeddlNavbar() {
     <Navbar bg="dark" expand="lg" fixed="top" variant="dark">
       <Container fluid>
         <Navbar.Brand>
-          <Link to="/">
+          <Link to={isAuthed ? '/profiles' : '/'}>
             <img alt="peddlLogo" className="logo" src={peddlLogo} />
           </Link>
         </Navbar.Brand>
