@@ -2,12 +2,17 @@ import React, { useEffect } from 'react';
 
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
+import {
+  ClientboundEvents,
+  ClientboundMessagePayload,
+  Profile,
+} from '@peddl/common';
 import PeddlNavbar from './components/PeddlNavbar/PeddlNavbar';
 
 import TitlePage from './content/TitlePage/TitlePage';
 import LoginPage from './content/LoginPage/LoginPage';
 import ProfilesPage from './content/ProfilesPage';
-import { RequireAuth } from './providers/AuthProvider';
+import { RequireAuth, useAuth } from './providers/AuthProvider';
 import LogoutPage from './content/LogoutPage';
 import EditSettingsPage from './content/EditSettingsPage';
 import EditUserProfilePage from './content/EditUserProfilePage';
@@ -17,10 +22,14 @@ import UserProfilePage from './content/UserProfilePage';
 import MatchesPage from './content/MatchesPage/MatchesPage';
 import MessagesPage from './content/MessagesPage';
 import RegisterPage from './content/RegisterPage';
+import axiosInstance, { getAuthHeader } from './axiosInstance';
 
 function App() {
   const { addToast, toastContainer } = useToast();
   const socket = useSocket();
+  const {
+    token: [token],
+  } = useAuth();
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -35,6 +44,29 @@ function App() {
         variant: 'danger',
       });
     });
+
+    socket.on(
+      ClientboundEvents.ReceiveMessage,
+      ({ fromUserId, content }: ClientboundMessagePayload) => {
+        const profile = axiosInstance.get<Profile>(
+          `/users/${fromUserId}/profile`,
+          { headers: getAuthHeader(token) }
+        );
+
+        Promise.all([profile]).then(
+          ([
+            {
+              data: { name },
+            },
+          ]) => {
+            addToast({
+              title: name,
+              content,
+            });
+          }
+        );
+      }
+    );
   });
 
   return (

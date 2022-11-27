@@ -4,8 +4,11 @@ import { createServer } from 'http';
 import morgan from 'morgan';
 import jwt from 'jsonwebtoken';
 import {
+  ClientboundEvents,
+  ClientboundMessagePayload,
   ServerboundEvents,
   ServerboundLoginPayload,
+  ServerboundMessagePayload,
   TokenData,
 } from '@peddl/common';
 
@@ -57,6 +60,31 @@ wss.on('connection', (socket) => {
       delete socketIdToUserId[socket.id];
     }
   });
+
+  socket.on(
+    ServerboundEvents.SendMessage,
+    ({
+      threadId,
+      toUserIds,
+      userId,
+      content,
+      messageId,
+    }: ServerboundMessagePayload) => {
+      toUserIds.forEach((id) => {
+        const receiver = userIdToSocket[id];
+        if (receiver) {
+          const data: ClientboundMessagePayload = {
+            messageId,
+            threadId,
+            fromUserId: userId,
+            content,
+          };
+          receiver.emit(`/threads/${threadId}`, data);
+          receiver.emit(ClientboundEvents.ReceiveMessage, data);
+        }
+      });
+    }
+  );
 });
 
 httpServer.listen(port, () => {

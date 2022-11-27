@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { Toast, ToastContainer } from 'react-bootstrap';
 import { Variant } from 'react-bootstrap/types';
 
@@ -32,59 +26,52 @@ export type ToastProviderProps = {
 export function ToastProvider({ children }: ToastProviderProps) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const addToast = useCallback(
-    (toast: Toast) => {
-      setToasts([toast, ...toasts]);
-    },
-    [toasts]
-  );
+  const addToast = (toast: Toast) => {
+    setToasts([toast, ...toasts]);
+  };
 
-  const toastContainer = useMemo(
-    () => (
-      <ToastContainer
-        className="mt-5 p-3 position-fixed fixed-top"
-        position="top-center"
-        style={{ zIndex: 1035 }}
-      >
-        {toasts.map(
-          (
-            {
-              title,
-              content,
-              dismissible = true,
-              autohide = true,
-              delay = 3000,
-              variant = 'light',
-            },
-            i
-          ) => (
-            <Toast
-              autohide={autohide}
-              bg={variant}
-              delay={delay}
-              onClose={() => setToasts(toasts.filter((_, idx) => idx !== i))}
+  const toastContainer = (
+    <ToastContainer
+      className="mt-5 p-3 position-fixed fixed-top"
+      position="top-center"
+      style={{ zIndex: 1035 }}
+    >
+      {toasts.map(
+        (
+          {
+            title,
+            content,
+            dismissible = true,
+            autohide = true,
+            delay = 3000,
+            variant = 'light',
+          },
+          i
+        ) => (
+          <Toast
+            autohide={autohide}
+            bg={variant}
+            delay={delay}
+            onClose={() => setToasts(toasts.filter((_, idx) => idx !== i))}
+          >
+            {title && (
+              <Toast.Header closeButton={dismissible}>
+                <strong className="me-auto">{title}</strong>
+              </Toast.Header>
+            )}
+            <Toast.Body
+              className={variant === 'dark' ? 'text-white' : 'text-black'}
             >
-              {title && (
-                <Toast.Header closeButton={dismissible}>
-                  <strong className="me-auto">{title}</strong>
-                </Toast.Header>
-              )}
-              <Toast.Body
-                className={variant === 'dark' ? 'text-white' : 'text-black'}
-              >
-                {content}
-              </Toast.Body>
-            </Toast>
-          )
-        )}
-      </ToastContainer>
-    ),
-    [toasts]
+              {content}
+            </Toast.Body>
+          </Toast>
+        )
+      )}
+    </ToastContainer>
   );
 
-  const value = useMemo(() => {
-    return { addToast, toastContainer };
-  }, [addToast, toastContainer]);
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
+  const value = { addToast, toastContainer };
 
   return (
     <ToastContext.Provider value={value}>{children}</ToastContext.Provider>

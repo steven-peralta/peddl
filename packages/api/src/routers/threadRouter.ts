@@ -122,9 +122,7 @@ router
       const { userId } = auth;
       const { threadId } = req.params;
 
-      await createMessage(threadId, userId, req.body);
-
-      res.status(HTTPStatus.CREATED).end();
+      res.json(await createMessage(threadId, userId, req.body));
     })
   );
 
