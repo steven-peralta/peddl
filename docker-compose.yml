@@ -22,6 +22,8 @@ services:
       MONGO_INITDB_DATABASE: ${MONGO_DB}
     networks:
       - default-network
+    ports:
+      - "27017:27017"
 
   api:
     image: 177973969841.dkr.ecr.us-east-1.amazonaws.com/peddl-api-${ENVIRONMENT:-staging}:${API_TAG:-latest}
