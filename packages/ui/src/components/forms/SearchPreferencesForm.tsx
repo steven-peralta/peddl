@@ -12,14 +12,12 @@ import {
   TagOption,
   Talent,
   TalentTagOptions,
-  validateAgeRange,
   validateGenders,
   validateGenres,
   validateLocations,
   validateTalents,
 } from '@peddl/common';
 import { ValidationFormProps } from './types';
-import Slider from '../Slider';
 import FormInput from './FormInput';
 import { validateOnBlur, validateOnChange } from './utils';
 import extractTagOptions from '../../utils/extractTagOptions';
@@ -34,26 +32,6 @@ export default function SearchPreferencesForm({
 
   return (
     <div>
-      <FormInput htmlFor="ageSetting" label="Age">
-        <div className="mt-4 pt-2 mb-2">
-          <Slider
-            max={100}
-            min={18}
-            onChange={([age1, age2]) => {
-              const change = validateOnChange(
-                'ageRange',
-                validateAgeRange,
-                dataState,
-                validationState,
-                initialValidateState
-              );
-              change([age1, age2]);
-            }}
-            step={1}
-            values={data.ageRange ?? [18, 25]}
-          />
-        </div>
-      </FormInput>
       <FormInput
         htmlFor="gendersSetting"
         label="Gender"

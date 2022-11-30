@@ -26,7 +26,6 @@ import ProfileDetailsForm, {
 import UserDetailsForm, {
   UserDetailsFormData,
 } from '../components/forms/UserDetailsForm';
-import MediaUploadGrid from '../components/MediaUploadGrid';
 import { useAuth } from '../providers/AuthProvider';
 import axiosInstance, { getAuthHeader } from '../axiosInstance';
 import useFormState from '../components/forms/hooks';
@@ -50,12 +49,6 @@ export default function EditUserProfilePage() {
   });
 
   const {
-    imagesState: [
-      [images, setImages],
-      [imageFiles, setImageFiles],
-      [uploadBoxEnabled, setUploadBoxEnabled],
-      [uploadValidationText, setUploadValidationText],
-    ],
     userFormDataState: [
       [userFormData, setUserFormData],
       [userFormValidationResults, setUserFormValidationResults],
@@ -208,15 +201,6 @@ export default function EditUserProfilePage() {
         <h1>Loading</h1>
       ) : (
         <Form noValidate>
-          <MediaUploadGrid
-            boxEnabledState={[uploadBoxEnabled, setUploadBoxEnabled]}
-            fileState={[imageFiles, setImageFiles]}
-            imageState={[images, setImages]}
-            validationTextState={[
-              uploadValidationText,
-              setUploadValidationText,
-            ]}
-          />
           <ProfileDetailsForm
             dataState={[profileFormData, setProfileFormData]}
             initialValidateState={[
@@ -244,7 +228,7 @@ export default function EditUserProfilePage() {
               {`An error occurred when trying to create a new user: ${requestError.message}`}
             </p>
           )}
-          <Button disabled={!areFormsValid} onClick={btnClick}>
+          <Button className="mb-3" disabled={!areFormsValid} onClick={btnClick}>
             {submitLoading && (
               <Spinner
                 animation="border"
@@ -255,7 +239,7 @@ export default function EditUserProfilePage() {
                 size="sm"
               />
             )}
-            Submit
+            Save
           </Button>
         </Form>
       )}

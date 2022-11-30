@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import { configure } from 'axios-hooks';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faBandcamp, faSoundcloud } from '@fortawesome/free-brands-svg-icons';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -12,6 +14,8 @@ import { AuthProvider } from './providers/AuthProvider';
 import { SettingsProvider } from './providers/SettingsProvider';
 import { WebsocketProvider } from './providers/WebsocketProvider';
 import { ToastProvider } from './providers/ToastProvider';
+
+library.add(faBandcamp, faSoundcloud);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
