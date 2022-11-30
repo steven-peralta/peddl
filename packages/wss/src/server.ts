@@ -53,7 +53,6 @@ const wss = new Server(httpServer, {
     methods: ['GET', 'POST'],
   },
 });
-console.log('test');
 mongoClient.connect().then(() => {
   wss.on('connection', (socket) => {
     console.log('Socket connected.');

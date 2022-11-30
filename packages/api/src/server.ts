@@ -22,7 +22,6 @@ app.use('/profiles', profileRouter);
 app.use('/threads', threadRouter);
 
 app.use(handleError);
-console.log('test');
 mongoClient.connect().then(() => {
   app.listen(port, () => {
     console.log(`App listening on port ${port}`);
