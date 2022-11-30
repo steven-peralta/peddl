@@ -105,7 +105,7 @@ export default function EditSettingsPage() {
     ).length === 0;
 
   return (
-    <Content title="Search Settings">
+    <Content>
       <Form noValidate>
         <SearchPreferencesForm
           dataState={[searchPrefFormData, setSearchPrefFormData]}
