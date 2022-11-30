@@ -32,6 +32,7 @@ export default function SearchPreferencesForm({
 
   return (
     <div>
+      <h2 className="mb-3">Search settings</h2>
       <FormInput
         htmlFor="gendersSetting"
         label="Gender"
