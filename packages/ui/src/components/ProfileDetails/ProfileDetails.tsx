@@ -1,13 +1,9 @@
 import React, { ReactElement, useState } from 'react';
 import { Badge, ButtonProps, Carousel, Container } from 'react-bootstrap';
 import './ProfileDetails.css';
-import {
-  CloudyFill,
-  GeoAlt,
-  Spotify,
-  XDiamondFill,
-} from 'react-bootstrap-icons';
+import { GeoAlt, Spotify } from 'react-bootstrap-icons';
 import { Genre, Profile, Talent, Location } from '@peddl/common';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 type ProfileDetailsProps = {
   profile: Profile;
@@ -128,19 +124,34 @@ export default function ProfileDetails({
                 <b className="mb-2">Links</b>
                 {bandcampUsername && (
                   <div className="d-flex flex-row align-items-center mb-2">
-                    <XDiamondFill
+                    <FontAwesomeIcon
                       className="me-2"
+                      icon={['fab', 'bandcamp']}
                       style={{ color: '#007AFF' }}
                     />
-                    <a className="m-0 p-0" href={bandcampLink}>
+                    <a
+                      className="m-0 p-0"
+                      href={bandcampLink}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
                       {bandcampLink}
                     </a>
                   </div>
                 )}
                 {soundcloudUsername && (
                   <div className="d-flex flex-row align-items-center mb-2">
-                    <CloudyFill className="me-2" style={{ color: '#007AFF' }} />
-                    <a className="m-0 p-0" href={soundcloudLink}>
+                    <FontAwesomeIcon
+                      className="me-2"
+                      icon={['fab', 'soundcloud']}
+                      style={{ color: '#007AFF' }}
+                    />
+                    <a
+                      className="m-0 p-0"
+                      href={soundcloudLink}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
                       {soundcloudLink}
                     </a>
                   </div>
@@ -148,7 +159,12 @@ export default function ProfileDetails({
                 {spotifyLink && (
                   <div className="d-flex flex-row align-items-center mb-2">
                     <Spotify className="me-2" style={{ color: '#007AFF' }} />
-                    <a className="m-0 p-0" href={spotifyLink}>
+                    <a
+                      className="m-0 p-0"
+                      href={spotifyLink}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
                       {spotifyLink}
                     </a>
                   </div>

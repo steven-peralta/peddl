@@ -124,7 +124,9 @@ export default function useFormState(): FormState {
   >({});
 
   // profile form state
-  const profileFormDataState = useState<ProfileDetailsFormData>({});
+  const profileFormDataState = useState<ProfileDetailsFormData>({
+    location: 'AustinTX',
+  });
   const profileFormValidationResultsState = useState<
     ValidationResults<ProfileDetailsFormData>
   >({});
