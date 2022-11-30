@@ -32,6 +32,8 @@ services:
       MONGO_DB: ${MONGO_DB}
       MONGO_URI: ${MONGO_URI}
       PORT: 8080
+    expose:
+      - 8080
     volumes:
       - "mediadata:/srv/static"
     depends_on:
@@ -46,6 +48,8 @@ services:
       MONGO_DB: ${MONGO_DB}
       MONGO_URI: ${MONGO_URI}
       PORT: 8000
+    expose:
+      - 8000
     depends_on:
       - mongo
     networks:
