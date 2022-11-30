@@ -246,7 +246,7 @@ export default function RegisterPage() {
             {`An error occurred when trying to create a new user: ${requestError.message}`}
           </p>
         )}
-        <Button disabled={!areFormsValid} onClick={btnClick}>
+        <Button className="mb-3" disabled={!areFormsValid} onClick={btnClick}>
           {submitLoading && (
             <Spinner
               animation="border"
