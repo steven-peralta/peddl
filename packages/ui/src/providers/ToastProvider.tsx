@@ -77,6 +77,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
                     className="rounded me-2"
                     height={20}
                     src={`${baseURL}${imageSrc}`}
+                    style={{ objectFit: 'cover' }}
                     width={20}
                   />
                 )}
