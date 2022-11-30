@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import { expressjwt, Request as JWTRequest } from 'express-jwt';
 import asyncHandler from 'express-async-handler';
 import {
   CreateUserBody,
@@ -25,7 +24,6 @@ import {
   validateSpotifyLink,
   validateTalents,
   validateForm,
-  TokenData,
 } from '@peddl/common';
 import multer from 'multer';
 import { APIRequest } from './utils';
@@ -39,7 +37,7 @@ import {
   throw409IfUserFound,
   updateUser,
 } from '../models/users';
-import { jwtSettings } from '../auth';
+import { authenticatedRoute, authenticatedUserIdRoute } from '../auth';
 import {
   createProfile,
   deleteProfile,
@@ -96,23 +94,6 @@ router.use(
     next();
   })
 );
-
-const authenticatedRoute = expressjwt(jwtSettings);
-
-const authenticatedUserIdRoute = [
-  authenticatedRoute,
-  asyncHandler(async (req: JWTRequest<TokenData>, _res, next) => {
-    const { userId: userIdParam } = req.params;
-    if (!req.auth) {
-      throw new APIError(HTTPStatus.UNAUTHORIZED, 'No token provided');
-    }
-    const { userId } = req.auth;
-    if (userIdParam !== userId) {
-      throw new APIError(HTTPStatus.UNAUTHORIZED, 'Invalid token.');
-    }
-    next();
-  }),
-];
 
 router.route('/').post(
   asyncHandler(

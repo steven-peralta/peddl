@@ -64,6 +64,7 @@ export interface Like extends UserAssociated, Dated {
 
 export interface Thread extends Identifiable, Dated {
   users: ID[];
+  latestMessage: string;
 }
 
 export interface Message

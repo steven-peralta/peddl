@@ -61,7 +61,9 @@ export type SearchPreferencesQueryParams = {
 };
 
 export type CreateThreadBody = { users: ID[] };
-export type EditThreadBody = Partial<CreateThreadBody>;
+export type EditThreadBody = Partial<
+  CreateThreadBody & { latestMessage: string }
+>;
 export type CreateMessageBody = { content: string };
 export type EditMessageBody = Partial<CreateMessageBody>;
 

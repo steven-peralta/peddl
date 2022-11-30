@@ -30,20 +30,24 @@ export default function ProfilesPage() {
 
   return (
     <div style={{ marginTop: '60px' }}>
-      {!profileIdsLoading && profileIds.length > 0 && (
-        <>
-          <ProfileView userId={profileIds[index].createdBy} />
-          <Container>
-            <PrevNextButtons
-              nextHidden={index === profileIds.length - 1}
-              nextIcon={<ArrowRight className="ms-1" />}
-              onNextClick={() => setIndex(index + 1)}
-              onPrevClick={() => setIndex(index - 1)}
-              prevHidden={index === 0}
-              prevIcon={<ArrowLeft className="me-1" />}
-            />
-          </Container>
-        </>
+      {profileIds.length === 0 ? (
+        <h1>No profiles found</h1>
+      ) : (
+        !profileIdsLoading && (
+          <>
+            <ProfileView userId={profileIds[index].createdBy} />
+            <Container>
+              <PrevNextButtons
+                nextHidden={index === profileIds.length - 1}
+                nextIcon={<ArrowRight className="ms-1" />}
+                onNextClick={() => setIndex(index + 1)}
+                onPrevClick={() => setIndex(index - 1)}
+                prevHidden={index === 0}
+                prevIcon={<ArrowLeft className="me-1" />}
+              />
+            </Container>
+          </>
+        )
       )}
     </div>
   );

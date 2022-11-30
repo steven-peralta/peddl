@@ -30,7 +30,7 @@ export async function throw404IfLikeNotFound(
   });
 
   if (!likeExists) {
-    throw new APIError(HTTPStatus.CONFLICT, 'Like not found.');
+    throw new APIError(HTTPStatus.NOT_FOUND, 'Like not found.');
   }
 }
 

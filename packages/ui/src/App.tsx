@@ -4,15 +4,15 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import {
   ClientboundEvents,
+  ClientboundMatchedPayload,
   ClientboundMessagePayload,
-  Profile,
 } from '@peddl/common';
 import PeddlNavbar from './components/PeddlNavbar/PeddlNavbar';
 
 import TitlePage from './content/TitlePage/TitlePage';
 import LoginPage from './content/LoginPage/LoginPage';
 import ProfilesPage from './content/ProfilesPage';
-import { RequireAuth, useAuth } from './providers/AuthProvider';
+import { RequireAuth } from './providers/AuthProvider';
 import LogoutPage from './content/LogoutPage';
 import EditSettingsPage from './content/EditSettingsPage';
 import EditUserProfilePage from './content/EditUserProfilePage';
@@ -22,49 +22,30 @@ import UserProfilePage from './content/UserProfilePage';
 import MatchesPage from './content/MatchesPage/MatchesPage';
 import MessagesPage from './content/MessagesPage';
 import RegisterPage from './content/RegisterPage';
-import axiosInstance, { getAuthHeader } from './axiosInstance';
 
 function App() {
   const { addToast, toastContainer } = useToast();
   const socket = useSocket();
-  const {
-    token: [token],
-  } = useAuth();
 
   useEffect(() => {
-    socket.on('connect', () => {
-      addToast({
-        variant: 'success',
-        content: 'Connected to server',
-      });
-    });
-    socket.on('disconnect', () => {
-      addToast({
-        content: 'Disconnected from server',
-        variant: 'danger',
-      });
-    });
-
     socket.on(
       ClientboundEvents.ReceiveMessage,
-      ({ fromUserId, content }: ClientboundMessagePayload) => {
-        const profile = axiosInstance.get<Profile>(
-          `/users/${fromUserId}/profile`,
-          { headers: getAuthHeader(token) }
-        );
+      ({ content, name, avatarSrc }: ClientboundMessagePayload) => {
+        addToast({
+          title: name,
+          content,
+          imageSrc: avatarSrc,
+        });
+      }
+    );
 
-        Promise.all([profile]).then(
-          ([
-            {
-              data: { name },
-            },
-          ]) => {
-            addToast({
-              title: name,
-              content,
-            });
-          }
-        );
+    socket.on(
+      ClientboundEvents.Matched,
+      ({ name }: ClientboundMatchedPayload) => {
+        addToast({
+          variant: 'success',
+          content: `You matched with ${name}`,
+        });
       }
     );
   });

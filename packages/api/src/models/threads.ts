@@ -47,7 +47,12 @@ export async function createThread(
   data: CreateThreadBody
 ): Promise<IDResponse> {
   const id = genid();
-  await threadsCollection.insertOne({ ...data, ...getDateMetadata(), id });
+  await threadsCollection.insertOne({
+    ...data,
+    ...getDateMetadata(),
+    id,
+    latestMessage: '',
+  });
   return { id };
 }
 

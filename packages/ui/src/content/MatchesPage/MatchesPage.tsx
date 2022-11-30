@@ -4,18 +4,27 @@ import { ListGroup } from 'react-bootstrap';
 import { ChevronRight } from 'react-bootstrap-icons';
 import useAxios from 'axios-hooks';
 import {
+  ClientboundCreateThreadPayload,
+  ClientboundDeleteThreadPayload,
+  ClientboundEvents,
+  ClientboundMatchesPageMatchedPayload,
+  ClientboundMatchesPageUnmatchedPayload,
+  ClientboundUpdateThreadPayload,
   ID,
   IDResponse,
   Like,
   Media,
   PagedResponse,
   Profile,
+  ServerboundCreateThreadPayload,
+  ServerboundEvents,
   Thread,
 } from '@peddl/common';
 import Content from '../../components/Content';
 import './MatchesPage.css';
 import { useAuth } from '../../providers/AuthProvider';
 import axiosInstance, { baseURL, getAuthHeader } from '../../axiosInstance';
+import { useSocket } from '../../providers/WebsocketProvider';
 
 interface MatchInfo {
   name: string;
@@ -31,11 +40,13 @@ interface ThreadInfo {
 }
 
 interface MatchesRowProps {
-  matches: MatchInfo[];
+  matches: Record<string, MatchInfo>;
 }
 
 function MatchesRow({ matches }: MatchesRowProps) {
   const navigate = useNavigate();
+  const socket = useSocket();
+  const matchValues = Object.values(matches);
 
   const {
     userId: [loggedInUserId],
@@ -50,6 +61,13 @@ function MatchesRow({ matches }: MatchesRowProps) {
       },
       { headers: getAuthHeader(token) }
     );
+
+    const socketPayload: ServerboundCreateThreadPayload = {
+      threadId: data.id,
+      users: [userId, loggedInUserId ?? ''],
+    };
+
+    socket.emit(ServerboundEvents.CreateThread, socketPayload);
 
     if (data) {
       return data.id;
@@ -68,13 +86,13 @@ function MatchesRow({ matches }: MatchesRowProps) {
 
   return (
     <div className="matchesContainer">
-      {matches.length === 0 ? (
+      {matchValues.length === 0 ? (
         <h3>No matches yet.</h3>
       ) : (
         <table>
           <thead>
             <tr>
-              {matches.map(({ avatarSrc, userId }) => (
+              {matchValues.map(({ avatarSrc, userId }) => (
                 <th onClick={avatarOnClick(userId)}>
                   <img
                     alt="profilePic"
@@ -87,7 +105,7 @@ function MatchesRow({ matches }: MatchesRowProps) {
           </thead>
           <tbody>
             <tr>
-              {matches.map(({ name }) => (
+              {matchValues.map(({ name }) => (
                 <td>{name}</td>
               ))}
             </tr>
@@ -99,15 +117,17 @@ function MatchesRow({ matches }: MatchesRowProps) {
 }
 
 interface ThreadsListProps {
-  threads: ThreadInfo[];
+  threads: Record<string, ThreadInfo>;
 }
 
 function ThreadsList({ threads }: ThreadsListProps) {
-  return threads.length === 0 ? (
+  const threadValues = Object.values(threads);
+
+  return threadValues.length === 0 ? (
     <h3>No messages yet.</h3>
   ) : (
     <ListGroup>
-      {threads.map(({ name, avatarSrc, threadId, lastMessage }) => {
+      {threadValues.map(({ name, avatarSrc, threadId, lastMessage }) => {
         return (
           <Link style={{ textDecoration: 'none' }} to={`/matches/${threadId}`}>
             <ListGroup.Item className="d-flex justify-content-between align-items-start">
@@ -139,6 +159,7 @@ export default function MatchesPage() {
     userId: [loggedInUserId],
     token: [token],
   } = useAuth();
+  const socket = useSocket();
 
   const [{ data: matchesData, loading: matchesDataLoading }] = useAxios<
     PagedResponse<Like>
@@ -154,8 +175,8 @@ export default function MatchesPage() {
     headers: getAuthHeader(token),
   });
 
-  const [matches, setMatches] = useState<MatchInfo[]>([]);
-  const [threads, setThreads] = useState<ThreadInfo[]>([]);
+  const [matches, setMatches] = useState<Record<string, MatchInfo>>({});
+  const [threads, setThreads] = useState<Record<string, ThreadInfo>>({});
 
   useEffect(() => {
     if (threadsData) {
@@ -186,24 +207,28 @@ export default function MatchesPage() {
               ]);
             })
           ).then((promises) => {
-            const newMatches = promises.map(
-              ([
-                {
-                  data: { name, createdBy: userId },
-                },
-                {
-                  data: {
-                    items: [{ filePath: avatarSrc }],
+            const newMatches = promises.reduce(
+              (
+                acc,
+                [
+                  {
+                    data: { name, createdBy: userId },
                   },
-                },
-              ]) => {
-                const match: MatchInfo = {
+                  {
+                    data: {
+                      items: [{ filePath: avatarSrc }],
+                    },
+                  },
+                ]
+              ) => {
+                acc[userId] = {
                   name,
                   userId,
                   avatarSrc,
                 };
-                return match;
-              }
+                return acc;
+              },
+              {} as Record<string, MatchInfo>
             );
             setMatches(newMatches);
           });
@@ -211,11 +236,13 @@ export default function MatchesPage() {
       }
 
       Promise.all(
-        threadItems.map(({ users, id: threadId }) => {
+        threadItems.map(({ users, id: threadId, latestMessage }) => {
           const [userId] = users.filter((id) => id !== loggedInUserId);
           const getThreadId = async () => threadId; // this sucks lol
+          const getLatestMessage = async () => latestMessage; // this also sucks lol
           return Promise.all([
             getThreadId(),
+            getLatestMessage(),
             axiosInstance.get<Profile>(`/users/${userId}/profile`, {
               headers: getAuthHeader(token),
             }),
@@ -225,31 +252,128 @@ export default function MatchesPage() {
           ]);
         })
       ).then((promises) => {
-        const allThreads = promises.map(
-          ([
-            threadId,
-            {
-              data: { name },
-            },
-            {
-              data: {
-                items: [{ filePath: avatarSrc }],
+        const allThreads = promises.reduce(
+          (
+            acc,
+            [
+              threadId,
+              latestMessage,
+              {
+                data: { name },
               },
-            },
-          ]) => {
-            const thread: ThreadInfo = {
+              {
+                data: {
+                  items: [{ filePath: avatarSrc }],
+                },
+              },
+            ]
+          ) => {
+            acc[threadId] = {
               name,
               avatarSrc,
               threadId,
-              lastMessage: 'lorem ipsum',
+              lastMessage: latestMessage,
             };
-            return thread;
-          }
+            return acc;
+          },
+          {} as Record<string, ThreadInfo>
         );
         setThreads(allThreads);
       });
     }
   }, [loggedInUserId, matchesData, threadsData, token]);
+
+  useEffect(() => {
+    socket.on(
+      ClientboundEvents.MatchesPageMatched,
+      ({ userId, name, avatarSrc }: ClientboundMatchesPageMatchedPayload) => {
+        const newMatchesInfo = {
+          ...matches,
+          [userId]: { userId, name, avatarSrc },
+        };
+        setMatches(newMatchesInfo);
+      }
+    );
+    socket.on(
+      ClientboundEvents.MatchesPageUnmatched,
+      ({ userId }: ClientboundMatchesPageUnmatchedPayload) => {
+        const newMatchesInfo = { ...matches };
+        delete newMatchesInfo[userId];
+        setMatches(newMatchesInfo);
+      }
+    );
+    socket.on(
+      ClientboundEvents.CreateThread,
+      async ({ threadId, users }: ClientboundCreateThreadPayload) => {
+        const [userId] = users.filter((id) => id !== loggedInUserId);
+
+        const {
+          data: { latestMessage },
+        } = await axiosInstance.get<Thread>(`/threads/${threadId}`, {
+          headers: getAuthHeader(token),
+        });
+
+        const {
+          data: { name },
+        } = await axiosInstance.get<Profile>(`/users/${userId}/profile`, {
+          headers: getAuthHeader(token),
+        });
+
+        const {
+          data: {
+            items: [{ filePath: avatarSrc }],
+          },
+        } = await axiosInstance.get<PagedResponse<Media>>(
+          `/users/${userId}/media`,
+          {
+            headers: getAuthHeader(token),
+          }
+        );
+
+        const newThreadInfo = {
+          ...threads,
+          [threadId]: {
+            threadId,
+            avatarSrc,
+            lastMessage: latestMessage,
+            name,
+          },
+        };
+
+        setThreads(newThreadInfo);
+
+        // remove our users from our matches
+        const newMatches = { ...matches };
+        delete newMatches[userId];
+        setMatches(newMatches);
+      }
+    );
+
+    socket.on(
+      ClientboundEvents.UpdateThread,
+      ({ threadId, latestMessage }: ClientboundUpdateThreadPayload) => {
+        const newThreadInfo = { ...threads };
+        newThreadInfo[threadId].lastMessage = latestMessage;
+        setThreads(newThreadInfo);
+      }
+    );
+
+    socket.on(
+      ClientboundEvents.DeleteThread,
+      ({ threadId }: ClientboundDeleteThreadPayload) => {
+        const newThreadInfo = { ...threads };
+        delete newThreadInfo[threadId];
+        setThreads(newThreadInfo);
+      }
+    );
+
+    return () => {
+      socket.off(ClientboundEvents.CreateThread);
+      socket.off(ClientboundEvents.UpdateThread);
+      socket.off(ClientboundEvents.DeleteThread);
+      socket.off(ClientboundEvents.MatchesPageMatched);
+    };
+  });
 
   return (
     <Content title="Matches">

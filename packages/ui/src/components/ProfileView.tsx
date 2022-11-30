@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import useAxios from 'axios-hooks';
-import { Like, Media, PagedResponse, Profile } from '@peddl/common';
+import {
+  Like,
+  Media,
+  PagedResponse,
+  Profile,
+  ServerboundCreateLikePayload,
+  ServerboundDeleteLikePayload,
+  ServerboundEvents,
+} from '@peddl/common';
 import { Button } from 'react-bootstrap';
 import { Heart, HeartFill } from 'react-bootstrap-icons';
 import { useAuth } from '../providers/AuthProvider';
 import axiosInstance, { baseURL, getAuthHeader } from '../axiosInstance';
 import ProfileDetails from './ProfileDetails/ProfileDetails';
+import { useSocket } from '../providers/WebsocketProvider';
 
 interface ViewProfileProps {
   userId: string;
@@ -36,16 +45,18 @@ export default function ProfileView({ userId }: ViewProfileProps) {
     token: [token],
     userId: [loggedInUserId],
   } = useAuth();
+  const socket = useSocket();
 
   const [{ data: profile, loading: profileLoading }] = useAxios<Profile>({
     url: `/users/${userId}/profile`,
     headers: getAuthHeader(token),
   });
 
-  const [{ data: like, loading: likeLoading }] = useAxios<Like>({
-    url: `/users/${loggedInUserId}/likes/${userId}`,
-    headers: getAuthHeader(token),
-  });
+  const [{ data: like, loading: likeLoading, error: likeError }] =
+    useAxios<Like>({
+      url: `/users/${loggedInUserId}/likes/${userId}`,
+      headers: getAuthHeader(token),
+    });
 
   const [{ data: media, loading: mediaLoading }] = useAxios<
     PagedResponse<Media>
@@ -58,8 +69,10 @@ export default function ProfileView({ userId }: ViewProfileProps) {
   const [liked, setLiked] = useState(false);
 
   useEffect(() => {
-    if (like) {
-      setLiked(!!like);
+    if (like && !likeError) {
+      setLiked(true);
+    } else if (!like || likeError) {
+      setLiked(false);
     }
     if (media) {
       const { items } = media;
@@ -71,13 +84,18 @@ export default function ProfileView({ userId }: ViewProfileProps) {
         })
       );
     }
-  }, [like, media]);
+  }, [like, media, likeError]);
 
   const onLikeClick = async () => {
     if (liked) {
       await axiosInstance.delete(`/users/${loggedInUserId}/likes/${userId}`, {
         headers: getAuthHeader(token),
       });
+      const socketData: ServerboundDeleteLikePayload = {
+        userId: loggedInUserId ?? '',
+        likedUserId: userId,
+      };
+      socket.emit(ServerboundEvents.DeleteLike, socketData);
       setLiked(false);
     } else {
       await axiosInstance.post(
@@ -87,6 +105,11 @@ export default function ProfileView({ userId }: ViewProfileProps) {
           headers: getAuthHeader(token),
         }
       );
+      const socketData: ServerboundCreateLikePayload = {
+        userId: loggedInUserId ?? '',
+        likedUserId: userId,
+      };
+      socket.emit(ServerboundEvents.CreateLike, socketData);
       setLiked(true);
     }
   };

@@ -9,17 +9,22 @@ import {
   Form,
   InputGroup,
 } from 'react-bootstrap';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import useAxios from 'axios-hooks';
 import {
+  ClientboundDeleteThreadPayload,
+  ClientboundEvents,
   ClientboundMessagePayload,
   IDResponse,
   Media,
   Message,
   PagedResponse,
   Profile,
+  ServerboundDeleteLikePayload,
+  ServerboundDeleteThreadPayload,
   ServerboundEvents,
   ServerboundMessagePayload,
+  ServerboundUpdateThreadPayload,
   Thread,
 } from '@peddl/common';
 import { useAuth } from '../providers/AuthProvider';
@@ -43,7 +48,10 @@ function Messages({ messages }: MessagesProps) {
 
   return (
     <Container>
-      <div className="d-flex flex-column align-items-start">
+      <div
+        className="d-flex flex-column align-items-start"
+        style={{ marginBottom: '100px' }}
+      >
         {messages.map(({ id, content, sentBy }) => {
           const loggedInUserMessage = sentBy === loggedInUserId;
 
@@ -57,7 +65,7 @@ function Messages({ messages }: MessagesProps) {
                 <div
                   className="p-2"
                   style={{
-                    backgroundColor: '#DEE2E6',
+                    backgroundColor: '#0D6EFD',
                     borderRadius: '4px',
                     maxWidth: '326px',
                   }}
@@ -67,6 +75,7 @@ function Messages({ messages }: MessagesProps) {
                     style={{
                       overflowWrap: 'break-word',
                       maxInlineSize: '310px',
+                      color: 'white',
                     }}
                   >
                     {content}
@@ -80,7 +89,8 @@ function Messages({ messages }: MessagesProps) {
               <div
                 className="p-2"
                 style={{
-                  backgroundColor: '#0D6EFD',
+                  backgroundColor: '#DEE2E6',
+
                   borderRadius: '4px',
                   maxWidth: '326px',
                 }}
@@ -90,7 +100,6 @@ function Messages({ messages }: MessagesProps) {
                   style={{
                     overflowWrap: 'break-word',
                     maxInlineSize: '310px',
-                    color: 'white',
                   }}
                 >
                   {content}
@@ -107,9 +116,46 @@ function Messages({ messages }: MessagesProps) {
 interface MessagesHeaderProps {
   avatarSrc: string;
   name: string;
+  threadId: string;
+  userId: string;
 }
 
-function MessagesHeader({ avatarSrc, name }: MessagesHeaderProps) {
+function MessagesHeader({
+  avatarSrc,
+  name,
+  threadId,
+  userId,
+}: MessagesHeaderProps) {
+  const {
+    token: [token],
+    userId: [loggedInUserId],
+  } = useAuth();
+  const navigate = useNavigate();
+  const socket = useSocket();
+
+  const unmatchUser = async () => {
+    await axiosInstance.delete(`/threads/${threadId}`, {
+      headers: getAuthHeader(token),
+    });
+
+    await axiosInstance.delete(`/users/${loggedInUserId}/likes/${userId}`, {
+      headers: getAuthHeader(token),
+    });
+
+    const socketPayload: ServerboundDeleteThreadPayload = {
+      threadId,
+      users: [userId],
+    };
+
+    socket.emit(ServerboundEvents.DeleteThread, socketPayload);
+    socket.emit(ServerboundEvents.DeleteLike, {
+      userId: loggedInUserId,
+      likedUserId: userId,
+    } as ServerboundDeleteLikePayload);
+
+    navigate('/matches');
+  };
+
   return (
     <div
       className="mb-3"
@@ -119,6 +165,7 @@ function MessagesHeader({ avatarSrc, name }: MessagesHeaderProps) {
         backgroundColor: 'white',
         borderBottom: 'solid',
         borderBottomColor: 'lightgrey',
+        borderWidth: '1px',
       }}
     >
       <Container>
@@ -139,7 +186,7 @@ function MessagesHeader({ avatarSrc, name }: MessagesHeaderProps) {
             title="Menu"
             variant="secondary"
           >
-            <Dropdown.Item href="#/action-1">Unmatch</Dropdown.Item>
+            <Dropdown.Item onClick={unmatchUser}>Unmatch</Dropdown.Item>
           </DropdownButton>
         </div>
 
@@ -159,6 +206,7 @@ function MessagesHeader({ avatarSrc, name }: MessagesHeaderProps) {
 export default function MessagesPage() {
   const { threadId } = useParams();
   const socket = useSocket();
+  const navigate = useNavigate();
 
   const {
     userId: [loggedInUserId],
@@ -181,6 +229,7 @@ export default function MessagesPage() {
   const [threadName, setThreadName] = useState('');
   const [threadIconSrc, setThreadIconSrc] = useState('');
   const [messageInputContent, setMessageInputContent] = useState('');
+  const [toUserId, setToUserId] = useState('');
 
   const endMessagesDiv = createRef<HTMLDivElement>();
 
@@ -202,14 +251,25 @@ export default function MessagesPage() {
       }
     );
 
+    socket.on(
+      ClientboundEvents.DeleteThread,
+      ({ threadId: payloadThreadId }: ClientboundDeleteThreadPayload) => {
+        if (payloadThreadId === threadId) {
+          navigate('/matches');
+        }
+      }
+    );
+
     return () => {
       socket.off(`/threads/${threadId}`);
+      socket.off(ClientboundEvents.DeleteThread);
     };
   });
 
   useEffect(() => {
     if (threadData) {
       const [userId] = threadData.users.filter((id) => id !== loggedInUserId);
+      setToUserId(userId);
       Promise.all([
         axiosInstance.get<Profile>(`/users/${userId}/profile`, {
           headers: getAuthHeader(token),
@@ -253,23 +313,30 @@ export default function MessagesPage() {
   }, [messagesData]);
 
   useEffect(() => {
-    endMessagesDiv.current?.scrollIntoView({ behavior: 'smooth' });
+    endMessagesDiv.current?.scrollIntoView();
   }, [endMessagesDiv, messages]);
 
   return threadDataLoading || messagesDataLoading ? (
     <h1>Loading...</h1>
   ) : (
     <div>
-      <MessagesHeader avatarSrc={threadIconSrc} name={threadName} />
+      <MessagesHeader
+        avatarSrc={threadIconSrc}
+        name={threadName}
+        threadId={threadId ?? ''}
+        userId={toUserId}
+      />
       <Messages messages={messages} />
       <div ref={endMessagesDiv} />
-      <div
+      <footer
         style={{
-          position: 'sticky',
+          position: 'fixed',
+          width: '100%',
           bottom: '0px',
           backgroundColor: 'white',
           borderTop: 'solid',
           borderTopColor: 'lightgrey',
+          borderWidth: '1px',
         }}
       >
         <Container>
@@ -297,15 +364,39 @@ export default function MessagesPage() {
                       ]);
                       setMessageInputContent('');
 
+                      const toUserIds =
+                        threadData?.users.filter(
+                          (userId) => userId !== loggedInUserId
+                        ) ?? [];
+
                       const eventData: ServerboundMessagePayload = {
                         messageId: id,
                         userId: loggedInUserId ?? '',
                         threadId: threadId ?? '',
-                        toUserIds: threadData?.users ?? [],
+                        toUserIds,
                         content: messageInputContent,
                       };
 
                       socket.emit(ServerboundEvents.SendMessage, eventData);
+
+                      axiosInstance.put(
+                        `/threads/${threadId}/`,
+                        {
+                          latestMessage: messageInputContent,
+                        },
+                        { headers: getAuthHeader(token) }
+                      );
+
+                      const updateThreadData: ServerboundUpdateThreadPayload = {
+                        threadId: threadId ?? '',
+                        latestMessage: messageInputContent,
+                        users: threadData?.users ?? [],
+                      };
+
+                      socket.emit(
+                        ServerboundEvents.UpdateThread,
+                        updateThreadData
+                      );
                     });
                 }}
               >
@@ -324,7 +415,7 @@ export default function MessagesPage() {
             </div>
           </div>
         </Container>
-      </div>
+      </footer>
     </div>
   );
 }

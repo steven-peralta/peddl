@@ -1,13 +1,21 @@
 export enum ServerboundEvents {
-  Login = 'login',
-  Logout = 'logout',
-  Like = 'like',
-  Unlike = 'unlike',
-  SendMessage = 'sendMessage',
+  Login = 'serverBoundLogin',
+  Logout = 'serverBoundLogout',
+  CreateLike = 'serverBoundCreateLike',
+  DeleteLike = 'serverBoundDeleteLike',
+  SendMessage = 'serverBoundSendMessage',
+  CreateThread = 'serverBoundCreateThread',
+  UpdateThread = 'serverBoundUpdateThread',
+  DeleteThread = 'serverBoundDeleteThread',
 }
 
 export enum ClientboundEvents {
-  Matched = 'matched',
-  Unmatched = 'unmatched',
-  ReceiveMessage = 'receiveMessage',
+  Matched = 'clientBoundMatched',
+  Unmatched = 'clientBoundUnmatched',
+  MatchesPageMatched = 'clientBoundMatchesPageMatched',
+  MatchesPageUnmatched = 'clientBoundMatchesPageUnmatched',
+  ReceiveMessage = 'clientBoundReceiveMessage',
+  CreateThread = 'clientBoundCreateThread',
+  UpdateThread = 'clientBoundUpdateThread',
+  DeleteThread = 'clientBoundDeleteThread',
 }

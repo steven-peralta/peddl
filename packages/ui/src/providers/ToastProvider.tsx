@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { Toast, ToastContainer } from 'react-bootstrap';
 import { Variant } from 'react-bootstrap/types';
+import { baseURL } from '../axiosInstance';
 
 export type Toast = {
   title?: string;
@@ -9,6 +10,8 @@ export type Toast = {
   autohide?: boolean;
   delay?: number;
   content: string;
+  show?: boolean;
+  imageSrc?: string;
 };
 
 export type ToastContext = {
@@ -24,10 +27,14 @@ export type ToastProviderProps = {
 };
 
 export function ToastProvider({ children }: ToastProviderProps) {
-  const [toasts, setToasts] = useState<Toast[]>([]);
+  const [toasts, setToasts] = useState<Record<string, Toast>>({});
 
   const addToast = (toast: Toast) => {
-    setToasts([toast, ...toasts]);
+    const newToasts = {
+      [Date.now()]: toast,
+      ...toasts,
+    };
+    setToasts(newToasts);
   };
 
   const toastContainer = (
@@ -36,8 +43,9 @@ export function ToastProvider({ children }: ToastProviderProps) {
       position="top-center"
       style={{ zIndex: 1035 }}
     >
-      {toasts.map(
-        (
+      {Object.entries(toasts).map(
+        ([
+          timestamp,
           {
             title,
             content,
@@ -45,17 +53,33 @@ export function ToastProvider({ children }: ToastProviderProps) {
             autohide = true,
             delay = 3000,
             variant = 'light',
+            show = true,
+            imageSrc,
           },
-          i
-        ) => (
+        ]) => (
           <Toast
+            key={timestamp}
             autohide={autohide}
             bg={variant}
             delay={delay}
-            onClose={() => setToasts(toasts.filter((_, idx) => idx !== i))}
+            onClose={() => {
+              const newToasts = { ...toasts };
+              newToasts[timestamp].show = false;
+              setToasts(newToasts);
+            }}
+            show={show}
           >
             {title && (
               <Toast.Header closeButton={dismissible}>
+                {imageSrc && (
+                  <img
+                    alt=""
+                    className="rounded me-2"
+                    height={20}
+                    src={`${baseURL}${imageSrc}`}
+                    width={20}
+                  />
+                )}
                 <strong className="me-auto">{title}</strong>
               </Toast.Header>
             )}

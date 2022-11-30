@@ -114,7 +114,8 @@ export async function deleteProfile(userId: string) {
 
 export async function getProfiles(
   searchPreferences: SearchPreferences,
-  { skip = 0, limit = 0 }: Pagination
+  { skip = 0, limit = 0 }: Pagination,
+  userId: string
 ): Promise<PagedResponse<Document>> {
   const {
     genders = [],
@@ -139,6 +140,7 @@ export async function getProfiles(
     ...genresFilter,
     ...talentsFilter,
     ...locationsFilter,
+    createdBy: { $nin: [userId] },
   };
   const totalCount = await profilesCollection.countDocuments(filter);
   const items = await profilesCollection
