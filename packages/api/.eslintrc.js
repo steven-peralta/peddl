@@ -15,6 +15,7 @@ module.exports = {
   },
   rules: {
     'dot-notation': 'off',
+    'no-underscore-dangle': 'off',
     '@typescript-eslint/no-unused-vars': [
       'error',
       {

@@ -1,33 +1,73 @@
-import { Profile, Settings, User } from '../models';
-import { ValidationResult } from '../util';
+import { ID } from '../models';
 
-type OmitModelProps<T> = Omit<T, 'id' | 'createdAt'>;
-type OmitCreatedBy<T> = Omit<OmitModelProps<T>, 'createdBy'>;
+export type PagedResponse<T> = {
+  items: T[];
+  totalCount: number;
+};
+
+export type Pagination = {
+  skip?: number;
+  limit?: number;
+};
+
+export type PaginationQueryParams = {
+  skip?: string;
+  limit?: string;
+};
+
+export type LoginBody = { email: string; password: string };
+
+export type SearchPreferencesFormData = {
+  ageRange?: [number, number];
+  genders?: string[];
+  genres?: string[];
+  talents?: string[];
+  locations?: string[];
+};
+
+export type CreateUserBody = {
+  email: string;
+  password: string;
+  searchPreferences: SearchPreferencesFormData;
+  profile: CreateProfileBody;
+};
+export type EditUserBody = Partial<Omit<CreateUserBody, 'profile'>>;
+
+export type CreateProfileBody = {
+  name: string;
+  birthday: string;
+  location: string;
+  gender: string;
+  genres?: string[];
+  talents?: string[];
+  bio?: string;
+  spotifyLink?: string;
+  soundcloudUsername?: string;
+  bandcampUsername?: string;
+};
+export type EditProfileBody = Partial<CreateProfileBody>;
+
+export type Token = { token: string; userId: string };
+export type ErrorResponse = { error: string };
 
 export type IDResponse = { id: string };
 
-export type PostUserRequest = Omit<OmitModelProps<User>, 'salt'>;
-export type PostUserResponse = IDResponse;
+export type SearchPreferencesQueryParams = {
+  ageRange?: string;
+  genders?: string;
+  genres?: string;
+  talents?: string;
+  locations?: string;
+};
 
-export type PostProfileRequest = Omit<
-  OmitModelProps<Profile>,
-  'createdBy' | 'birthday'
-> & { birthday: string };
-export type PostProfileResponse = IDResponse;
+export type CreateThreadBody = { users: ID[] };
+export type EditThreadBody = Partial<
+  CreateThreadBody & { latestMessage: string }
+>;
+export type CreateMessageBody = { content: string };
+export type EditMessageBody = Partial<CreateMessageBody>;
 
-export type PostSettingsRequest = OmitCreatedBy<Settings>;
-export type PostSettingsResponse = IDResponse;
-
-export type PostAuthRequest = PostUserRequest;
-export type PostAuthResponse = { userId: string; token: string };
-
-export type GetProfilesRequest = PostSettingsRequest;
-
-export type GetSettingsRequest = OmitCreatedBy<Settings>;
-
-export type ErrorResponse = { error: string };
-export type FailedValidationResponse = { errors: ValidationResult[] };
-export type PagedResponse<T> = {
-  items: T[];
-  count: number;
+export type TokenData = {
+  userId: string;
+  time: Date;
 };

@@ -1,13 +1,4 @@
-import {
-  Gender,
-  Genders,
-  Genre,
-  Genres,
-  Location,
-  Locations,
-  Talent,
-  Talents,
-} from '../models';
+import { Gender, Genre, Location, Talent } from '../models';
 
 const bioMaxLength = 240;
 const textInputMaxLength = 1024;
@@ -20,16 +11,47 @@ const spotifyLinkRegex = /^https:\/\/open.spotify.com\/artist\/[A-z0-9?=-]+$/g;
 const soundcloudLinkRegex = /^([a-z0-9-_])\w+$/g;
 const bandcampLinkRegex = /^([a-z0-9-_])\w+$/g;
 
-export type ValidationResult = {
-  isValid: boolean;
-  reason?: string;
-};
+export type ValidationSuccess = { isValid: true };
+export type ValidationFailure = { isValid: false; reason: string };
+export type ValidationResult = ValidationSuccess | ValidationFailure;
+export type ValidationResults<T> = Partial<Record<keyof T, ValidationResult>>;
+
+export const isValidationFailure = (
+  validation: ValidationResult
+): validation is ValidationFailure => !validation.isValid;
+
+export const isValidationSuccess = (
+  validation: ValidationResult
+): validation is ValidationSuccess => validation.isValid;
 
 export type ValidatorFunc<T> = (value: T) => ValidationResult;
 
-export const validateEmail: ValidatorFunc<string | undefined> = (
-  email
-): ValidationResult => {
+type Entries<T> = {
+  [K in keyof T]: [K, T[K]];
+}[keyof T][];
+
+const getEntries = <T extends Record<string, unknown>>(obj: T) =>
+  Object.entries(obj) as Entries<T>;
+
+export function validateForm<T extends Record<string, unknown>>(
+  model: T,
+  validators: { [K in keyof T]: ValidatorFunc<T[K]> },
+  skipNull = false
+): ValidationResults<T> {
+  return getEntries(validators).reduce((acc, [key, validator]) => {
+    const value = model[key];
+    if (!value && skipNull) return acc;
+
+    acc[key] = validator(model[key]);
+
+    return acc;
+  }, {} as ValidationResults<T>);
+}
+
+const makeValidator = <T>(validator: ValidatorFunc<T>): ValidatorFunc<T> =>
+  validator;
+
+export const validateEmail = makeValidator((email?: string) => {
   if (!email) {
     return { isValid: false, reason: 'Your email is required.' };
   }
@@ -48,11 +70,9 @@ export const validateEmail: ValidatorFunc<string | undefined> = (
   return {
     isValid: true,
   };
-};
+});
 
-export const validatePassword: ValidatorFunc<string | undefined> = (
-  password
-): ValidationResult => {
+export const validatePassword = makeValidator((password?: string) => {
   if (!password || password === '') {
     return { isValid: false, reason: 'Your password is required.' };
   }
@@ -72,11 +92,11 @@ export const validatePassword: ValidatorFunc<string | undefined> = (
   return {
     isValid: true,
   };
-};
+});
 
 export const validateConfirmPassword = (
-  password: string | undefined,
-  confirmPassword: string | undefined
+  password?: string,
+  confirmPassword?: string
 ): ValidationResult => {
   if (password !== confirmPassword) {
     return {
@@ -89,9 +109,7 @@ export const validateConfirmPassword = (
   };
 };
 
-export const validateBirthday: ValidatorFunc<Date | string | null> = (
-  d
-): ValidationResult => {
+export const validateBirthday = makeValidator((d?: Date | string | null) => {
   if (d) {
     let date: Date;
     if (typeof d === 'string') {
@@ -117,11 +135,9 @@ export const validateBirthday: ValidatorFunc<Date | string | null> = (
   }
 
   return { isValid: true };
-};
+});
 
-export const validateName: ValidatorFunc<string | undefined> = (
-  name
-): ValidationResult => {
+export const validateName = makeValidator((name?: string) => {
   if (!name) {
     return { isValid: false, reason: 'Your name is required.' };
   }
@@ -140,16 +156,14 @@ export const validateName: ValidatorFunc<string | undefined> = (
   return {
     isValid: true,
   };
-};
+});
 
-export const validateLocation: ValidatorFunc<string | undefined> = (
-  location
-): ValidationResult => {
+export const validateLocation = makeValidator((location?: string) => {
   if (!location) {
     return { isValid: false, reason: 'Your location is required.' };
   }
 
-  if (!Locations.includes(location as Location)) {
+  if (!Object.keys(Location).includes(location)) {
     return {
       isValid: false,
       reason: `${location} is not a valid location.`,
@@ -159,25 +173,49 @@ export const validateLocation: ValidatorFunc<string | undefined> = (
   return {
     isValid: true,
   };
-};
+});
 
-export const validateGender: ValidatorFunc<string | undefined> = (
-  gender
-): ValidationResult => {
+export const validateLocations = makeValidator((locations?: string[]) => {
+  if (locations) {
+    if (
+      locations.some((location) => !Object.keys(Location).includes(location))
+    ) {
+      return {
+        isValid: false,
+        reason: 'One of the specified locations is invalid.',
+      };
+    }
+  }
+
+  return { isValid: true };
+});
+
+export const validateGender = makeValidator((gender?: string) => {
   if (gender) {
-    if (!Genders.includes(gender as Gender)) {
+    if (!Object.keys(Gender).includes(gender)) {
       return { isValid: false, reason: `${gender} is not a valid gender.` };
     }
   }
 
   return { isValid: true };
-};
+});
 
-export const validateGenres: ValidatorFunc<string[]> = (
-  genres
-): ValidationResult => {
+export const validateGenders = makeValidator((genders?: string[]) => {
+  if (genders) {
+    if (genders.some((gender) => !Object.keys(Gender).includes(gender))) {
+      return {
+        isValid: false,
+        reason: 'One of the specified genders is invalid.',
+      };
+    }
+  }
+
+  return { isValid: true };
+});
+
+export const validateGenres = makeValidator((genres?: string[]) => {
   if (genres) {
-    if (genres.some((genre) => !Genres.includes(genre as Genre))) {
+    if (genres.some((genre) => !Object.keys(Genre).includes(genre))) {
       return {
         isValid: false,
         reason: `One of the specified genres is invalid.`,
@@ -186,13 +224,11 @@ export const validateGenres: ValidatorFunc<string[]> = (
   }
 
   return { isValid: true };
-};
+});
 
-export const validateTalents: ValidatorFunc<string[]> = (
-  talents
-): ValidationResult => {
+export const validateTalents = makeValidator((talents?: string[]) => {
   if (talents) {
-    if (talents.some((talent) => !Talents.includes(talent as Talent))) {
+    if (talents.some((talent) => !Object.keys(Talent).includes(talent))) {
       return {
         isValid: false,
         reason: 'One of the specified talents is invalid.',
@@ -201,9 +237,9 @@ export const validateTalents: ValidatorFunc<string[]> = (
   }
 
   return { isValid: true };
-};
+});
 
-export const validateBio: ValidatorFunc<string | undefined> = (bio) => {
+export const validateBio = makeValidator((bio?: string) => {
   if (bio) {
     if (bio.length > bioMaxLength) {
       return { isValid: false, reason: 'Your bio is too long.' };
@@ -211,11 +247,9 @@ export const validateBio: ValidatorFunc<string | undefined> = (bio) => {
   }
 
   return { isValid: true };
-};
+});
 
-export const validateSpotifyLink: ValidatorFunc<string | undefined> = (
-  link
-) => {
+export const validateSpotifyLink = makeValidator((link?: string) => {
   if (link) {
     if (!link.match(spotifyLinkRegex)) {
       return { isValid: false, reason: 'Your Spotify artist link is invalid.' };
@@ -223,11 +257,9 @@ export const validateSpotifyLink: ValidatorFunc<string | undefined> = (
   }
 
   return { isValid: true };
-};
+});
 
-export const validateSoundcloudUsername: ValidatorFunc<string | undefined> = (
-  link
-) => {
+export const validateSoundcloudUsername = makeValidator((link?: string) => {
   if (link) {
     if (!link.match(soundcloudLinkRegex)) {
       return {
@@ -237,11 +269,9 @@ export const validateSoundcloudUsername: ValidatorFunc<string | undefined> = (
     }
   }
   return { isValid: true };
-};
+});
 
-export const validateBandcampUsername: ValidatorFunc<string | undefined> = (
-  link
-) => {
+export const validateBandcampUsername = makeValidator((link?: string) => {
   if (link) {
     if (!link.match(bandcampLinkRegex)) {
       return {
@@ -252,4 +282,24 @@ export const validateBandcampUsername: ValidatorFunc<string | undefined> = (
   }
 
   return { isValid: true };
-};
+});
+
+export const validateAgeRange = makeValidator((ageRange?: number[]) => {
+  if (ageRange) {
+    if (ageRange.length !== 2) {
+      return {
+        isValid: false,
+        reason: 'Age range must consist of exactly two numbers',
+      };
+    }
+
+    if (ageRange.some((age) => age > 100 || age < 0)) {
+      return {
+        isValid: false,
+        reason: 'Ages cannot be over 100 or less than 0',
+      };
+    }
+  }
+
+  return { isValid: true };
+});

@@ -1,12 +1,7 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { Toast, ToastContainer } from 'react-bootstrap';
 import { Variant } from 'react-bootstrap/types';
+import { baseURL } from '../axiosInstance';
 
 export type Toast = {
   title?: string;
@@ -15,6 +10,8 @@ export type Toast = {
   autohide?: boolean;
   delay?: number;
   content: string;
+  show?: boolean;
+  imageSrc?: string;
 };
 
 export type ToastContext = {
@@ -30,61 +27,75 @@ export type ToastProviderProps = {
 };
 
 export function ToastProvider({ children }: ToastProviderProps) {
-  const [toasts, setToasts] = useState<Toast[]>([]);
+  const [toasts, setToasts] = useState<Record<string, Toast>>({});
 
-  const addToast = useCallback(
-    (toast: Toast) => {
-      setToasts([toast, ...toasts]);
-    },
-    [toasts]
-  );
+  const addToast = (toast: Toast) => {
+    const newToasts = {
+      [Date.now()]: toast,
+      ...toasts,
+    };
+    setToasts(newToasts);
+  };
 
-  const toastContainer = useMemo(
-    () => (
-      <ToastContainer
-        className="mt-5 p-3 position-fixed fixed-top"
-        position="top-center"
-        style={{ zIndex: 1035 }}
-      >
-        {toasts.map(
-          (
-            {
-              title,
-              content,
-              dismissible = true,
-              autohide = true,
-              delay = 3000,
-              variant = 'light',
-            },
-            i
-          ) => (
-            <Toast
-              autohide={autohide}
-              bg={variant}
-              delay={delay}
-              onClose={() => setToasts(toasts.filter((_, idx) => idx !== i))}
+  const toastContainer = (
+    <ToastContainer
+      className="mt-5 p-3 position-fixed fixed-top"
+      position="top-center"
+      style={{ zIndex: 1035 }}
+    >
+      {Object.entries(toasts).map(
+        ([
+          timestamp,
+          {
+            title,
+            content,
+            dismissible = true,
+            autohide = true,
+            delay = 3000,
+            variant = 'light',
+            show = true,
+            imageSrc,
+          },
+        ]) => (
+          <Toast
+            key={timestamp}
+            autohide={autohide}
+            bg={variant}
+            delay={delay}
+            onClose={() => {
+              const newToasts = { ...toasts };
+              newToasts[timestamp].show = false;
+              setToasts(newToasts);
+            }}
+            show={show}
+          >
+            {title && (
+              <Toast.Header closeButton={dismissible}>
+                {imageSrc && (
+                  <img
+                    alt=""
+                    className="rounded me-2"
+                    height={20}
+                    src={`${baseURL}${imageSrc}`}
+                    width={20}
+                  />
+                )}
+                <strong className="me-auto">{title}</strong>
+              </Toast.Header>
+            )}
+            <Toast.Body
+              className={variant === 'dark' ? 'text-white' : 'text-black'}
             >
-              {title && (
-                <Toast.Header closeButton={dismissible}>
-                  <strong className="me-auto">{title}</strong>
-                </Toast.Header>
-              )}
-              <Toast.Body
-                className={variant === 'dark' ? 'text-white' : 'text-black'}
-              >
-                {content}
-              </Toast.Body>
-            </Toast>
-          )
-        )}
-      </ToastContainer>
-    ),
-    [toasts]
+              {content}
+            </Toast.Body>
+          </Toast>
+        )
+      )}
+    </ToastContainer>
   );
 
-  const value = useMemo(() => {
-    return { addToast, toastContainer };
-  }, [addToast, toastContainer]);
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
+  const value = { addToast, toastContainer };
 
   return (
     <ToastContext.Provider value={value}>{children}</ToastContext.Provider>

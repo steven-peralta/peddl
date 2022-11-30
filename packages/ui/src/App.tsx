@@ -2,37 +2,52 @@ import React, { useEffect } from 'react';
 
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
-import PeddlNavbar from './components/MainNavbar/PeddlNavbar';
+import {
+  ClientboundEvents,
+  ClientboundMatchedPayload,
+  ClientboundMessagePayload,
+} from '@peddl/common';
+import PeddlNavbar from './components/PeddlNavbar/PeddlNavbar';
 
 import TitlePage from './content/TitlePage/TitlePage';
-import CreateAccountPage from './content/CreateAccount/CreateAccountPage';
 import LoginPage from './content/LoginPage/LoginPage';
-import ProfilesPage from './content/UserProfiles/ProfilesPage';
+import ProfilesPage from './content/ProfilesPage';
 import { RequireAuth } from './providers/AuthProvider';
 import LogoutPage from './content/LogoutPage';
-import ViewProfilePage from './content/ViewProfilePage';
-import EditSearchSettings from './content/EditSearchSettings/EditSearchSettings';
-import EditUserProfile from './content/EditUserProfile/EditUserProfile';
+import EditSettingsPage from './content/EditSettingsPage';
+import EditUserProfilePage from './content/EditUserProfilePage';
 import { useToast } from './providers/ToastProvider';
 import { useSocket } from './providers/WebsocketProvider';
-import Matches from './content/Matches/Matches';
-import Messages from './content/Messages/Messages';
+import UserProfilePage from './content/UserProfilePage';
+import MatchesPage from './content/MatchesPage/MatchesPage';
+import MessagesPage from './content/MessagesPage';
+import RegisterPage from './content/RegisterPage';
 
 function App() {
   const { addToast, toastContainer } = useToast();
   const socket = useSocket();
 
   useEffect(() => {
-    socket.on('connect', () => {
-      addToast({ variant: 'success', content: 'Connected to server' });
-    });
-    socket.on('disconnect', () => {
-      addToast({
-        content: 'Disconnected from server',
-        variant: 'danger',
-        autohide: false,
-      });
-    });
+    socket.on(
+      ClientboundEvents.ReceiveMessage,
+      ({ content, name, avatarSrc }: ClientboundMessagePayload) => {
+        addToast({
+          title: name,
+          content,
+          imageSrc: avatarSrc,
+        });
+      }
+    );
+
+    socket.on(
+      ClientboundEvents.Matched,
+      ({ name }: ClientboundMatchedPayload) => {
+        addToast({
+          variant: 'success',
+          content: `You matched with ${name}`,
+        });
+      }
+    );
   });
 
   return (
@@ -41,23 +56,24 @@ function App() {
       <PeddlNavbar />
       <Routes>
         <Route element={<TitlePage />} path="/" />
-        <Route element={<CreateAccountPage />} path="register" />
+        <Route element={<RegisterPage />} path="register" />
         <Route element={<LoginPage />} path="login" />
+
         <Route
           element={
             <RequireAuth>
-              <Messages />
+              <MatchesPage />
             </RequireAuth>
           }
-          path="messages"
+          path="matches"
         />
         <Route
           element={
             <RequireAuth>
-              <Matches />
+              <MessagesPage />
             </RequireAuth>
           }
-          path="matches"
+          path="matches/:threadId"
         />
         <Route
           element={
@@ -70,26 +86,26 @@ function App() {
         <Route
           element={
             <RequireAuth>
-              <ViewProfilePage />
+              <UserProfilePage />
             </RequireAuth>
           }
-          path="viewProfile"
+          path="user"
         />
         <Route
           element={
             <RequireAuth>
-              <EditSearchSettings />
+              <EditSettingsPage />
             </RequireAuth>
           }
-          path="searchSettings"
+          path="settings"
         />
         <Route
           element={
             <RequireAuth>
-              <EditUserProfile />
+              <EditUserProfilePage />
             </RequireAuth>
           }
-          path="userProfiles"
+          path="user/edit"
         />
         <Route
           element={

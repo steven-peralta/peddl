@@ -1,56 +1,31 @@
-import express, { Express, json } from 'express';
+import express, { json } from 'express';
 import cors from 'cors';
-import { MongoClient, Db } from 'mongodb';
 import morgan from 'morgan';
-import setupRoutes from './routes';
+import { mongoClient } from './db';
+import handleError from './error/handleError';
+import userRouter from './routers/userRouter';
+import authRouter from './routers/authRouter';
+import profileRouter from './routers/profileRouter';
+import threadRouter from './routers/threadRouter';
 
-class Server {
-  port: string;
+const port = process.env['PORT'] ?? '8080';
 
-  app: Express;
+const app = express();
 
-  mongoClient: MongoClient;
+mongoClient.connect().then(() => {
+  app.use(cors());
+  app.use(json());
+  app.use(morgan('combined'));
+  app.use(express.static('static/'));
 
-  dbName: string;
+  app.use('/auth', authRouter);
+  app.use('/users', userRouter);
+  app.use('/profiles', profileRouter);
+  app.use('/threads', threadRouter);
 
-  db?: Db;
+  app.use(handleError);
 
-  constructor(
-    port: string = process.env['PORT'] ?? '8080',
-    mongoConnectionURL = process.env['MONGO_URI'] ??
-      'mongodb://admin:mongo@localhost:27017',
-    dbName = process.env['MONGO_DB'] ?? 'peddl'
-  ) {
-    this.app = express();
-    this.mongoClient = new MongoClient(mongoConnectionURL);
-    this.dbName = dbName;
-    this.port = port;
-  }
-
-  setupRoutes(db: Db) {
-    setupRoutes(this.app, db);
-  }
-
-  async start() {
-    await this.mongoClient.connect();
-    this.db = this.mongoClient.db(this.dbName);
-
-    if (this.db) {
-      this.app.use(cors());
-      this.app.use(json());
-      this.app.use(morgan('combined'));
-
-      this.app.use(express.static('static/'));
-
-      this.setupRoutes(this.db);
-
-      this.app.listen(this.port, () => {
-        console.log(`App listening on port ${this.port}`);
-      });
-    } else {
-      throw new Error('DB is undefined');
-    }
-  }
-}
-
-new Server().start().catch(console.error);
+  app.listen(port, () => {
+    console.log(`App listening on port ${port}`);
+  });
+});

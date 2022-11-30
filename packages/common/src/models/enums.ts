@@ -1,5 +1,4 @@
 export type TagOption = { value: string; label: string };
-
 export const getTagOptions = ([key, value]: [string, string]) => {
   return { value: key, label: value };
 };
@@ -162,3 +161,22 @@ export enum Talent {
 export const Talents = Object.values(Talent);
 export const TalentTagOptions =
   Object.entries(Talent).map<TagOption>(getTagOptions);
+
+export const getTagOptionFromValue = (
+  value: string,
+  constants: Record<string, string>
+) => {
+  return {
+    value,
+    label: constants[value],
+  };
+};
+
+export const getTagOptionsFromValues = (
+  values: string[],
+  constants: Record<string, string>
+): TagOption[] => {
+  return values.map((value) => {
+    return getTagOptionFromValue(value, constants);
+  });
+};

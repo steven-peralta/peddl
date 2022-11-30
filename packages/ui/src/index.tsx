@@ -7,7 +7,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
-import axiosInstance from './utils/axiosInstance';
+import axiosInstance from './axiosInstance';
 import { AuthProvider } from './providers/AuthProvider';
 import { SettingsProvider } from './providers/SettingsProvider';
 import { WebsocketProvider } from './providers/WebsocketProvider';
@@ -17,21 +17,21 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
-configure({ axios: axiosInstance });
+configure({ axios: axiosInstance, cache: false });
 
 root.render(
   <React.StrictMode>
-    <ToastProvider>
-      <AuthProvider>
-        <WebsocketProvider>
+    <WebsocketProvider>
+      <ToastProvider>
+        <AuthProvider>
           <SettingsProvider>
             <BrowserRouter>
               <App />
             </BrowserRouter>
           </SettingsProvider>
-        </WebsocketProvider>
-      </AuthProvider>
-    </ToastProvider>
+        </AuthProvider>
+      </ToastProvider>
+    </WebsocketProvider>
   </React.StrictMode>
 );
 
