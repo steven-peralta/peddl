@@ -11,20 +11,19 @@ import threadRouter from './routers/threadRouter';
 const port = process.env['PORT'] ?? '8080';
 
 const app = express();
+app.use(cors());
+app.use(json());
+app.use(morgan('combined'));
+app.use(express.static('static/'));
+
+app.use('/auth', authRouter);
+app.use('/users', userRouter);
+app.use('/profiles', profileRouter);
+app.use('/threads', threadRouter);
+
+app.use(handleError);
 
 mongoClient.connect().then(() => {
-  app.use(cors());
-  app.use(json());
-  app.use(morgan('combined'));
-  app.use(express.static('static/'));
-
-  app.use('/auth', authRouter);
-  app.use('/users', userRouter);
-  app.use('/profiles', profileRouter);
-  app.use('/threads', threadRouter);
-
-  app.use(handleError);
-
   app.listen(port, () => {
     console.log(`App listening on port ${port}`);
   });
