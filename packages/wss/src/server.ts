@@ -44,18 +44,16 @@ const userIdToSocket: Record<string, Socket> = {};
 export const profilesCollection = db.collection<Profile>('profiles');
 export const mediaCollection = db.collection<Media>('media');
 export const likesCollection = db.collection<Like>('likes');
-
+app.use(morgan('combined'));
+const httpServer = createServer(app);
+const wss = new Server(httpServer, {
+  path: '/',
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST'],
+  },
+});
 mongoClient.connect().then(() => {
-  app.use(morgan('combined'));
-  const httpServer = createServer(app);
-  const wss = new Server(httpServer, {
-    path: '/',
-    cors: {
-      origin: '*',
-      methods: ['GET', 'POST'],
-    },
-  });
-
   wss.on('connection', (socket) => {
     console.log('Socket connected.');
 
